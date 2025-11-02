@@ -1,0 +1,18 @@
+{
+  "name": "judolimeil-server",
+  "version": "1.0.0",
+  "description": "Serveur de gestion de tournoi de judo",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "socket.io": "^4.8.0"
+  },
+  "keywords": ["judo", "tournoi", "competition"],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}

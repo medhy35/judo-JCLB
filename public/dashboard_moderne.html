@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Judo Dashboard - Administration</title>
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #1976d2;
+            --secondary-color: #424242;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --danger-color: #f44336;
+            --light-bg: #fafafa;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .navbar {
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .stats-card {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            border: none;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .stats-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+        }
+
+        .tatami-card {
+            border-left: 4px solid var(--primary-color);
+            transition: all 0.3s ease;
+        }
+
+        .tatami-card.libre { border-left-color: var(--success-color); }
+        .tatami-card.occupe { border-left-color: var(--danger-color); }
+        .tatami-card.pause { border-left-color: var(--warning-color); }
+
+        .combat-info {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 0.5rem 0;
+        }
+
+        .vs-divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--secondary-color);
+            margin: 0 1rem;
+        }
+
+        .btn-fab {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 1000;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .quick-actions {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .status-badge {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-weight: 500;
+        }
+
+        .loading-skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, transparent 37%, transparent 63%, #f0f0f0 75%);
+            background-size: 400% 100%;
+            animation: skeleton-loading 1.4s ease infinite;
+        }
+
+        @keyframes skeleton-loading {
+            0% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .combat-feed-item {
+            border-bottom: 1px solid #e9ecef;
+            padding: 0.75rem;
+            transition: background-color 0.2s ease;
+        }
+
+        .combat-feed-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .combat-feed-item:last-child {
+            border-bottom: none;
+        }
+
+        .combat-meta {
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+
+        .combat-result {
+            font-weight: 600;
+        }
+
+        .combat-result.victoire {
+            color: var(--success-color);
+        }
+
+        .combat-result.defaite {
+            color: var(--danger-color);
+        }
+
+        .classement-item {
+            padding: 0.75rem;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.2s ease;
+        }
+
+        .classement-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .classement-item:last-child {
+            border-bottom: none;
+        }
+
+        .rang-badge {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-right: 0.75rem;
+        }
+
+        .rang-1 { background: linear-gradient(135deg, #ffd700, #ffed4a); color: #8b7300; }
+        .rang-2 { background: linear-gradient(135deg, #c0c0c0, #e2e8f0); color: #4a5568; }
+        .rang-3 { background: linear-gradient(135deg, #cd7f32, #d69e2e); color: #744210; }
+        .rang-other { background: #e9ecef; color: #6c757d; }
+    </style>
+</head>
+
+<body>
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white">
+    <div class="container-fluid">
+        <a class="navbar-brand fw-bold text-primary" href="#">
+            <i class="fas fa-medal me-2"></i>Judo Manager
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <i class="fas fa-bars"></i>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#dashboard">
+                        <i class="fas fa-chart-line me-1"></i>Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="gestion_equipes.html">
+                        <i class="fas fa-users me-1"></i>Équipes
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="gestion_tatamis.html">
+                        <i class="fas fa-layer-group me-1"></i>Tatamis
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="gestion_poules.html">
+                        <i class="fas fa-sitemap me-1"></i>Poules
+                    </a>
+                </li>
+            </ul>
+
+            <div class="d-flex align-items-center">
+                    <span class="badge bg-success me-3" id="statusIndicator">
+                        <i class="fas fa-circle me-1"></i>Connecté
+                    </span>
+                <button class="btn btn-outline-primary btn-sm" id="refreshBtn">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Main Content -->
+<div class="container-fluid py-4">
+    <!-- Statistiques -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h4 class="mb-3 fw-light">Statistiques générales</h4>
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card stats-card h-100">
+                <div class="card-body d-flex align-items-center">
+                    <div class="card-icon bg-primary me-3">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div>
+                        <h6 class="card-title text-muted mb-1">Équipes</h6>
+                        <h3 class="mb-0" id="statEquipes">-</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card stats-card h-100">
+                <div class="card-body d-flex align-items-center">
+                    <div class="card-icon bg-success me-3">
+                        <i class="fas fa-user-ninja"></i>
+                    </div>
+                    <div>
+                        <h6 class="card-title text-muted mb-1">Combattants</h6>
+                        <h3 class="mb-0" id="statCombattants">-</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card stats-card h-100">
+                <div class="card-body d-flex align-items-center">
+                    <div class="card-icon bg-warning me-3">
+                        <i class="fas fa-fist-raised"></i>
+                    </div>
+                    <div>
+                        <h6 class="card-title text-muted mb-1">Combats</h6>
+                        <h3 class="mb-0" id="statCombats">-</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card stats-card h-100">
+                <div class="card-body d-flex align-items-center">
+                    <div class="card-icon bg-info me-3">
+                        <i class="fas fa-th-large"></i>
+                    </div>
+                    <div>
+                        <h6 class="card-title text-muted mb-1">Tatamis</h6>
+                        <h3 class="mb-0" id="statTatamis">-</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Actions rapides -->
+    <div class="quick-actions">
+        <h5 class="mb-3">Actions rapides</h5>
+        <div class="row">
+            <div class="col-md-3 mb-2">
+                <button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#modalEquipe">
+                    <i class="fas fa-plus me-2"></i>Nouvelle équipe
+                </button>
+            </div>
+            <div class="col-md-3 mb-2">
+                <button class="btn btn-success w-100" data-bs-toggle="modal" data-bs-target="#modalTatami">
+                    <i class="fas fa-plus me-2"></i>Nouveau tatami
+                </button>
+            </div>
+            <div class="col-md-3 mb-2">
+                <button class="btn btn-warning w-100" id="genererPoules">
+                    <i class="fas fa-sitemap me-2"></i>Générer poules
+                </button>
+            </div>
+            <div class="col-md-3 mb-2">
+                <button class="btn btn-info w-100" id="voirTableau">
+                    <i class="fas fa-trophy me-2"></i>Tableau final
+                </button>
+            </div>
+            <div class="col-md-3 mb-2">
+                <button class="btn btn-info w-100" id="voirClassement">
+                    <i class="fas fa-trophy me-2"></i>Classements
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tatamis en direct -->
+    <div class="row">
+        <div class="col-lg-8">
+            <h4 class="mb-3 fw-light">Tatamis en direct</h4>
+            <div id="tatamisContainer">
+                <!-- Skeleton loading -->
+                <div class="row" id="loadingSkeleton">
+                    <div class="col-md-6 mb-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="loading-skeleton" style="height: 20px; margin-bottom: 10px;"></div>
+                                <div class="loading-skeleton" style="height: 15px; width: 60%; margin-bottom: 10px;"></div>
+                                <div class="loading-skeleton" style="height: 15px; width: 80%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="loading-skeleton" style="height: 20px; margin-bottom: 10px;"></div>
+                                <div class="loading-skeleton" style="height: 15px; width: 60%; margin-bottom: 10px;"></div>
+                                <div class="loading-skeleton" style="height: 15px; width: 80%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar avec feed et classement -->
+        <div class="col-lg-4">
+            <!-- Feed des combats récents -->
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0">
+                        <i class="fas fa-history me-2"></i>Combats récents
+                    </h6>
+                    <span class="badge bg-primary" id="feedCount">0</span>
+                </div>
+                <div class="card-body p-0">
+                    <div id="combatFeed" style="max-height: 300px; overflow-y: auto;">
+                        <div class="p-3 text-center text-muted">
+                            <i class="fas fa-clock fa-2x mb-2"></i>
+                            <p class="mb-0">Aucun combat récent</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Classement en direct -->
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0">
+                        <i class="fas fa-trophy me-2"></i>Classement général
+                    </h6>
+                    <button class="btn btn-sm btn-outline-primary" id="refreshClassement">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                </div>
+                <div class="card-body p-0">
+                    <div id="classementContainer" style="max-height: 350px; overflow-y: auto;">
+                        <div class="p-3 text-center text-muted">
+                            <i class="fas fa-trophy fa-2x mb-2"></i>
+                            <p class="mb-0">Aucune donnée de classement</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- FAB Button -->
+<button class="btn btn-primary btn-fab" title="Ajouter" data-bs-toggle="modal" data-bs-target="#modalEquipe">
+    <i class="fas fa-plus"></i>
+</button>
+
+<!-- Modals -->
+<!-- Modal Équipe -->
+<div class="modal fade" id="modalEquipe" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-users me-2"></i>Nouvelle équipe
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="formEquipe">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="equipeId" class="form-label">ID de l'équipe</label>
+                        <input type="text" id="equipeId" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="equipeNom" class="form-label">Nom de l'équipe</label>
+                        <input type="text" id="equipeNom" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Couleur</label>
+                        <select class="form-select" id="equipeCouleur">
+                            <option value="primary">Bleu</option>
+                            <option value="danger">Rouge</option>
+                            <option value="success">Vert</option>
+                            <option value="warning">Jaune</option>
+                            <option value="info">Cyan</option>
+                            <option value="secondary">Gris</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-2"></i>Créer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Tatami -->
+<div class="modal fade" id="modalTatami" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-th-large me-2"></i>Nouveau tatami
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="formTatami">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="tatamiNom" class="form-label">Nom du tatami</label>
+                        <input type="text" id="tatamiNom" class="form-control" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-2"></i>Créer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+
+<script>
+    // Variables globales
+    const socket = io();
+    let isConnected = false;
+
+    // Initialisation
+    document.addEventListener('DOMContentLoaded', function() {
+        // Charger les données
+        loadData();
+
+        // Configuration des événements
+        setupEventListeners();
+
+        // WebSocket
+        setupWebSocket();
+    });
+
+    // Chargement des données
+    async function loadData() {
+        try {
+            await Promise.all([
+                loadStats(),
+                loadTatamis(),
+                loadCombatFeed(),
+                loadClassement()
+            ]);
+            hideLoadingSkeleton();
+        } catch (error) {
+            console.error('Erreur chargement:', error);
+            showNotification('Erreur de chargement des données', 'danger');
+        }
+    }
+
+    async function loadStats() {
+        const [equipes, combattants, combats, tatamis] = await Promise.all([
+            fetch('/api/equipes').then(r => r.json()),
+            fetch('/api/combattants').then(r => r.json()),
+            fetch('/api/combats').then(r => r.json()),
+            fetch('/api/tatamis').then(r => r.json())
+        ]);
+
+        document.getElementById('statEquipes').textContent = equipes.length;
+        document.getElementById('statCombattants').textContent = combattants.length;
+        document.getElementById('statCombats').textContent = combats.length;
+        document.getElementById('statTatamis').textContent = tatamis.length;
+    }
+
+    async function loadTatamis() {
+        const tatamis = await fetch('/api/tatamis').then(r => r.json());
+        const container = document.getElementById('tatamisContainer');
+
+        if (tatamis.length === 0) {
+            container.innerHTML = `
+                    <div class="text-center py-5">
+                        <i class="fas fa-th-large fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">Aucun tatami configuré</p>
+                        <button class="btn btn-primary" data-mdb-toggle="modal" data-mdb-target="#modalTatami">
+                            <i class="fas fa-plus me-2"></i>Créer le premier tatami
+                        </button>
+                    </div>
+                `;
+            return;
+        }
+
+        const html = `<div class="row">${tatamis.map(tatami => createTatamiCard(tatami)).join('')}</div>`;
+        container.innerHTML = html;
+    }
+
+    async function loadCombatFeed() {
+        try {
+            const combats = await fetch('/api/combats').then(r => r.json());
+            const combatsRecents = combats
+                .filter(c => c.etat === 'terminé')
+                .sort((a, b) => new Date(b.dateFin || b.dateCreation) - new Date(a.dateFin || a.dateCreation))
+                .slice(0, 10);
+
+            const container = document.getElementById('combatFeed');
+            const countBadge = document.getElementById('feedCount');
+
+            countBadge.textContent = combatsRecents.length;
+
+            if (combatsRecents.length === 0) {
+                container.innerHTML = `
+                        <div class="p-3 text-center text-muted">
+                            <i class="fas fa-clock fa-2x mb-2"></i>
+                            <p class="mb-0">Aucun combat récent</p>
+                        </div>
+                    `;
+                return;
+            }
+
+            const html = combatsRecents.map(combat => {
+                const vainqueur = combat.vainqueur;
+                const vainqueurNom = vainqueur === 'rouge' ? combat.rouge.nom :
+                    vainqueur === 'bleu' ? combat.bleu.nom : null;
+
+                const temps = combat.dateFin ?
+                    new Date(combat.dateFin).toLocaleTimeString('fr-FR', {
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    }) : 'N/A';
+
+                return `
+                        <div class="combat-feed-item">
+                            <div class="d-flex justify-content-between align-items-start mb-1">
+                                <div class="flex-grow-1">
+                                    <div class="d-flex align-items-center mb-1">
+                                        <span class="text-danger fw-medium">${combat.rouge.nom}</span>
+                                        <span class="mx-2 text-muted">vs</span>
+                                        <span class="text-primary fw-medium">${combat.bleu.nom}</span>
+                                    </div>
+                                    ${vainqueurNom ? `
+                                        <div class="combat-result victoire">
+                                            <i class="fas fa-trophy me-1"></i>${vainqueurNom} gagne
+                                        </div>
+                                    ` : ''}
+                                </div>
+                                <div class="text-end">
+                                    <div class="combat-meta">${temps}</div>
+                                    <div class="combat-meta">${combat.tatami}</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+            }).join('');
+
+            container.innerHTML = html;
+        } catch (error) {
+            console.error('Erreur chargement feed combats:', error);
+        }
+    }
+
+    async function loadClassement() {
+        try {
+            const classement = await fetch('/api/classement/general').then(r => r.json());
+            const container = document.getElementById('classementContainer');
+
+            if (classement.length === 0) {
+                container.innerHTML = `
+                        <div class="p-3 text-center text-muted">
+                            <i class="fas fa-trophy fa-2x mb-2"></i>
+                            <p class="mb-0">Aucune donnée de classement</p>
+                        </div>
+                    `;
+                return;
+            }
+
+            const html = classement.slice(0, 8).map((equipe, index) => {
+                const rang = index + 1;
+                const rangClass = rang === 1 ? 'rang-1' :
+                    rang === 2 ? 'rang-2' :
+                        rang === 3 ? 'rang-3' : 'rang-other';
+
+                return `
+                        <div class="classement-item">
+                            <div class="rang-badge ${rangClass}">${rang}</div>
+                            <div class="flex-grow-1">
+                                <div class="fw-medium mb-1">${equipe.nom}</div>
+                                <div class="d-flex gap-3">
+                                    <small class="text-muted">
+                                        <i class="fas fa-trophy me-1"></i>${equipe.victoires}V
+                                    </small>
+                                    <small class="text-muted">
+                                        <i class="fas fa-star me-1"></i>${equipe.points}pts
+                                    </small>
+                                    <small class="text-muted">
+                                        <i class="fas fa-chart-line me-1"></i>${equipe.differentiel > 0 ? '+' : ''}${equipe.differentiel}
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+            }).join('');
+
+            container.innerHTML = html;
+        } catch (error) {
+            console.error('Erreur chargement classement:', error);
+        }
+    }
+
+    function createTatamiCard(tatami) {
+        const etatClass = tatami.etat === 'libre' ? 'libre' :
+            tatami.etat === 'occupé' ? 'occupe' : 'pause';
+
+        const etatIcon = tatami.etat === 'libre' ? 'check-circle' :
+            tatami.etat === 'occupé' ? 'play-circle' : 'pause-circle';
+
+        const etatColor = tatami.etat === 'libre' ? 'success' :
+            tatami.etat === 'occupé' ? 'danger' : 'warning';
+
+        const combat = tatami.combatActuel;
+        const scoreConfrontation = tatami.scoreConfrontation || { rouge: 0, bleu: 0 };
+
+        return `
+                <div class="col-lg-6 mb-3">
+                    <div class="card tatami-card ${etatClass} h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 class="card-title mb-0">${tatami.nom}</h5>
+                                <span class="badge bg-${etatColor}">
+                                    <i class="fas fa-${etatIcon} me-1"></i>${tatami.etat}
+                                </span>
+                            </div>
+
+                            ${combat ? `
+                                <!-- Combat actuel -->
+                                <div class="combat-info mb-3">
+                                    <div class="row text-center mb-2">
+                                        <div class="col-5">
+                                            <div class="p-2 bg-danger bg-opacity-10 rounded">
+                                                <div class="fw-bold text-danger">${combat.rouge.nom}</div>
+                                                <small class="text-muted">${combat.rouge.equipe}</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-2 d-flex align-items-center justify-content-center">
+                                            <span class="fw-bold text-muted">VS</span>
+                                        </div>
+                                        <div class="col-5">
+                                            <div class="p-2 bg-primary bg-opacity-10 rounded">
+                                                <div class="fw-bold text-primary">${combat.bleu.nom}</div>
+                                                <small class="text-muted">${combat.bleu.equipe}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Score du combat actuel -->
+                                    <div class="row text-center small mb-2">
+                                        <div class="col-5">
+                                            <div class="d-flex justify-content-center gap-2">
+                                                ${combat.ipponRouge ? '<span class="badge bg-warning">I</span>' : ''}
+                                                ${combat.wazariRouge > 0 ? `<span class="badge bg-info">${combat.wazariRouge}W</span>` : ''}
+                                                ${combat.yukoRouge > 0 ? `<span class="badge bg-secondary">${combat.yukoRouge}Y</span>` : ''}
+                                                ${combat.penalitesRouge > 0 ? `<span class="badge bg-danger">${combat.penalitesRouge}S</span>` : ''}
+                                            </div>
+                                        </div>
+                                        <div class="col-2"></div>
+                                        <div class="col-5">
+                                            <div class="d-flex justify-content-center gap-2">
+                                                ${combat.ipponBleu ? '<span class="badge bg-warning">I</span>' : ''}
+                                                ${combat.wazariBleu > 0 ? `<span class="badge bg-info">${combat.wazariBleu}W</span>` : ''}
+                                                ${combat.yukoBleu > 0 ? `<span class="badge bg-secondary">${combat.yukoBleu}Y</span>` : ''}
+                                                ${combat.penalitesBleu > 0 ? `<span class="badge bg-danger">${combat.penalitesBleu}S</span>` : ''}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- État du combat -->
+                                    <div class="text-center">
+                                        <small class="text-muted">
+                                            <i class="fas fa-clock me-1"></i>
+                                            ${combat.etat === 'en cours' ? 'En cours' :
+            combat.etat === 'terminé' ? 'Terminé' : 'À venir'}
+                                        </small>
+                                    </div>
+                                </div>
+
+                                <!-- Score de confrontation équipes -->
+                                <div class="border-top pt-2">
+                                    <div class="row text-center">
+                                        <div class="col-5">
+                                            <div class="fw-bold text-danger fs-4">${scoreConfrontation.rouge}</div>
+                                            <small class="text-muted">Points équipe</small>
+                                        </div>
+                                        <div class="col-2 d-flex align-items-center justify-content-center">
+                                            <i class="fas fa-trophy text-warning"></i>
+                                        </div>
+                                        <div class="col-5">
+                                            <div class="fw-bold text-primary fs-4">${scoreConfrontation.bleu}</div>
+                                            <small class="text-muted">Points équipe</small>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Progression des combats -->
+                                ${tatami.combatsIds.length > 1 ? `
+                                    <div class="mt-2">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <small class="text-muted">Progression</small>
+                                            <small class="text-muted">${(tatami.indexCombatActuel || 0) + 1} / ${tatami.combatsIds.length}</small>
+                                        </div>
+                                        <div class="progress mt-1" style="height: 4px;">
+                                            <div class="progress-bar" style="width: ${((tatami.indexCombatActuel || 0) + 1) / tatami.combatsIds.length * 100}%"></div>
+                                        </div>
+                                    </div>
+                                ` : ''}
+
+                            ` : `
+                                <div class="combat-info text-center py-4">
+                                    <i class="fas fa-bed fa-2x text-muted mb-2"></i>
+                                    <p class="text-muted mb-0">Aucun combat assigné</p>
+                                </div>
+                            `}
+
+                            <div class="mt-3 d-flex gap-2">
+                                <button class="btn btn-sm btn-outline-primary flex-fill" onclick="gererTatami(${tatami.id})">
+                                    <i class="fas fa-cog me-1"></i>Gérer
+                                </button>
+                                <button class="btn btn-sm btn-outline-info" onclick="voirTatami(${tatami.id})">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                ${combat ? `
+                                    <button class="btn btn-sm btn-outline-success" onclick="marquerCombat(${tatami.id})">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+    }
+
+    function hideLoadingSkeleton() {
+        const skeleton = document.getElementById('loadingSkeleton');
+        if (skeleton) {
+            skeleton.style.display = 'none';
+        }
+    }
+
+    // Gestion des événements
+    function setupEventListeners() {
+        // Refresh
+        document.getElementById('refreshBtn').addEventListener('click', () => {
+            loadData();
+            showNotification('Données actualisées', 'info');
+        });
+
+        // Refresh classement
+        document.getElementById('refreshClassement').addEventListener('click', () => {
+            loadClassement();
+        });
+
+        // Formulaires
+        document.getElementById('formEquipe').addEventListener('submit', handleEquipeSubmit);
+        document.getElementById('formTatami').addEventListener('submit', handleTatamiSubmit);
+    }
+
+    async function handleEquipeSubmit(e) {
+        e.preventDefault();
+
+        const formData = {
+            id: document.getElementById('equipeId').value,
+            nom: document.getElementById('equipeNom').value,
+            couleur: document.getElementById('equipeCouleur').value
+        };
+
+        try {
+            const response = await fetch('/api/equipes', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+
+            if (response.ok) {
+                const modal = bootstrap.Modal.getInstance(document.getElementById('modalEquipe'));
+                modal.hide();
+                e.target.reset();
+
+                showNotification('Équipe créée avec succès', 'success');
+                loadStats();
+            } else {
+                const error = await response.json();
+                showNotification(error.error || 'Erreur lors de la création', 'danger');
+            }
+        } catch (error) {
+            showNotification('Erreur de connexion', 'danger');
+        }
+    }
+
+    async function handleTatamiSubmit(e) {
+        e.preventDefault();
+
+        const formData = {
+            nom: document.getElementById('tatamiNom').value
+        };
+
+        try {
+            const response = await fetch('/api/tatamis', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+
+            if (response.ok) {
+                const modal = bootstrap.Modal.getInstance(document.getElementById('modalTatami'));
+                modal.hide();
+                e.target.reset();
+
+                showNotification('Tatami créé avec succès', 'success');
+                loadData();
+            } else {
+                const error = await response.json();
+                showNotification(error.error || 'Erreur lors de la création', 'danger');
+            }
+        } catch (error) {
+            showNotification('Erreur de connexion', 'danger');
+        }
+    }
+
+    // WebSocket
+    function setupWebSocket() {
+        socket.on('connect', () => {
+            isConnected = true;
+            updateConnectionStatus('Connecté', 'success');
+        });
+
+        socket.on('disconnect', () => {
+            isConnected = false;
+            updateConnectionStatus('Déconnecté', 'danger');
+        });
+
+        socket.on('stats:update', () => {
+            loadStats();
+        });
+
+        socket.on('tatamis:update', () => {
+            loadTatamis();
+        });
+
+        socket.on('combats:update', () => {
+            loadCombatFeed();
+            loadClassement(); // Le classement peut changer après un combat terminé
+        });
+
+        socket.on('classement:update', () => {
+            loadClassement();
+        });
+    }
+
+    function updateConnectionStatus(text, type) {
+        const indicator = document.getElementById('statusIndicator');
+        indicator.className = `badge bg-${type} me-3`;
+        indicator.innerHTML = `<i class="fas fa-circle me-1"></i>${text}`;
+    }
+
+    // Utilitaires
+    function showNotification(message, type = 'info') {
+        // Créer une notification toast simple
+        const toast = document.createElement('div');
+        toast.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+        toast.style.cssText = 'top: 20px; right: 20px; z-index: 2000; min-width: 300px;';
+        toast.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" onclick="this.parentElement.remove()"></button>
+            `;
+
+        document.body.appendChild(toast);
+
+        // Auto-remove après 3 secondes
+        setTimeout(() => {
+            if (toast.parentElement) {
+                toast.remove();
+            }
+        }, 3000);
+    }
+
+    // Actions
+    function gererTatami(id) {
+        window.location.href = `table_combat.html?tatami=${id}`;
+    }
+
+    function voirTatami(id) {
+        window.location.href = `public_tatami.html?tatami=${id}`;
+    }
+
+    function marquerCombat(tatamiId) {
+        window.location.href = `table_combat.html?tatami=${tatamiId}`;
+    }
+    document.getElementById('voirTableau').addEventListener('click', () => {
+        window.location.href = 'gestion_tableau.html';
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,218 @@
+[
+  {
+    "nom": "TATAMI 1",
+    "etat": "occupé",
+    "combatsIds": [
+      1760672690003,
+      1760672689439
+    ],
+    "indexCombatActuel": 1,
+    "dateCreation": "2025-10-16T18:01:47.595Z",
+    "historique": [
+      {
+        "timestamp": "2025-10-16T18:03:13.767Z",
+        "action": "assigner_combats",
+        "combatsIds": [
+          1760637794055,
+          1760637793805
+        ],
+        "nombreCombats": 2
+      },
+      {
+        "timestamp": "2025-10-16T18:12:11.110Z",
+        "action": "combat_suivant",
+        "ancienIndex": 0,
+        "nouveauIndex": 1
+      },
+      {
+        "timestamp": "2025-10-16T18:16:13.839Z",
+        "action": "liberer_tatami"
+      },
+      {
+        "timestamp": "2025-10-16T18:22:47.204Z",
+        "action": "assigner_combats",
+        "combatsIds": [
+          1760638967741,
+          1760638967089
+        ],
+        "nombreCombats": 2
+      },
+      {
+        "timestamp": "2025-10-16T18:24:28.836Z",
+        "action": "combat_suivant",
+        "ancienIndex": 0,
+        "nouveauIndex": 1
+      },
+      {
+        "timestamp": "2025-10-16T18:25:49.143Z",
+        "action": "liberer_tatami"
+      },
+      {
+        "timestamp": "2025-10-16T18:26:14.446Z",
+        "action": "assigner_combats",
+        "combatsIds": [
+          1760639174458,
+          1760639174381
+        ],
+        "nombreCombats": 2
+      },
+      {
+        "timestamp": "2025-10-16T18:26:38.124Z",
+        "action": "combat_suivant",
+        "ancienIndex": 0,
+        "nouveauIndex": 1
+      },
+      {
+        "timestamp": "2025-10-16T18:27:23.223Z",
+        "action": "liberer_tatami"
+      },
+      {
+        "timestamp": "2025-10-16T18:27:35.776Z",
+        "action": "assigner_combats",
+        "combatsIds": [
+          1760639255769,
+          1760639255943
+        ],
+        "nombreCombats": 2
+      },
+      {
+        "timestamp": "2025-10-16T18:27:45.922Z",
+        "action": "combat_suivant",
+        "ancienIndex": 0,
+        "nouveauIndex": 1
+      },
+      {
+        "timestamp": "2025-10-16T18:28:12.260Z",
+        "action": "liberer_tatami"
+      },
+      {
+        "timestamp": "2025-10-16T18:28:26.279Z",
+        "action": "assigner_combats",
+        "combatsIds": [
+          1760639306708,
+          1760639306249
+        ],
+        "nombreCombats": 2
+      },
+      {
+        "timestamp": "2025-10-16T18:28:36.532Z",
+        "action": "combat_suivant",
+        "ancienIndex": 0,
+        "nouveauIndex": 1
+      },
+      {
+        "timestamp": "2025-10-17T03:17:00.499Z",
+        "action": "liberer_tatami"
+      },
+      {
+        "timestamp": "2025-10-17T03:19:44.414Z",
+        "action": "assigner_combats",
+        "combatsIds": [
+          1760671184917,
+          1760671184863
+        ],
+        "nombreCombats": 2
+      },
+      {
+        "timestamp": "2025-10-17T03:21:01.103Z",
+        "action": "combat_suivant",
+        "ancienIndex": 0,
+        "nouveauIndex": 1
+      },
+      {
+        "timestamp": "2025-10-17T03:44:25.721Z",
+        "action": "liberer_tatami"
+      },
+      {
+        "timestamp": "2025-10-17T03:44:49.221Z",
+        "action": "assigner_combats",
+        "combatsIds": [
+          1760672690003,
+          1760672689439
+        ],
+        "nombreCombats": 2
+      },
+      {
+        "timestamp": "2025-10-17T03:45:22.663Z",
+        "action": "combat_suivant",
+        "ancienIndex": 0,
+        "nouveauIndex": 1
+      }
+    ],
+    "scoreConfrontation": {
+      "rouge": 1,
+      "bleu": 100
+    },
+    "id": 1760637707612
+  },
+  {
+    "nom": "Tatami 1",
+    "etat": "occupé",
+    "combatsIds": [
+      1760673880931,
+      1760673881635
+    ],
+    "indexCombatActuel": 1,
+    "dateCreation": "2025-10-16T18:21:18.144Z",
+    "historique": [
+      {
+        "timestamp": "2025-10-16T18:21:28.917Z",
+        "action": "assigner_combats",
+        "combatsIds": [
+          1760638889251,
+          1760638889142
+        ],
+        "nombreCombats": 2
+      },
+      {
+        "timestamp": "2025-10-16T18:21:43.732Z",
+        "action": "combat_suivant",
+        "ancienIndex": 0,
+        "nouveauIndex": 1
+      },
+      {
+        "timestamp": "2025-10-17T03:17:03.864Z",
+        "action": "liberer_tatami"
+      },
+      {
+        "timestamp": "2025-10-17T03:28:04.362Z",
+        "action": "assigner_combats",
+        "combatsIds": [
+          1760671684999,
+          1760671684435
+        ],
+        "nombreCombats": 2
+      },
+      {
+        "timestamp": "2025-10-17T03:29:05.876Z",
+        "action": "combat_suivant",
+        "ancienIndex": 0,
+        "nouveauIndex": 1
+      },
+      {
+        "timestamp": "2025-10-17T03:44:29.506Z",
+        "action": "liberer_tatami"
+      },
+      {
+        "timestamp": "2025-10-17T04:04:41.012Z",
+        "action": "assigner_combats",
+        "combatsIds": [
+          1760673880931,
+          1760673881635
+        ],
+        "nombreCombats": 2
+      },
+      {
+        "timestamp": "2025-10-17T04:06:24.650Z",
+        "action": "combat_suivant",
+        "ancienIndex": 0,
+        "nouveauIndex": 1
+      }
+    ],
+    "scoreConfrontation": {
+      "rouge": 120,
+      "bleu": 111
+    },
+    "id": 1760638878655
+  }
+]

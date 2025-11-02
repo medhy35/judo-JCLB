@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><!DOCTYPE html>
+        <html lang="fr">
+        <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Tatami Public - Judo</title>
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <!-- CSS personnalisé -->
+    <link href="public_tatamis.css" rel="stylesheet">
+</head>
+
+<body>
+<!-- Header public -->
+<div class="public-header">
+    <div class="logo-section">
+        <h1><i class="fas fa-medal me-2"></i>JUDO</h1>
+    </div>
+    <div class="tatami-title" id="tatamiTitle">
+        <i class="fas fa-th-large me-2"></i><span id="tatamiName">Tatami</span>
+    </div>
+    <div class="status-indicator bg-success" id="combatStatus">
+        <i class="fas fa-circle me-1"></i>EN ATTENTE
+    </div>
+</div>
+
+<!-- Indicateur de connexion -->
+<div class="connection-status connected" id="connectionStatus">
+    <i class="fas fa-wifi me-1"></i>Connecté
+</div>
+
+<!-- Zone de combat principale -->
+<div class="public-combat-zone" id="combatZone">
+    <div class="public-combat-header">
+        <span id="combatTitle">Combat en cours</span>
+    </div>
+
+    <div class="public-combattants-display">
+        <!-- Combattant Rouge -->
+        <div class="public-combattant-rouge">
+            <div class="public-combattant-nom" id="publicRougeNom">-</div>
+            <div class="public-combattant-equipe" id="publicRougeEquipe">-</div>
+            <div class="public-scores-display" id="publicRougeScores">
+                <!-- Scores dynamiques -->
+            </div>
+        </div>
+
+        <!-- Timer central -->
+        <div class="public-timer-central">
+            <div class="public-etat-combat public-etat-prevu" id="publicEtatCombat">PRÊT</div>
+            <div class="public-timer-display" id="publicTimerDisplay">4:00</div>
+
+            <!-- Osaekomi public -->
+            <div class="public-osaekomi-display" id="publicOsaekomoDisplay">
+                <div><strong>OSAEKOMI</strong></div>
+                <div class="public-osaekomi-timer" id="publicOsaekomoTimer">00</div>
+                <div><small>Maintien au sol</small></div>
+            </div>
+        </div>
+
+        <!-- Combattant Bleu -->
+        <div class="public-combattant-bleu">
+            <div class="public-combattant-nom" id="publicBleuNom">-</div>
+            <div class="public-combattant-equipe" id="publicBleuEquipe">-</div>
+            <div class="public-scores-display" id="publicBleuScores">
+                <!-- Scores dynamiques -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Score de confrontation -->
+<div class="confrontation-score" id="confrontationSection">
+    <div class="confrontation-title">
+        <i class="fas fa-trophy me-2"></i>Score de la confrontation
+    </div>
+    <div class="confrontation-scores">
+        <div class="confrontation-team">
+            <div class="confrontation-score-value confrontation-rouge" id="scoreRougeEquipe">0</div>
+            <div><small>Équipe Rouge</small></div>
+        </div>
+        <div class="confrontation-vs">VS</div>
+        <div class="confrontation-team">
+            <div class="confrontation-score-value confrontation-bleu" id="scoreBleuEquipe">0</div>
+            <div><small>Équipe Bleue</small></div>
+        </div>
+    </div>
+</div>
+
+<!-- File d'attente -->
+<div class="public-queue" id="queueSection" style="display: none;">
+    <div class="public-queue-title">
+        <i class="fas fa-list me-2"></i>Prochains combats
+    </div>
+    <div id="publicCombatQueue">
+        <!-- Queue dynamique -->
+    </div>
+</div>
+
+<!-- Victory Overlay public -->
+<div class="public-victory-overlay" id="publicVictoryOverlay">
+    <div class="public-victory-content">
+        <h1><i class="fas fa-trophy"></i></h1>
+        <h2 id="publicVictoryWinner">VICTOIRE!</h2>
+        <p id="publicVictoryMethod">Par Ippon</p>
+    </div>
+</div>
+
+<!-- Indicateur de rafraîchissement -->
+<div class="refresh-indicator" id="refreshIndicator">
+    <i class="fas fa-sync-alt"></i> Mis à jour il y a <span id="lastUpdate">0</span>s
+</div>
+
+<!-- Scripts -->
+<script src="/socket.io/socket.io.js"></script>
+
+<script>
+    // =======================================
+    // ÉCRAN PUBLIC TATAMI - SCRIPT COMPLET
+    // Application Judo Manager
+    // =======================================
+
+    // Variables globales
+    const socket = io();
+    let tatamiId = null;
+    let combat = null;
+    let tatami = null;
+    let lastUpdateTime = Date.now();
+    let updateInterval = null;
+    let victoryTimeout = null;
+
+    // =======================================
+    // INITIALISATION
+    // =======================================
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Récupérer l'ID du tatami depuis l'URL
+        const urlParams = new URLSearchParams(window.location.search);
+        tatamiId = parseInt(urlParams.get('tatami'));
+
+        if (!tatamiId) {
+            showError('ID de tatami manquant dans l\'URL');
+            return;
+        }
+
+        loadData();
+        setupWebSocket();
+        setupAutoRefresh();
+    });
+
+    // =======================================
+    // CHARGEMENT DES DONNÉES
+    // =======================================
+
+    async function loadData() {
+        try {
+            const [tatamiResponse, combatResponse] = await Promise.all([
+                fetch(`/api/tatamis/${tatamiId}`),
+                fetch(`/api/tatamis/${tatamiId}/combat-actuel`)
+            ]);
+
+            if (tatamiResponse.ok) {
+                tatami = await tatamiResponse.json();
+            } else {
+                throw new Error('Tatami non trouvé');
+            }
+
+            if (combatResponse.ok) {
+                const combatData = await combatResponse.json();
+                combat = combatData;
+            }
+
+            updateDisplay();
+            lastUpdateTime = Date.now();
+        } catch (error) {
+            console.error('Erreur chargement:', error);
+            showError('Erreur de chargement des données');
+        }
+    }
+
+    // =======================================
+    // MISE À JOUR DE L'AFFICHAGE
+    // =======================================
+
+    function updateDisplay() {
+        updateTatamiInfo();
+        updateCombatDisplay();
+        updateConfrontationScore();
+        updateQueue();
+    }
+
+    function updateTatamiInfo() {
+        if (!tatami) return;
+
+        document.getElementById('tatamiName').textContent = tatami.nom;
+        document.getElementById('tatamiTitle').innerHTML =
+            `<i class="fas fa-th-large me-2"></i>${tatami.nom}`;
+    }
+
+    function updateCombatDisplay() {
+        if (!combat) {
+            showNoCombat();
+            return;
+        }
+
+        // Noms et équipes
+        document.getElementById('publicRougeNom').textContent = combat.rouge?.nom || 'Rouge';
+        document.getElementById('publicBleuNom').textContent = combat.bleu?.nom || 'Bleu';
+        document.getElementById('publicRougeEquipe').textContent = combat.rouge?.equipe || 'Équipe Rouge';
+        document.getElementById('publicBleuEquipe').textContent = combat.bleu?.equipe || 'Équipe Bleue';
+
+        // Timer
+        const timer = combat.timer || 240;
+        updateTimerDisplay(timer);
+
+        // Scores
+        updateScoreDisplay();
+
+        // État du combat
+        updateEtatCombat();
+    }
+
+    function updateScoreDisplay() {
+        if (!combat) return;
+
+        // Affichage rouge
+        let rougeHtml = '';
+        if (combat.rouge?.ippon || combat.ipponRouge) {
+            rougeHtml += '<div class="public-score-badge public-score-ippon">IPPON</div>';
+        }
+
+        const wazariRouge = combat.rouge?.wazari || combat.wazariRouge || 0;
+        const yukoRouge = combat.rouge?.yuko || combat.yukoRouge || 0;
+        const shidoRouge = combat.rouge?.shido || combat.penalitesRouge || 0;
+
+        if (wazariRouge > 0) {
+            rougeHtml += `<div class="public-score-badge public-score-rouge">${wazariRouge} WAZARI</div>`;
+        }
+        if (yukoRouge > 0) {
+            rougeHtml += `<div class="public-score-badge public-score-rouge">${yukoRouge} YUKO</div>`;
+        }
+        if (shidoRouge > 0) {
+            rougeHtml += `<div class="public-score-badge" style="background: #757575; color: white;">${shidoRouge} SHIDO</div>`;
+        }
+        document.getElementById('publicRougeScores').innerHTML = rougeHtml;
+
+        // Affichage bleu
+        let bleuHtml = '';
+        if (combat.bleu?.ippon || combat.ipponBleu) {
+            bleuHtml += '<div class="public-score-badge public-score-ippon">IPPON</div>';
+        }
+
+        const wazariBleu = combat.bleu?.wazari || combat.wazariBleu || 0;
+        const yukoBleu = combat.bleu?.yuko || combat.yukoBleu || 0;
+        const shidoBleu = combat.bleu?.shido || combat.penalitesBleu || 0;
+
+        if (wazariBleu > 0) {
+            bleuHtml += `<div class="public-score-badge public-score-bleu">${wazariBleu} WAZARI</div>`;
+        }
+        if (yukoBleu > 0) {
+            bleuHtml += `<div class="public-score-badge public-score-bleu">${yukoBleu} YUKO</div>`;
+        }
+        if (shidoBleu > 0) {
+            bleuHtml += `<div class="public-score-badge" style="background: #757575; color: white;">${shidoBleu} SHIDO</div>`;
+        }
+        document.getElementById('publicBleuScores').innerHTML = bleuHtml;
+    }
+
+    function updateTimerDisplay(seconds) {
+        const minutes = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        const timeStr = `${minutes}:${secs.toString().padStart(2, '0')}`;
+
+        const timerEl = document.getElementById('publicTimerDisplay');
+        timerEl.textContent = timeStr;
+
+        timerEl.className = 'public-timer-display';
+        if (seconds <= 10) {
+            timerEl.classList.add('danger');
+        } else if (seconds <= 30) {
+            timerEl.classList.add('warning');
+        }
+    }
+
+    function updateEtatCombat() {
+        if (!combat) return;
+
+        const etatEl = document.getElementById('publicEtatCombat');
+        const statusEl = document.getElementById('combatStatus');
+        const etat = combat.etat || 'prévu';
+
+        // Mettre à jour l'état du combat
+        etatEl.className = 'public-etat-combat';
+        let etatText = '';
+        let statusText = '';
+        let statusClass = '';
+
+        switch (etat) {
+            case 'prévu':
+                etatEl.classList.add('public-etat-prevu');
+                etatText = 'À VENIR';
+                statusText = 'EN ATTENTE';
+                statusClass = 'bg-secondary';
+                break;
+            case 'en cours':
+                etatEl.classList.add('public-etat-en-cours');
+                etatText = 'EN COURS';
+                statusText = 'COMBAT EN COURS';
+                statusClass = 'bg-success';
+                break;
+            case 'pause':
+                etatEl.classList.add('public-etat-pause');
+                etatText = 'PAUSE';
+                statusText = 'EN PAUSE';
+                statusClass = 'bg-warning';
+                break;
+            case 'terminé':
+                etatEl.classList.add('public-etat-termine');
+                etatText = 'TERMINÉ';
+                statusText = 'TERMINÉ';
+                statusClass = 'bg-info';
+                showCombatTermine();
+                break;
+        }
+
+        etatEl.textContent = etatText;
+        statusEl.className = `status-indicator ${statusClass}`;
+        statusEl.innerHTML = `<i class="fas fa-circle me-1"></i>${statusText}`;
+    }
+
+    function updateConfrontationScore() {
+        if (!tatami) return;
+
+        const score = tatami.scoreConfrontation || { rouge: 0, bleu: 0 };
+        document.getElementById('scoreRougeEquipe').textContent = score.rouge;
+    }
+</script>
+</body>
+
+</html>

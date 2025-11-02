@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Affichage Combat - Judo</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header avec nom du tatami */
+        .header {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .tatami-name {
+            font-size: 2rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .competition-info {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        /* Zone principale de combat */
+        .combat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        /* Noms des combattants */
+        .combattants {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .combattant {
+            flex: 1;
+            text-align: center;
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .combattant.rouge {
+            border: 4px solid #e53935;
+            box-shadow: 0 0 30px rgba(229, 57, 53, 0.5);
+        }
+
+        .combattant.bleu {
+            border: 4px solid #1e88e5;
+            box-shadow: 0 0 30px rgba(30, 136, 229, 0.5);
+        }
+
+        .combattant.vainqueur {
+            animation: pulse-winner 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse-winner {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+            }
+            50% {
+                transform: scale(1.02);
+                box-shadow: 0 0 50px rgba(255, 215, 0, 0.8);
+            }
+        }
+
+        .equipe-nom {
+            font-size: 1.5rem;
+            font-weight: 700;
+            opacity: 0.8;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        .combattant-nom {
+            font-size: 3rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+        }
+
+        .categorie {
+            font-size: 1.2rem;
+            opacity: 0.7;
+            font-weight: 400;
+        }
+
+        /* Séparateur VS */
+        .vs-separator {
+            font-size: 4rem;
+            font-weight: 900;
+            opacity: 0.5;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+        }
+
+        /* Scores */
+        .scores-zone {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 3rem;
+            margin: 3rem 0;
+        }
+
+        .score-block {
+            text-align: center;
+            min-width: 200px;
+        }
+
+        .score-label {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            opacity: 0.8;
+        }
+
+        .score-badges {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .badge {
+            padding: 0.8rem 2rem;
+            border-radius: 8px;
+            font-size: 1.8rem;
+            font-weight: 900;
+            min-width: 200px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .badge-ippon {
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #8b7300;
+            animation: glow-gold 2s ease-in-out infinite;
+        }
+
+        @keyframes glow-gold {
+            0%, 100% { box-shadow: 0 4px 15px rgba(255, 215, 0, 0.5); }
+            50% { box-shadow: 0 4px 30px rgba(255, 215, 0, 0.9); }
+        }
+
+        .badge-wazari {
+            background: linear-gradient(135deg, #42a5f5, #1e88e5);
+            color: white;
+        }
+
+        .badge-yuko {
+            background: linear-gradient(135deg, #66bb6a, #43a047);
+            color: white;
+        }
+
+        .badge-shido {
+            background: linear-gradient(135deg, #757575, #424242);
+            color: white;
+        }
+
+        /* Timer central */
+        .timer-zone {
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .etat-combat {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            padding: 0.5rem 2rem;
+            display: inline-block;
+            border-radius: 25px;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .etat-combat.en-cours {
+            background: linear-gradient(135deg, #66bb6a, #43a047);
+            animation: pulse-etat 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse-etat {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .etat-combat.termine {
+            background: linear-gradient(135deg, #e53935, #c62828);
+        }
+
+        .timer-display {
+            font-size: 8rem;
+            font-weight: 900;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+            font-variant-numeric: tabular-nums;
+            letter-spacing: 5px;
+        }
+
+        .timer-display.warning {
+            color: #ffeb3b;
+            animation: blink-warning 1s ease-in-out infinite;
+        }
+
+        .timer-display.danger {
+            color: #e53935;
+            animation: blink-danger 0.5s ease-in-out infinite;
+        }
+
+        @keyframes blink-warning {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        @keyframes blink-danger {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Osaekomi */
+        .osaekomi-display {
+            display: none;
+            margin-top: 2rem;
+            padding: 2rem;
+            background: rgba(255, 152, 0, 0.9);
+            border-radius: 12px;
+            animation: pulse-osaekomi 1s ease-in-out infinite;
+        }
+
+        .osaekomi-display.active {
+            display: block;
+        }
+
+        @keyframes pulse-osaekomi {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 0 20px rgba(255, 152, 0, 0.5);
+            }
+            50% {
+                transform: scale(1.02);
+                box-shadow: 0 0 40px rgba(255, 152, 0, 0.8);
+            }
+        }
+
+        .osaekomi-label {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+        }
+
+        .osaekomi-timer {
+            font-size: 6rem;
+            font-weight: 900;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .osaekomi-cote {
+            font-size: 1.8rem;
+            margin-top: 0.5rem;
+            opacity: 0.9;
+        }
+
+        /* Score de confrontation */
+        .confrontation-score {
+            text-align: center;
+            margin-top: 2rem;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+        }
+
+        .confrontation-label {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            margin-bottom: 0.5rem;
+        }
+
+        .confrontation-value {
+            font-size: 3rem;
+            font-weight: 900;
+        }
+
+        /* Message de fin */
+        .fin-message {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.95);
+            padding: 4rem 6rem;
+            border-radius: 20px;
+            text-align: center;
+            border: 5px solid #ffd700;
+            z-index: 1000;
+            animation: fade-in 0.5s ease-out;
+        }
+
+        .fin-message.show {
+            display: block;
+        }
+
+        @keyframes fade-in {
+            from { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+            to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        }
+
+        .fin-message h1 {
+            font-size: 5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            color: #ffd700;
+            text-transform: uppercase;
+        }
+
+        .fin-message p {
+            font-size: 2rem;
+            opacity: 0.9;
+        }
+
+        /* État vide */
+        .empty-state {
+            text-align: center;
+            padding: 4rem;
+        }
+
+        .empty-state i {
+            font-size: 8rem;
+            opacity: 0.3;
+            margin-bottom: 2rem;
+        }
+
+        .empty-state h2 {
+            font-size: 3rem;
+            opacity: 0.5;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .combattant-nom { font-size: 2.5rem; }
+            .timer-display { font-size: 6rem; }
+            .badge { font-size: 1.5rem; min-width: 150px; }
+        }
+
+        @media (max-width: 768px) {
+            .combattants { flex-direction: column; gap: 1rem; }
+            .vs-separator { font-size: 3rem; }
+            .combattant-nom { font-size: 2rem; }
+            .timer-display { font-size: 4rem; }
+            .scores-zone { flex-direction: column; gap: 1rem; }
+        }
+    </style>
+</head>
+
+<body>
+<!-- Header -->
+<div class="header">
+    <div class="tatami-name" id="tatamiName">TATAMI 1</div>
+    <div class="competition-info" id="competitionInfo">Tournoi Judo</div>
+</div>
+
+<!-- Zone de combat -->
+<div class="combat-container" id="combatContainer">
+    <!-- État vide -->
+    <div class="empty-state" id="emptyState">
+        <div style="font-size: 8rem;">🥋</div>
+        <h2>En attente d'un combat</h2>
+    </div>
+
+    <!-- Combat actif -->
+    <div id="combatActif" style="display: none;">
+        <!-- Combattants -->
+        <div class="combattants">
+            <div class="combattant rouge" id="combattantRouge">
+                <div class="equipe-nom" id="equipeRouge">Équipe Rouge</div>
+                <div class="combattant-nom" id="nomRouge">COMBATTANT</div>
+                <div class="categorie" id="categorieRouge">-73 kg</div>
+            </div>
+
+            <div class="vs-separator">VS</div>
+
+            <div class="combattant bleu" id="combattantBleu">
+                <div class="equipe-nom" id="equipeBleu">Équipe Bleue</div>
+                <div class="combattant-nom" id="nomBleu">COMBATTANT</div>
+                <div class="categorie" id="categorieBleu">-73 kg</div>
+            </div>
+        </div>
+
+        <!-- Scores -->
+        <div class="scores-zone">
+            <div class="score-block">
+                <div class="score-label">ROUGE</div>
+                <div class="score-badges" id="scoresRouge">
+                    <!-- Badges dynamiques -->
+                </div>
+            </div>
+
+            <div class="score-block">
+                <div class="score-label">BLEU</div>
+                <div class="score-badges" id="scoresBleu">
+                    <!-- Badges dynamiques -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Timer -->
+        <div class="timer-zone">
+            <div class="etat-combat" id="etatCombat">EN COURS</div>
+            <div class="timer-display" id="timerDisplay">4:00</div>
+
+            <!-- Osaekomi -->
+            <div class="osaekomi-display" id="osaekomoDisplay">
+                <div class="osaekomi-label">OSAEKOMI</div>
+                <div class="osaekomi-timer" id="osaekomoTimer">00</div>
+                <div class="osaekomi-cote" id="osaekomoCote"></div>
+            </div>
+        </div>
+
+        <!-- Score de confrontation -->
+        <div class="confrontation-score">
+            <div class="confrontation-label">Score de la rencontre</div>
+            <div class="confrontation-value" id="confrontationScore">0 - 0</div>
+        </div>
+    </div>
+</div>
+
+<!-- Message de fin -->
+<div class="fin-message" id="finMessage">
+    <h1 id="finTitre">VICTOIRE !</h1>
+    <p id="finDetails">Par Ippon</p>
+</div>
+
+<!-- Scripts -->
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    // Configuration
+    const socket = io();
+    const urlParams = new URLSearchParams(window.location.search);
+    const tatamiId = parseInt(urlParams.get('tatami'));
+
+    let combat = null;
+    let tatami = null;
+    let osaekomiTimer = 0;
+    let osaekomiInterval = null;
+
+    let timerLocal = 0;           // Timer local pour affichage
+    let timerInterval = null;     // Intervalle du compteur
+
+    // Initialisation
+    if (!tatamiId) {
+        document.getElementById('emptyState').innerHTML = `
+                <div style="font-size: 8rem;">⚠️</div>
+                <h2>ID de tatami manquant</h2>
+                <p style="font-size: 1.5rem; margin-top: 1rem; opacity: 0.5;">
+                    Ajoutez ?tatami=ID à l'URL
+                </p>
+            `;
+    } else {
+        loadData();
+        setupWebSocket();
+
+        // Actualiser toutes les 5 secondes
+        //setInterval(loadData, 5000);
+    }
+
+    // Chargement des données
+    async function loadData() {
+        try {
+            const [tatamiResponse, combatResponse] = await Promise.all([
+                fetch(`/api/tatamis/${tatamiId}`),
+                fetch(`/api/tatamis/${tatamiId}/combat-actuel`)
+            ]);
+
+            if (tatamiResponse.ok) {
+                tatami = await tatamiResponse.json();
+                updateTatamiInfo();
+            }
+
+            if (combatResponse.ok) {
+                const combatData = await combatResponse.json();
+                combat = combatData;
+                updateCombatDisplay();
+            } else {
+                showEmptyState();
+            }
+        } catch (error) {
+            console.error('Erreur chargement:', error);
+        }
+    }
+
+    // Mise à jour du tatami
+    function updateTatamiInfo() {
+        if (!tatami) return;
+
+        document.getElementById('tatamiName').textContent = tatami.nom.toUpperCase();
+
+        const score = tatami.scoreConfrontation || { rouge: 0, bleu: 0 };
+        document.getElementById('confrontationScore').textContent =
+            `${score.rouge} - ${score.bleu}`;
+    }
+
+    // Affichage du combat
+    function updateCombatDisplay() {
+        if (!combat) {
+            showEmptyState();
+            return;
+        }
+
+        document.getElementById('emptyState').style.display = 'none';
+        document.getElementById('combatActif').style.display = 'block';
+
+        // Combattants
+        document.getElementById('nomRouge').textContent =
+            (combat.rouge?.nom || 'ROUGE').toUpperCase();
+        document.getElementById('equipeRouge').textContent =
+            (combat.rouge?.equipe || 'Équipe').toUpperCase();
+        document.getElementById('categorieRouge').textContent =
+            `${combat.rouge?.sexe || ''} ${combat.rouge?.poids || ''}`;
+
+        document.getElementById('nomBleu').textContent =
+            (combat.bleu?.nom || 'BLEU').toUpperCase();
+        document.getElementById('equipeBleu').textContent =
+            (combat.bleu?.equipe || 'Équipe').toUpperCase();
+        document.getElementById('categorieBleu').textContent =
+            `${combat.bleu?.sexe || ''} ${combat.bleu?.poids || ''}`;
+
+        // Scores
+        updateScores();
+
+        // Timer
+        syncTimer();
+
+        // État
+        updateEtat();
+
+        // Vainqueur
+        updateVainqueur();
+    }
+
+    // Mise à jour des scores
+    function updateScores() {
+        // Rouge
+        let htmlRouge = '';
+        if (combat.ipponRouge || combat.rouge?.ippon) {
+            htmlRouge = '<div class="badge badge-ippon">IPPON</div>';
+        } else {
+            const wazari = combat.wazariRouge || combat.rouge?.wazari || 0;
+            const yuko = combat.yukoRouge || combat.rouge?.yuko || 0;
+
+            if (wazari > 0) {
+                htmlRouge += `<div class="badge badge-wazari">${wazari} WAZARI</div>`;
+            }
+            if (yuko > 0) {
+                htmlRouge += `<div class="badge badge-yuko">${yuko} YUKO</div>`;
+            }
+        }
+
+        const shidoRouge = combat.penalitesRouge || combat.rouge?.shido || 0;
+        if (shidoRouge > 0) {
+            htmlRouge += `<div class="badge badge-shido">${shidoRouge} SHIDO</div>`;
+        }
+
+        if (!htmlRouge) {
+            htmlRouge = '<div class="badge" style="background: rgba(255,255,255,0.1);">-</div>';
+        }
+
+        document.getElementById('scoresRouge').innerHTML = htmlRouge;
+
+        // Bleu
+        let htmlBleu = '';
+        if (combat.ipponBleu || combat.bleu?.ippon) {
+            htmlBleu = '<div class="badge badge-ippon">IPPON</div>';
+        } else {
+            const wazari = combat.wazariBleu || combat.bleu?.wazari || 0;
+            const yuko = combat.yukoBleu || combat.bleu?.yuko || 0;
+
+            if (wazari > 0) {
+                htmlBleu += `<div class="badge badge-wazari">${wazari} WAZARI</div>`;
+            }
+            if (yuko > 0) {
+                htmlBleu += `<div class="badge badge-yuko">${yuko} YUKO</div>`;
+            }
+        }
+
+        const shidoBleu = combat.penalitesBleu || combat.bleu?.shido || 0;
+        if (shidoBleu > 0) {
+            htmlBleu += `<div class="badge badge-shido">${shidoBleu} SHIDO</div>`;
+        }
+
+        if (!htmlBleu) {
+            htmlBleu = '<div class="badge" style="background: rgba(255,255,255,0.1);">-</div>';
+        }
+
+        document.getElementById('scoresBleu').innerHTML = htmlBleu;
+    }
+
+    // Mise à jour du timer
+    function updateTimer() {
+        const timer = timerLocal;
+        const minutes = Math.floor(timer / 60);
+        const seconds = timer % 60;
+        const timeStr = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+
+        const timerEl = document.getElementById('timerDisplay');
+        timerEl.textContent = timeStr;
+
+        timerEl.className = 'timer-display';
+        if (timer <= 10) {
+            timerEl.classList.add('danger');
+        } else if (timer <= 30) {
+            timerEl.classList.add('warning');
+        }
+    }
+
+    // Démarrer le timer local
+    function startTimerLocal() {
+        stopTimerLocal(); // Arrêter si déjà actif
+
+        timerInterval = setInterval(() => {
+            if (timerLocal > 0) {
+                timerLocal--;
+                updateTimer();
+            } else {
+                stopTimerLocal();
+            }
+        }, 1000);
+    }
+
+    // Arrêter le timer local
+    function stopTimerLocal() {
+        if (timerInterval) {
+            clearInterval(timerInterval);
+            timerInterval = null;
+        }
+    }
+
+    // Synchroniser le timer avec le combat
+    function syncTimer() {
+        if (!combat) return;
+
+        // Récupérer le timer du backend
+        timerLocal = combat.timer || 0;
+        updateTimer();
+
+        // Démarrer le défilement si combat en cours
+        if (combat.etat === 'en cours') {
+            startTimerLocal();
+        } else {
+            stopTimerLocal();
+        }
+    }
+
+
+    // Mise à jour de l'état
+    function updateEtat() {
+        const etat = combat.etat || 'prévu';
+        const etatEl = document.getElementById('etatCombat');
+
+        etatEl.textContent = etat.toUpperCase();
+        etatEl.className = 'etat-combat';
+
+        if (etat === 'en cours') {
+            etatEl.classList.add('en-cours');
+        } else if (etat === 'terminé') {
+            etatEl.classList.add('termine');
+        }
+    }
+
+    // Mise à jour vainqueur
+    function updateVainqueur() {
+        const rougeEl = document.getElementById('combattantRouge');
+        const bleuEl = document.getElementById('combattantBleu');
+
+        rougeEl.classList.remove('vainqueur');
+        bleuEl.classList.remove('vainqueur');
+
+        if (combat.etat === 'terminé' && combat.vainqueur) {
+            if (combat.vainqueur === 'rouge') {
+                rougeEl.classList.add('vainqueur');
+            } else if (combat.vainqueur === 'bleu') {
+                bleuEl.classList.add('vainqueur');
+            }
+
+            showFinMessage();
+        } else {
+            document.getElementById('finMessage').classList.remove('show');
+        }
+    }
+
+    // Message de fin
+    function showFinMessage() {
+        const vainqueurNom = combat.vainqueur === 'rouge' ?
+            combat.rouge?.nom : combat.bleu?.nom;
+
+        const raisons = {
+            'ippon': 'Par IPPON',
+            'double_wazari': 'Par double WAZARI',
+            'disqualification': 'Par disqualification',
+            'temps_ecoule': 'Aux points',
+            'osaekomi_ippon': 'Par IPPON (Osaekomi)'
+        };
+
+        document.getElementById('finTitre').textContent =
+            `${vainqueurNom?.toUpperCase() || 'VICTOIRE'} !`;
+        document.getElementById('finDetails').textContent =
+            raisons[combat.raisonFin] || combat.raisonFin || '';
+
+        document.getElementById('finMessage').classList.add('show');
+
+        // Masquer après 5 secondes
+        setTimeout(() => {
+            document.getElementById('finMessage').classList.remove('show');
+        }, 5000);
+    }
+
+    // État vide
+    function showEmptyState() {
+        document.getElementById('emptyState').style.display = 'block';
+        document.getElementById('combatActif').style.display = 'none';
+    }
+
+    // WebSocket
+    function setupWebSocket() {
+        // ⚠️ AJOUTER : Rejoindre la room du tatami spécifique
+        socket.emit('join-tatami', tatamiId);
+
+        socket.on('connect', () => {
+            console.log('✅ Connecté au WebSocket');
+            // Rejoindre à nouveau la room en cas de reconnexion
+            socket.emit('join-tatami', tatamiId);
+        });
+
+        socket.on('combats:update', (data) => {
+            // ⚠️ OPTIMISATION : Ne traiter que si c'est notre tatami
+            if (data.tatamiId === tatamiId && data.combat && data.combat.id === combat?.id) {
+                const oldEtat = combat?.etat;
+                combat = data.combat;
+
+                if (oldEtat !== combat.etat) {
+                    syncTimer();
+                }
+
+                updateCombatDisplay();
+            }
+        });
+
+        socket.on('tatamis:update', (data) => {
+            if (data.tatami && data.tatami.id === tatamiId) {
+                tatami = data.tatami;
+                updateTatamiInfo();
+            }
+        });
+
+        socket.on('osaekomi:update', (data) => {
+            if (data.tatamiId === tatamiId) {
+                const osaekomoDisplay = document.getElementById('osaekomoDisplay');
+                osaekomoDisplay.classList.add('active');
+                document.getElementById('osaekomoTimer').textContent =
+                    data.osaekomiCounter.toString().padStart(2, '0');
+                document.getElementById('osaekomoCote').textContent =
+                    data.osaekomiCote?.toUpperCase() || '';
+            }
+        });
+
+        socket.on('osaekomi:stop', (data) => {
+            if (data.tatamiId === tatamiId) {
+                document.getElementById('osaekomoDisplay').classList.remove('active');
+            }
+        });
+    }
+</script>
+</body>
+</html>

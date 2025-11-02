@@ -1,0 +1,1529 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tableau Éliminatoire - Judo Manager</title>
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #1976d2;
+            --secondary-color: #424242;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --danger-color: #f44336;
+            --light-bg: #fafafa;
+            --gold: #ffd700;
+            --silver: #c0c0c0;
+            --bronze: #cd7f32;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .navbar {
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .main-card {
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border: none;
+        }
+
+        .tableau-container {
+            padding: 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 2rem;
+            overflow-x: auto;
+        }
+
+        .phase-section {
+            margin-bottom: 3rem;
+        }
+
+        .phase-title {
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .phase-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(135deg, var(--primary-color), #42a5f5);
+            border-radius: 2px;
+        }
+
+        .matches-grid {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .match-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 1.5rem;
+            min-width: 280px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .match-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .match-card.terminé {
+            border-color: var(--success-color);
+            background: linear-gradient(135deg, #f8fff8, #e8f5e8);
+        }
+
+        .match-card.en_cours {
+            border-color: var(--primary-color);
+            background: linear-gradient(135deg, #f0f7ff, #e3f2fd);
+            animation: pulse-border 2s infinite;
+        }
+
+        .match-card.assignable {
+            border-color: var(--warning-color);
+            background: linear-gradient(135deg, #fff8e1, #ffecb3);
+        }
+
+        @keyframes pulse-border {
+            0%, 100% { border-color: var(--primary-color); }
+            50% { border-color: #42a5f5; }
+        }
+
+        .match-header {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .match-number {
+            font-size: 0.9rem;
+            color: #6c757d;
+            font-weight: 500;
+        }
+
+        .equipes-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .equipe-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+
+        .equipe-item.vainqueur {
+            background: linear-gradient(135deg, #e8f5e8, #c8e6c8);
+            border-color: var(--success-color);
+            font-weight: bold;
+        }
+
+        .equipe-item.perdant {
+            background: #f8f9fa;
+            color: #6c757d;
+        }
+
+        .equipe-nom {
+            flex: 1;
+            font-weight: 500;
+        }
+
+        .equipe-nom.vide {
+            color: #6c757d;
+            font-style: italic;
+        }
+
+        .score-input {
+            width: 60px;
+            text-align: center;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            margin-left: 1rem;
+        }
+
+        .vs-separator {
+            text-align: center;
+            color: #6c757d;
+            font-weight: bold;
+            margin: 0.5rem 0;
+        }
+
+        .match-actions {
+            margin-top: 1rem;
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-assign {
+            background: linear-gradient(135deg, var(--warning-color), #ffb74d);
+            border: none;
+            color: white;
+            font-weight: 500;
+        }
+
+        .btn-assign:hover {
+            background: linear-gradient(135deg, #f57c00, var(--warning-color));
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .trophy-icon {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: var(--gold);
+            font-size: 1.2rem;
+        }
+
+        .finalist-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--silver);
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
+        .generator-section {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border: 2px dashed #dee2e6;
+            border-radius: 12px;
+            padding: 3rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .generator-section:hover {
+            border-color: var(--primary-color);
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+        }
+
+        .qualifiées-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .qualifiée-card {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .qualifiée-card:hover {
+            border-color: var(--primary-color);
+            background: #f0f7ff;
+        }
+
+        .qualifiée-card.selected {
+            border-color: var(--success-color);
+            background: #e8f5e8;
+        }
+
+        .rang-badge {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-right: 0.5rem;
+        }
+
+        .rang-1 { background: var(--gold); color: #8b7300; }
+        .rang-2 { background: var(--silver); color: #4a4a4a; }
+        .rang-3 { background: var(--bronze); color: #744210; }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: #6c757d;
+        }
+
+        .phase-flow {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .flow-arrow {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin: 0 1rem;
+        }
+
+        .flow-phase {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .flow-phase.active {
+            border-color: var(--primary-color);
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .flow-phase.completed {
+            border-color: var(--success-color);
+            background: var(--success-color);
+            color: white;
+        }
+
+        .stats-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        .podium {
+            display: flex;
+            justify-content: center;
+            align-items: end;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .podium-place {
+            text-align: center;
+            padding: 1.5rem 1rem;
+            border-radius: 12px;
+            min-width: 150px;
+            transition: all 0.3s ease;
+        }
+
+        .podium-1 {
+            background: linear-gradient(135deg, var(--gold), #ffed4a);
+            color: #8b7300;
+            transform: scale(1.1);
+            order: 2;
+        }
+
+        .podium-2 {
+            background: linear-gradient(135deg, var(--silver), #e2e8f0);
+            color: #4a5568;
+            order: 1;
+        }
+
+        .podium-3 {
+            background: linear-gradient(135deg, var(--bronze), #d69e2e);
+            color: #744210;
+            order: 3;
+        }
+
+        .podium-nom {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .podium-titre {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .fab-button {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, var(--primary-color), #42a5f5);
+            color: white;
+            font-size: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .fab-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #e9ecef;
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .matches-grid {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .match-card {
+                min-width: auto;
+                width: 100%;
+                max-width: 400px;
+            }
+
+            .match-actions {
+                flex-direction: column;
+            }
+
+            .match-actions .btn {
+                width: 100%;
+            }
+
+            .phase-flow {
+                flex-direction: column;
+            }
+
+            .flow-arrow {
+                transform: rotate(90deg);
+                margin: 0.5rem 0;
+            }
+
+            .podium {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .podium-place {
+                order: unset !important;
+                transform: none !important;
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white">
+    <div class="container-fluid">
+        <a class="navbar-brand fw-bold text-primary" href="dashboard_moderne.html">
+            <i class="fas fa-arrow-left me-2"></i>Tableau Éliminatoire
+        </a>
+
+        <div class="d-flex align-items-center">
+            <span class="badge bg-success me-3" id="statusIndicator">
+                <i class="fas fa-circle me-1"></i>Connecté
+            </span>
+        </div>
+    </div>
+</nav>
+
+<!-- Main Content -->
+<div class="container-fluid py-4">
+    <!-- Header avec actions -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h2 class="fw-light mb-1">Tableau Éliminatoire</h2>
+            <p class="text-muted">Gérez les phases finales de la compétition</p>
+        </div>
+        <div class="col-md-6 text-end">
+            <button class="btn btn-outline-info me-2" id="refreshBtn">
+                <i class="fas fa-sync me-2"></i>Actualiser
+            </button>
+            <button class="btn btn-outline-danger me-2" id="resetTableauBtn">
+                <i class="fas fa-trash me-2"></i>Réinitialiser
+            </button>
+            <button class="btn btn-primary" id="genererTableauBtn">
+                <i class="fas fa-trophy me-2"></i>Générer tableau
+            </button>
+        </div>
+    </div>
+
+    <!-- Statistiques -->
+    <div class="stats-summary">
+        <div class="stat-card">
+            <div class="stat-number text-primary" id="statEquipesQualifiees">0</div>
+            <div class="stat-label">Équipes qualifiées</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number text-warning" id="statMatchsTotal">0</div>
+            <div class="stat-label">Matchs total</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number text-success" id="statMatchsTermines">0</div>
+            <div class="stat-label">Matchs terminés</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number text-info" id="statPhaseActuelle">-</div>
+            <div class="stat-label">Phase actuelle</div>
+        </div>
+    </div>
+
+    <!-- Contenu principal -->
+    <div id="mainContent">
+        <!-- État vide par défaut -->
+        <div id="emptyState" class="generator-section">
+            <i class="fas fa-trophy fa-4x mb-3 text-muted"></i>
+            <h4 class="mb-2">Tableau éliminatoire non généré</h4>
+            <p class="text-muted mb-3">Sélectionnez les équipes qualifiées des poules pour créer le tableau final</p>
+            <button class="btn btn-primary btn-lg" id="genererTableauBtn2">
+                <i class="fas fa-trophy me-2"></i>Générer le tableau
+            </button>
+        </div>
+
+        <!-- Contenu du tableau -->
+        <div id="tableauContent" class="d-none">
+            <!-- Flux des phases -->
+            <div class="phase-flow" id="phaseFlow"></div>
+
+            <!-- Podium (visible seulement quand finale terminée) -->
+            <div id="podiumSection" class="d-none">
+                <h3 class="text-center mb-4">
+                    <i class="fas fa-trophy text-warning me-2"></i>Podium Final
+                </h3>
+                <div class="podium" id="podiumContainer"></div>
+            </div>
+
+            <!-- Phases du tableau -->
+            <div id="phasesContainer"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Bouton FAB -->
+<button class="fab-button" onclick="showQuickActions()">
+    <i class="fas fa-plus"></i>
+</button>
+
+<!-- Modal Génération Tableau -->
+<div class="modal fade" id="modalGenerateur" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-trophy me-2"></i>Générer le tableau éliminatoire
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="formGenerateur">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Équipes qualifiées pour les phases finales</label>
+                        <p class="text-muted small">Sélectionnez les équipes qui accèdent au tableau éliminatoire (basé sur les classements de poules)</p>
+                    </div>
+
+                    <div id="equipesQualifieesContainer">
+                        <!-- Contenu dynamique -->
+                    </div>
+
+                    <div class="alert alert-info mt-3">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Le système déterminera automatiquement la phase de départ selon le nombre d'équipes sélectionnées
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-trophy me-2"></i>Créer le tableau
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Assignation Tatami -->
+<div class="modal fade" id="modalAssignationTableau" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-layer-group me-2"></i>Assigner au tatami
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="formAssignationTableau">
+                <div class="modal-body">
+                    <input type="hidden" id="assignPhase">
+                    <input type="hidden" id="assignMatchId">
+
+                    <div class="mb-3">
+                        <label class="form-label">Match à assigner</label>
+                        <div id="assignMatchInfo" class="p-2 bg-light rounded">
+                            <!-- Info dynamique -->
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="tatamisList" class="form-label">Sélectionner un tatami</label>
+                        <select class="form-select" id="tatamisList" required>
+                            <option value="">-- Choisir un tatami --</option>
+                        </select>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Cette action créera les combats entre les équipes et les assignera au tatami sélectionné.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-warning">
+                        <i class="fas fa-layer-group me-2"></i>Assigner
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Résultat Match -->
+<div class="modal fade" id="modalResultat" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-edit me-2"></i>Résultat du match
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="formResultat">
+                <div class="modal-body">
+                    <input type="hidden" id="matchPhase">
+                    <input type="hidden" id="matchId">
+
+                    <div class="mb-3">
+                        <label class="form-label">Match</label>
+                        <div id="matchInfo" class="p-2 bg-light rounded">
+                            <!-- Info dynamique -->
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <label for="scoreA" class="form-label">Score Équipe A</label>
+                            <input type="number" id="scoreA" class="form-control" min="0" max="10" required>
+                        </div>
+                        <div class="col-6">
+                            <label for="scoreB" class="form-label">Score Équipe B</label>
+                            <input type="number" id="scoreB" class="form-control" min="0" max="10" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="vainqueurSelect" class="form-label">Vainqueur</label>
+                        <select class="form-select" id="vainqueurSelect" required>
+                            <option value="">-- Déterminé automatiquement --</option>
+                            <option value="A">Équipe A</option>
+                            <option value="B">Équipe B</option>
+                        </select>
+                        <small class="form-text text-muted">Le vainqueur est généralement déterminé par le score le plus élevé</small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-2"></i>Enregistrer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+
+<script>
+    // Variables globales
+    const socket = io();
+    let tableau = null;
+    let classementGeneral = [];
+    let equipes = [];
+    let tatamis = [];
+    let selectedEquipes = [];
+
+    // Initialisation
+    document.addEventListener('DOMContentLoaded', function() {
+        loadData();
+        setupEventListeners();
+        setupWebSocket();
+        startScorePolling();
+    });
+
+    // Chargement des données
+    async function loadData() {
+        try {
+            const [tableauData, classementData, equipesData, tatamisData] = await Promise.all([
+                fetch('/api/tableau').then(r => r.json()),
+                fetch('/api/classement/general').then(r => r.json()),
+                fetch('/api/equipes').then(r => r.json()),
+                fetch('/api/tatamis').then(r => r.json())
+            ]);
+
+            tableau = tableauData;
+            classementGeneral = classementData;
+            equipes = equipesData;
+            tatamis = tatamisData;
+
+            renderTableau();
+            updateStats();
+            updateEquipesQualifiees();
+            updateTatamisList();
+        } catch (error) {
+            console.error('Erreur chargement:', error);
+            showNotification('Erreur de chargement des données', 'danger');
+        }
+    }
+
+    // Mise à jour de la liste des tatamis
+    function updateTatamisList() {
+        const select = document.getElementById('tatamisList');
+        select.innerHTML = '<option value="">-- Choisir un tatami --</option>';
+
+        tatamis.forEach(tatami => {
+            const option = document.createElement('option');
+            option.value = tatami.id;
+            option.textContent = `${tatami.nom} (${tatami.etat})`;
+            if (tatami.etat === 'occupé') {
+                option.disabled = true;
+                option.textContent += ' - Occupé';
+            }
+            select.appendChild(option);
+        });
+    }
+
+    // Rendu du tableau
+    function renderTableau() {
+        const emptyState = document.getElementById('emptyState');
+        const tableauContent = document.getElementById('tableauContent');
+
+        const hasMatches = Object.values(tableau).some(phase => phase.length > 0);
+
+        if (!hasMatches) {
+            emptyState.classList.remove('d-none');
+            tableauContent.classList.add('d-none');
+            return;
+        }
+
+        emptyState.classList.add('d-none');
+        tableauContent.classList.remove('d-none');
+
+        renderPhaseFlow();
+        renderPhases();
+        renderPodium();
+    }
+
+    // Rendu du flux des phases
+    function renderPhaseFlow() {
+        const container = document.getElementById('phaseFlow');
+        const phases = ['huitième', 'quart', 'demi', 'finale'];
+        const currentPhase = getCurrentPhase();
+
+        const html = phases.map((phase, index) => {
+            const hasMatches = tableau[phase] && tableau[phase].length > 0;
+            if (!hasMatches) return '';
+
+            const isCompleted = isPhaseCompleted(phase);
+            const isCurrent = phase === currentPhase;
+
+            let className = 'flow-phase';
+            if (isCompleted) className += ' completed';
+            else if (isCurrent) className += ' active';
+
+            return `
+                <div class="${className}">
+                    <i class="fas fa-${getPhaseIcon(phase)} me-1"></i>
+                    ${getPhaseLabel(phase)}
+                </div>
+                ${index < phases.length - 1 && tableau[phases[index + 1]]?.length > 0 ?
+                '<i class="fas fa-arrow-right flow-arrow"></i>' : ''}
+            `;
+        }).filter(Boolean).join('');
+
+        container.innerHTML = html;
+    }
+
+    // Rendu des phases
+    function renderPhases() {
+        const container = document.getElementById('phasesContainer');
+        const phases = ['huitième', 'quart', 'demi', 'finale'];
+
+        const html = phases.map(phase => {
+            if (!tableau[phase] || tableau[phase].length === 0) return '';
+
+            return `
+                <div class="phase-section">
+                    <h3 class="phase-title">
+                        <i class="fas fa-${getPhaseIcon(phase)} me-2"></i>
+                        ${getPhaseLabel(phase)}
+                    </h3>
+                    <div class="matches-grid">
+                        ${tableau[phase].map(match => createMatchCard(match, phase)).join('')}
+                    </div>
+                </div>
+            `;
+        }).filter(Boolean).join('');
+
+        container.innerHTML = html;
+    }
+
+    async function getMatchProgression(match) {
+        if (!match.combatsIds || match.combatsIds.length === 0) return 0;
+
+        try {
+            const combats = await fetch('/api/combats').then(r => r.json());
+            const combatsMatch = combats.filter(c => match.combatsIds.includes(c.id));
+            const termines = combatsMatch.filter(c => c.etat === 'terminé').length;
+
+            return Math.round((termines / match.combatsIds.length) * 100);
+        } catch {
+            return 0;
+        }
+    }
+
+    // Création d'une carte de match AVEC bouton d'assignation
+    function createMatchCard(match, phase) {
+        const isFinished = match.vainqueur !== null;
+        const hasAssignedCombats = match.combatsIds && match.combatsIds.length > 0;
+        const canBeAssigned = match.equipeA && match.equipeB && !isFinished && !hasAssignedCombats;
+
+        let cardClass = '';
+        if (isFinished) cardClass = 'terminé';
+        else if (hasAssignedCombats) cardClass = 'en_cours';
+        else if (canBeAssigned) cardClass = 'assignable';
+
+        return `
+            <div class="match-card ${cardClass}">
+                ${isFinished ? '<i class="fas fa-trophy trophy-icon"></i>' : ''}
+                ${phase === 'finale' && !isFinished && match.equipeA && match.equipeB ?
+            '<div class="finalist-badge">FINALE</div>' : ''}
+
+                <div class="match-header">
+                    <div class="match-number">Match ${match.id}</div>
+                    ${hasAssignedCombats ? `
+                        <small class="text-success">
+                            <i class="fas fa-layer-group me-1"></i>Assigné
+                        </small>
+                        ${!isFinished && match.combatsIds ? `
+                            <div class="progress mt-2" style="height: 6px;">
+                                <div class="progress-bar bg-success"
+                                     style="width: ${getMatchProgression(match)}%">
+                                </div>
+                            </div>
+                            <small class="text-muted">${getMatchProgression(match)}% terminé</small>
+                        ` : ''}
+                    ` : ''}
+                </div>
+
+                <div class="equipes-container">
+                    <div class="equipe-item ${match.vainqueur === 'A' ? 'vainqueur' : (isFinished ? 'perdant' : '')}">
+                        <div class="equipe-nom ${!match.equipeA ? 'vide' : ''}">
+                            ${match.equipeA ? getEquipeNom(match.equipeA) : 'En attente...'}
+                        </div>
+                       ${match.equipeA && (hasAssignedCombats || isFinished) ? `
+    <div class="d-flex align-items-center">
+        <input type="number" class="score-input" value="${match.scoreA || 0}"
+            onchange="updateScore('${phase}', ${match.id}, 'A', this.value)"
+            ${isFinished ? 'readonly' : ''}>
+        ${hasAssignedCombats && !isFinished ? `
+            <small class="text-muted ms-2">/  ${match.combatsIds ? match.combatsIds.length : 0}</small>
+        ` : ''}
+    </div>
+` : ''}
+                    </div>
+
+                    <div class="vs-separator">VS</div>
+
+                    <div class="equipe-item ${match.vainqueur === 'B' ? 'vainqueur' : (isFinished ? 'perdant' : '')}">
+                        <div class="equipe-nom ${!match.equipeB ? 'vide' : ''}">
+                            ${match.equipeB ? getEquipeNom(match.equipeB) : 'En attente...'}
+                        </div>
+                        ${match.equipeB && (hasAssignedCombats || isFinished) ? `
+                            <input type="number" class="score-input" value="${match.scoreB || 0}"
+                                onchange="updateScore('${phase}', ${match.id}, 'B', this.value)"
+                                ${isFinished ? 'readonly' : ''}>
+                        ` : ''}
+                    </div>
+                </div>
+
+                <!-- Actions du match -->
+                <div class="match-actions">
+                    ${canBeAssigned ? `
+                        <button class="btn btn-sm btn-warning btn-assign" onclick="openAssignationModal('${phase}', ${match.id})">
+                            <i class="fas fa-layer-group me-1"></i>Assigner au tatami
+                        </button>
+                    ` : ''}
+
+                    ${hasAssignedCombats && !isFinished ? `
+                        <button class="btn btn-sm btn-success" onclick="openResultatModal('${phase}', ${match.id})">
+                            <i class="fas fa-save me-1"></i>Saisir résultat
+                        </button>
+                    ` : ''}
+
+                    ${isFinished ? `
+                        <button class="btn btn-sm btn-outline-primary" onclick="editMatch('${phase}', ${match.id})">
+                            <i class="fas fa-edit me-1"></i>Modifier
+                        </button>
+                    ` : ''}
+
+                    ${hasAssignedCombats ? `
+                        <button class="btn btn-sm btn-outline-info" onclick="voirCombats('${phase}', ${match.id})">
+                            <i class="fas fa-eye me-1"></i>Voir combats
+                        </button>
+                    ` : ''}
+                </div>
+            </div>
+        `;
+    }
+
+    // Fonction pour ouvrir le modal d'assignation
+    function openAssignationModal(phase, matchId) {
+        const match = tableau[phase].find(m => m.id === matchId);
+        if (!match || !match.equipeA || !match.equipeB) {
+            showNotification('Match incomplet pour assignation', 'warning');
+            return;
+        }
+
+        document.getElementById('assignPhase').value = phase;
+        document.getElementById('assignMatchId').value = matchId;
+
+        document.getElementById('assignMatchInfo').innerHTML = `
+            <div class="d-flex justify-content-between align-items-center">
+                <strong>${getEquipeNom(match.equipeA)}</strong>
+                <span class="text-muted mx-2">vs</span>
+                <strong>${getEquipeNom(match.equipeB)}</strong>
+            </div>
+            <div class="text-center mt-1">
+                <small class="text-muted">${getPhaseLabel(phase)} - Match ${matchId}</small>
+            </div>
+        `;
+
+        const modal = new bootstrap.Modal(document.getElementById('modalAssignationTableau'));
+        modal.show();
+    }
+
+    // Fonction pour voir les combats d'un match
+    function voirCombats(phase, matchId) {
+        const match = tableau[phase].find(m => m.id === matchId);
+        if (match && match.tatamiId) {
+            window.open(`table_combat.html?tatami=${match.tatamiId}`, '_blank');
+        } else {
+            showNotification('Aucun tatami assigné à ce match', 'info');
+        }
+    }
+
+    // Rendu du podium
+    function renderPodium() {
+        const podiumSection = document.getElementById('podiumSection');
+        const container = document.getElementById('podiumContainer');
+
+        // Vérifier si la finale est terminée
+        const finale = tableau.finale?.[0];
+        if (!finale || !finale.vainqueur) {
+            podiumSection.classList.add('d-none');
+            return;
+        }
+
+        podiumSection.classList.remove('d-none');
+
+        const champion = finale.vainqueur === 'A' ? finale.equipeA : finale.equipeB;
+        const finaliste = finale.vainqueur === 'A' ? finale.equipeB : finale.equipeA;
+
+        // Pour la 3ème place, prendre les perdants des demi-finales
+        let troisiemes = [];
+        if (tableau.demi && tableau.demi.length >= 2) {
+            tableau.demi.forEach(demi => {
+                if (demi.vainqueur) {
+                    const perdant = demi.vainqueur === 'A' ? demi.equipeB : demi.equipeA;
+                    if (perdant) troisiemes.push(perdant);
+                }
+            });
+        }
+
+        const html = `
+            <div class="podium-place podium-1">
+                <i class="fas fa-trophy fa-2x mb-2"></i>
+                <div class="podium-nom">${getEquipeNom(champion)}</div>
+                <div class="podium-titre">Champion</div>
+            </div>
+
+            <div class="podium-place podium-2">
+                <i class="fas fa-medal fa-2x mb-2"></i>
+                <div class="podium-nom">${getEquipeNom(finaliste)}</div>
+                <div class="podium-titre">Finaliste</div>
+            </div>
+
+            ${troisiemes.length > 0 ? `
+                <div class="podium-place podium-3">
+                    <i class="fas fa-award fa-2x mb-2"></i>
+                    <div class="podium-nom">${getEquipeNom(troisiemes[0])}</div>
+                    <div class="podium-titre">3ème place</div>
+                </div>
+            ` : ''}
+        `;
+
+        container.innerHTML = html;
+    }
+
+    // Polling pour mettre à jour les scores des matchs en cours
+    let pollingInterval = null;
+    function startScorePolling() {
+        if (pollingInterval) clearInterval(pollingInterval);
+
+        pollingInterval = setInterval(async () => {
+            const phases = ['huitième', 'quart', 'demi', 'finale'];
+
+            for (const phase of phases) {
+                if (!tableau[phase]) continue;
+
+                for (const match of tableau[phase]) {
+                    if (match.combatsIds && match.combatsIds.length > 0 && !match.vainqueur) {
+                        try {
+                            const response = await fetch(`/api/tableau/${phase}/${match.id}/calculer-score`);
+                            if (response.ok) {
+                                const result = await response.json();
+
+                                // Mettre à jour l'affichage si le score a changé
+                                if (result.scoreA !== match.scoreA || result.scoreB !== match.scoreB) {
+                                    loadData(); // Recharger toutes les données
+                                    break;
+                                }
+                            }
+                        } catch (error) {
+                            console.error('Erreur polling score:', error);
+                        }
+                    }
+                }
+            }
+        }, 5000); // Toutes les 5 secondes
+    }
+
+    // Gestion de la soumission d'assignation
+    // Gestion de la soumission d'assignation
+    async function handleAssignationSubmit(e) {
+        e.preventDefault();
+
+        const phase = document.getElementById('assignPhase').value;
+        const matchId = parseInt(document.getElementById('assignMatchId').value);
+        const tatamiId = parseInt(document.getElementById('tatamisList').value);
+
+        if (!tatamiId) {
+            showNotification('Veuillez sélectionner un tatami', 'warning');
+            return;
+        }
+
+        const match = tableau[phase].find(m => m.id === matchId);
+        if (!match) {
+            showNotification('Match introuvable', 'danger');
+            return;
+        }
+
+        try {
+            // Utiliser directement la route tableau
+            const response = await fetch(`/api/tableau/assign/${phase}/${matchId}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ tatamiId: tatamiId })
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+
+                const modal = bootstrap.Modal.getInstance(document.getElementById('modalAssignationTableau'));
+                modal.hide();
+
+                showNotification(
+                    `Match assigné au tatami avec ${result.combatsCrees} combat(s) créé(s)`,
+                    'success'
+                );
+                loadData();
+            } else {
+                const error = await response.json();
+                showNotification(error.error || 'Erreur lors de l\'assignation', 'danger');
+            }
+        } catch (error) {
+            console.error('Erreur assignation:', error);
+            showNotification('Erreur de connexion', 'danger');
+        }
+    }
+
+    // Mise à jour des statistiques
+    function updateStats() {
+        let totalMatches = 0;
+        let matchesTermines = 0;
+        let equipesQualifiees = 0;
+        let phaseActuelle = '-';
+
+        Object.values(tableau).forEach(phase => {
+            if (phase.length > 0) {
+                totalMatches += phase.length;
+                matchesTermines += phase.filter(m => m.vainqueur !== null).length;
+                equipesQualifiees = Math.max(equipesQualifiees, phase.length * 2);
+            }
+        });
+
+        phaseActuelle = getCurrentPhase() || 'Terminé';
+
+        document.getElementById('statEquipesQualifiees').textContent = equipesQualifiees;
+        document.getElementById('statMatchsTotal').textContent = totalMatches;
+        document.getElementById('statMatchsTermines').textContent = matchesTermines;
+        document.getElementById('statPhaseActuelle').textContent = getPhaseLabel(phaseActuelle);
+    }
+
+    // Mise à jour des équipes qualifiées
+    function updateEquipesQualifiees() {
+        const container = document.getElementById('equipesQualifieesContainer');
+
+        if (classementGeneral.length === 0) {
+            container.innerHTML = `
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Aucun classement général disponible. Veuillez d'abord terminer les poules.
+                </div>
+            `;
+            return;
+        }
+
+        const html = `
+            <div class="mb-3">
+                <p class="small text-muted">Classement général des poules :</p>
+            </div>
+            <div class="qualifiées-grid">
+                ${classementGeneral.slice(0, 16).map((equipe, index) => `
+                    <div class="qualifiée-card ${selectedEquipes.includes(equipe.equipeId) ? 'selected' : ''}"
+                         onclick="toggleEquipeSelection('${equipe.equipeId}')">
+                        <div class="d-flex align-items-center mb-2">
+                            <span class="rang-badge ${index < 3 ? `rang-${index + 1}` : ''}">${index + 1}</span>
+                            <strong>${equipe.nom}</strong>
+                        </div>
+                        <div class="small text-muted">
+                            ${equipe.victoires}V • ${equipe.points}pts
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+            <div class="mt-3">
+                <p class="small text-muted">
+                    <i class="fas fa-info-circle me-1"></i>
+                    <span id="selectionCount">${selectedEquipes.length}</span> équipe(s) sélectionnée(s)
+                </p>
+            </div>
+        `;
+
+        container.innerHTML = html;
+    }
+
+    // Utilitaires
+    function getCurrentPhase() {
+        const phases = ['finale', 'demi', 'quart', 'huitième'];
+
+        for (const phase of phases) {
+            if (tableau[phase] && tableau[phase].length > 0) {
+                const hasIncomplete = tableau[phase].some(m => m.vainqueur === null && m.equipeA && m.equipeB);
+                if (hasIncomplete) return phase;
+            }
+        }
+
+        return phases[0]; // Par défaut finale
+    }
+
+    function isPhaseCompleted(phase) {
+        if (!tableau[phase] || tableau[phase].length === 0) return false;
+        return tableau[phase].every(m => m.vainqueur !== null);
+    }
+
+    function getPhaseIcon(phase) {
+        const icons = {
+            'huitième': 'list',
+            'quart': 'th',
+            'demi': 'crown',
+            'finale': 'trophy'
+        };
+        return icons[phase] || 'circle';
+    }
+
+    function getPhaseLabel(phase) {
+        const labels = {
+            'huitième': 'Huitièmes',
+            'quart': 'Quarts de finale',
+            'demi': 'Demi-finales',
+            'finale': 'Finale'
+        };
+        return labels[phase] || phase;
+    }
+
+    function getEquipeNom(equipeId) {
+        const equipe = equipes.find(e => e.id === equipeId);
+        return equipe ? equipe.nom : equipeId;
+    }
+
+    function toggleEquipeSelection(equipeId) {
+        const index = selectedEquipes.indexOf(equipeId);
+        if (index > -1) {
+            selectedEquipes.splice(index, 1);
+        } else {
+            selectedEquipes.push(equipeId);
+        }
+        updateEquipesQualifiees();
+    }
+
+    // Actions
+    async function updateScore(phase, matchId, equipe, score) {
+        try {
+            const scoreData = {};
+            scoreData[`score${equipe}`] = parseInt(score) || 0;
+
+            const response = await fetch(`/api/tableau/${phase}/${matchId}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(scoreData)
+            });
+
+            if (response.ok) {
+                loadData(); // Recharger pour mettre à jour l'affichage
+            }
+        } catch (error) {
+            console.error('Erreur mise à jour score:', error);
+        }
+    }
+
+    function openResultatModal(phase, matchId) {
+        const match = tableau[phase].find(m => m.id === matchId);
+        if (!match) return;
+
+        document.getElementById('matchPhase').value = phase;
+        document.getElementById('matchId').value = matchId;
+        document.getElementById('scoreA').value = match.scoreA || 0;
+        document.getElementById('scoreB').value = match.scoreB || 0;
+        document.getElementById('vainqueurSelect').value = match.vainqueur || '';
+
+        document.getElementById('matchInfo').innerHTML = `
+            <div class="d-flex justify-content-between align-items-center">
+                <strong>${getEquipeNom(match.equipeA)}</strong>
+                <span class="text-muted">vs</span>
+                <strong>${getEquipeNom(match.equipeB)}</strong>
+            </div>
+            <div class="text-center mt-1">
+                <small class="text-muted">${getPhaseLabel(phase)} - Match ${matchId}</small>
+            </div>
+        `;
+
+        const modal = new bootstrap.Modal(document.getElementById('modalResultat'));
+        modal.show();
+    }
+
+    function editMatch(phase, matchId) {
+        openResultatModal(phase, matchId);
+    }
+
+    // Configuration des événements
+    function setupEventListeners() {
+        // Génération tableau
+        document.getElementById('formGenerateur').addEventListener('submit', handleGenerateurSubmit);
+        document.getElementById('genererTableauBtn').addEventListener('click', () => {
+            const modal = new bootstrap.Modal(document.getElementById('modalGenerateur'));
+            modal.show();
+        });
+        document.getElementById('genererTableauBtn2').addEventListener('click', () => {
+            const modal = new bootstrap.Modal(document.getElementById('modalGenerateur'));
+            modal.show();
+        });
+
+        // Assignation tableau
+        document.getElementById('formAssignationTableau').addEventListener('submit', handleAssignationSubmit);
+
+        // Résultat match
+        document.getElementById('formResultat').addEventListener('submit', handleResultatSubmit);
+
+        // Refresh
+        document.getElementById('refreshBtn').addEventListener('click', () => {
+            loadData();
+            showNotification('Données actualisées', 'info');
+        });
+
+        // Reset tableau
+        document.getElementById('resetTableauBtn').addEventListener('click', handleResetTableau);
+
+        // Auto-détermination vainqueur
+        document.getElementById('scoreA').addEventListener('input', updateVainqueurAuto);
+        document.getElementById('scoreB').addEventListener('input', updateVainqueurAuto);
+    }
+
+    function updateVainqueurAuto() {
+        const scoreA = parseInt(document.getElementById('scoreA').value) || 0;
+        const scoreB = parseInt(document.getElementById('scoreB').value) || 0;
+
+        const vainqueurSelect = document.getElementById('vainqueurSelect');
+        if (scoreA > scoreB) {
+            vainqueurSelect.value = 'A';
+        } else if (scoreB > scoreA) {
+            vainqueurSelect.value = 'B';
+        } else {
+            vainqueurSelect.value = '';
+        }
+    }
+
+    // Soumission génération tableau
+    async function handleGenerateurSubmit(e) {
+        e.preventDefault();
+
+        if (selectedEquipes.length < 2) {
+            showNotification('Sélectionnez au moins 2 équipes', 'warning');
+            return;
+        }
+
+        if (selectedEquipes.length > 16) {
+            showNotification('Maximum 16 équipes pour le tableau', 'warning');
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/tableau', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ qualifiees: selectedEquipes })
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                const modal = bootstrap.Modal.getInstance(document.getElementById('modalGenerateur'));
+                modal.hide();
+
+                showNotification(`Tableau créé ! Phase de départ: ${getPhaseLabel(result.startPhase)}`, 'success');
+                loadData();
+                selectedEquipes = [];
+            } else {
+                const error = await response.json();
+                showNotification(error.error || 'Erreur lors de la création', 'danger');
+            }
+        } catch (error) {
+            showNotification('Erreur de connexion', 'danger');
+        }
+    }
+
+    // Soumission résultat match
+    async function handleResultatSubmit(e) {
+        e.preventDefault();
+
+        const phase = document.getElementById('matchPhase').value;
+        const matchId = parseInt(document.getElementById('matchId').value);
+        const scoreA = parseInt(document.getElementById('scoreA').value) || 0;
+        const scoreB = parseInt(document.getElementById('scoreB').value) || 0;
+        const vainqueur = document.getElementById('vainqueurSelect').value;
+
+        if (!vainqueur) {
+            showNotification('Veuillez désigner un vainqueur', 'warning');
+            return;
+        }
+
+        try {
+            // Mettre à jour le match
+            let response = await fetch(`/api/tableau/${phase}/${matchId}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ scoreA, scoreB, vainqueur })
+            });
+
+            if (response.ok) {
+                // Faire avancer le vainqueur à la phase suivante
+                response = await fetch(`/api/tableau/advance/${phase}/${matchId}`, {
+                    method: 'POST'
+                });
+
+                if (response.ok) {
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('modalResultat'));
+                    modal.hide();
+
+                    showNotification('Résultat enregistré et vainqueur qualifié', 'success');
+                    loadData();
+                } else {
+                    const error = await response.json();
+                    showNotification(error.error || 'Erreur qualification', 'danger');
+                }
+            } else {
+                const error = await response.json();
+                showNotification(error.error || 'Erreur enregistrement', 'danger');
+            }
+        } catch (error) {
+            showNotification('Erreur de connexion', 'danger');
+        }
+    }
+
+    // Reset tableau
+    async function handleResetTableau() {
+        if (!confirm('Supprimer tout le tableau éliminatoire ? Cette action est irréversible.')) {
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/tableau', {
+                method: 'DELETE'
+            });
+
+            if (response.ok) {
+                showNotification('Tableau réinitialisé', 'success');
+                loadData();
+                selectedEquipes = [];
+            } else {
+                showNotification('Erreur lors de la réinitialisation', 'danger');
+            }
+        } catch (error) {
+            showNotification('Erreur de connexion', 'danger');
+        }
+    }
+
+    // Actions rapides FAB
+    function showQuickActions() {
+        const hasMatches = Object.values(tableau).some(phase => phase.length > 0);
+
+        if (!hasMatches) {
+            const modal = new bootstrap.Modal(document.getElementById('modalGenerateur'));
+            modal.show();
+        } else {
+            // Trouver le prochain match à jouer
+            const phases = ['huitième', 'quart', 'demi', 'finale'];
+            let nextMatch = null;
+
+            for (const phase of phases) {
+                if (tableau[phase]) {
+                    nextMatch = tableau[phase].find(m => !m.vainqueur && m.equipeA && m.equipeB);
+                    if (nextMatch) {
+                        openResultatModal(phase, nextMatch.id);
+                        return;
+                    }
+                }
+            }
+
+            showNotification('Aucun match en attente', 'info');
+        }
+    }
+
+    // WebSocket
+    function setupWebSocket() {
+        socket.on('connect', () => {
+            updateConnectionStatus('Connecté', 'success');
+        });
+
+        socket.on('disconnect', () => {
+            updateConnectionStatus('Déconnecté', 'danger');
+        });
+
+        socket.on('classement:update', () => {
+            loadData();
+        });
+    }
+
+    function updateConnectionStatus(text, type) {
+        const indicator = document.getElementById('statusIndicator');
+        indicator.className = `badge bg-${type} me-3`;
+        indicator.innerHTML = `<i class="fas fa-circle me-1"></i>${text}`;
+    }
+
+    // Notifications
+    function showNotification(message, type = 'info') {
+        const toast = document.createElement('div');
+        toast.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+        toast.style.cssText = 'top: 20px; right: 20px; z-index: 2000; min-width: 300px;';
+        toast.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" onclick="this.parentElement.remove()"></button>
+        `;
+
+        document.body.appendChild(toast);
+
+        setTimeout(() => {
+            if (toast.parentElement) {
+                toast.remove();
+            }
+        }, 3000);
+    }
+
+    // Reset des modals
+    document.getElementById('modalGenerateur').addEventListener('hidden.bs.modal', function() {
+        selectedEquipes = [];
+        updateEquipesQualifiees();
+    });
+
+    document.getElementById('modalResultat').addEventListener('hidden.bs.modal', function() {
+        document.getElementById('formResultat').reset();
+    });
+
+    document.getElementById('modalAssignationTableau').addEventListener('hidden.bs.modal', function() {
+        document.getElementById('formAssignationTableau').reset();
+    });
+</script>
+</body>
+</html>

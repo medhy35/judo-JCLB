@@ -1,0 +1,526 @@
+/* ==========================================
+   ÉCRAN PUBLIC TATAMI - STYLES CSS
+   Application Judo Manager
+   ========================================== */
+
+/* Variables CSS réutilisées */
+:root {
+    --primary-color: #1976d2;
+    --secondary-color: #424242;
+    --success-color: #4caf50;
+    --warning-color: #ff9800;
+    --danger-color: #f44336;
+    --light-bg: #000;
+    --rouge-color: #d32f2f;
+    --bleu-color: #1976d2;
+}
+
+/* Base pour écran public */
+body {
+    background: linear-gradient(135deg, #000 0%, #1a1a1a 100%);
+    font-family: 'Roboto', sans-serif;
+    color: white;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+/* Header public simplifié */
+.public-header {
+    background: linear-gradient(135deg, var(--primary-color), #42a5f5);
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+.logo-section h1 {
+    margin: 0;
+    font-size: 2.5rem;
+    font-weight: 900;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.tatami-title {
+    font-size: 1.8rem;
+    font-weight: 500;
+}
+
+.status-indicator {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+/* Zone de combat adaptée pour public */
+.public-combat-zone {
+    background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+    margin: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+    border: 3px solid #333;
+}
+
+.public-combat-header {
+    background: linear-gradient(135deg, var(--secondary-color), #616161);
+    color: white;
+    padding: 1.5rem;
+    border-radius: 17px 17px 0 0;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+/* Affichage combattants pour public */
+.public-combattants-display {
+    display: grid;
+    grid-template-columns: 2.5fr 1fr 2.5fr;
+    gap: 2rem;
+    padding: 3rem;
+    align-items: center;
+    min-height: 400px;
+}
+
+.public-combattant-rouge,
+.public-combattant-bleu {
+    padding: 2rem;
+    border-radius: 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+}
+
+.public-combattant-rouge {
+    background: linear-gradient(135deg, rgba(211, 47, 47, 0.3), rgba(244, 67, 54, 0.2));
+    border: 3px solid var(--rouge-color);
+}
+
+.public-combattant-bleu {
+    background: linear-gradient(135deg, rgba(25, 118, 210, 0.3), rgba(33, 150, 243, 0.2));
+    border: 3px solid var(--bleu-color);
+}
+
+.public-combattant-nom {
+    font-size: 2.5rem;
+    font-weight: 900;
+    margin-bottom: 0.5rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+.public-combattant-rouge .public-combattant-nom {
+    color: #ff5252;
+}
+
+.public-combattant-bleu .public-combattant-nom {
+    color: #42a5f5;
+}
+
+.public-combattant-equipe {
+    font-size: 1.3rem;
+    color: #ccc;
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+}
+
+/* Scores publics */
+.public-scores-display {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 1.5rem;
+}
+
+.public-score-badge {
+    padding: 0.8rem 1.5rem;
+    border-radius: 15px;
+    font-weight: 900;
+    min-width: 80px;
+    text-align: center;
+    font-size: 1.4rem;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+.public-score-rouge {
+    background: linear-gradient(135deg, var(--rouge-color), #ef5350);
+    color: white;
+}
+
+.public-score-bleu {
+    background: linear-gradient(135deg, var(--bleu-color), #42a5f5);
+    color: white;
+}
+
+.public-score-ippon {
+    background: linear-gradient(135deg, #ffd700, #ffed4a);
+    color: #8b7300;
+    font-size: 1.8rem;
+    animation: pulse-gold 1.5s infinite alternate;
+}
+
+@keyframes pulse-gold {
+    from { background: linear-gradient(135deg, #ffd700, #ffed4a); }
+    to { background: linear-gradient(135deg, #ffed4a, #fff176); }
+}
+
+/* Timer central public */
+.public-timer-central {
+    text-align: center;
+    padding: 2rem;
+    background: rgba(255,255,255,0.05);
+    border-radius: 20px;
+    border: 2px solid rgba(255,255,255,0.1);
+}
+
+.public-timer-display {
+    font-family: 'Courier New', monospace;
+    font-size: 5rem;
+    font-weight: 900;
+    color: white;
+    margin-bottom: 1rem;
+    text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
+}
+
+.public-timer-display.warning {
+    color: var(--warning-color);
+    animation: pulse-warning 1s infinite;
+}
+
+.public-timer-display.danger {
+    color: var(--danger-color);
+    animation: pulse-danger 0.5s infinite;
+}
+
+@keyframes pulse-warning {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+@keyframes pulse-danger {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.public-etat-combat {
+    font-size: 1.5rem;
+    font-weight: 600;
+    padding: 0.8rem 1.5rem;
+    border-radius: 25px;
+    display: inline-block;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.public-etat-prevu {
+    background: rgba(233, 236, 239, 0.2);
+    color: #ccc;
+}
+
+.public-etat-en-cours {
+    background: linear-gradient(135deg, var(--success-color), #66bb6a);
+    color: white;
+    animation: pulse-success 2s infinite;
+}
+
+.public-etat-pause {
+    background: linear-gradient(135deg, var(--warning-color), #ffa726);
+    color: white;
+}
+
+.public-etat-termine {
+    background: linear-gradient(135deg, var(--secondary-color), #616161);
+    color: white;
+}
+
+@keyframes pulse-success {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.8; }
+}
+
+/* Osaekomi public */
+.public-osaekomi-display {
+    background: linear-gradient(135deg, rgba(255, 193, 7, 0.3), rgba(255, 152, 0, 0.2));
+    border: 3px solid var(--warning-color);
+    border-radius: 20px;
+    padding: 1.5rem;
+    margin: 1rem 0;
+    text-align: center;
+    display: none;
+}
+
+.public-osaekomi-display.active {
+    display: block;
+    animation: pulse-osaekomi 1s infinite;
+}
+
+@keyframes pulse-osaekomi {
+    0%, 100% { border-color: var(--warning-color); }
+    50% { border-color: var(--danger-color); }
+}
+
+.public-osaekomi-timer {
+    font-family: 'Courier New', monospace;
+    font-size: 3rem;
+    font-weight: 900;
+    color: var(--warning-color);
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+/* Score de confrontation */
+.confrontation-score {
+    background: linear-gradient(135deg, rgba(255, 193, 7, 0.2), rgba(255, 152, 0, 0.1));
+    border: 2px solid #ffcc02;
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin: 2rem;
+    text-align: center;
+}
+
+.confrontation-title {
+    font-size: 1.3rem;
+    color: #ffcc02;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.confrontation-scores {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.confrontation-team {
+    text-align: center;
+}
+
+.confrontation-score-value {
+    font-size: 3rem;
+    font-weight: 900;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+.confrontation-rouge {
+    color: #ff5252;
+}
+
+.confrontation-bleu {
+    color: #42a5f5;
+}
+
+.confrontation-vs {
+    font-size: 2rem;
+    color: #ffcc02;
+    font-weight: bold;
+}
+
+/* File d'attente publique */
+.public-queue {
+    background: rgba(255,255,255,0.05);
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin: 2rem;
+    border: 2px solid rgba(255,255,255,0.1);
+}
+
+.public-queue-title {
+    font-size: 1.5rem;
+    color: #42a5f5;
+    margin-bottom: 1rem;
+    text-align: center;
+    font-weight: 600;
+}
+
+.public-queue-item {
+    padding: 0.8rem;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    font-size: 1.1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.public-queue-item:last-child {
+    border-bottom: none;
+}
+
+.public-queue-item.current {
+    background: rgba(66, 165, 245, 0.2);
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+/* Responsive public */
+@media (max-width: 1200px) {
+    .public-combattants-display {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        padding: 2rem;
+    }
+
+    .public-timer-central {
+        order: -1;
+        padding: 1.5rem;
+    }
+
+    .public-timer-display {
+        font-size: 3.5rem;
+    }
+
+    .public-combattant-nom {
+        font-size: 2rem;
+    }
+
+    .logo-section h1 {
+        font-size: 2rem;
+    }
+
+    .tatami-title {
+        font-size: 1.5rem;
+    }
+
+    .status-indicator {
+        font-size: 1rem;
+        padding: 0.4rem 0.8rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .public-header {
+        padding: 0.8rem 1rem;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .public-combat-zone {
+        margin: 1rem;
+    }
+
+    .public-combattants-display {
+        padding: 1.5rem;
+    }
+
+    .public-timer-display {
+        font-size: 2.5rem;
+    }
+
+    .confrontation-score-value {
+        font-size: 2rem;
+    }
+
+    .confrontation-vs {
+        font-size: 1.5rem;
+    }
+}
+
+/* Connexion status */
+.connection-status {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    z-index: 1000;
+}
+
+.connection-status.connected {
+    background: var(--success-color);
+    color: white;
+}
+
+.connection-status.disconnected {
+    background: var(--danger-color);
+    color: white;
+    animation: pulse 1s infinite;
+}
+
+/* Auto-refresh indicator */
+.refresh-indicator {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    color: rgba(255,255,255,0.5);
+    font-size: 0.8rem;
+}
+
+/* Victory overlay adapté */
+.public-victory-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.9);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    color: white;
+    text-align: center;
+}
+
+.public-victory-content {
+    animation: victoryPulse 2s infinite;
+}
+
+.public-victory-content h1 {
+    font-size: 6rem;
+    margin-bottom: 1rem;
+    color: #ffd700;
+    text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
+}
+
+.public-victory-content h2 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.public-victory-content p {
+    font-size: 2rem;
+    color: #ccc;
+}
+
+@keyframes victoryPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+/* États visuels spéciaux */
+.error-state {
+    color: var(--danger-color);
+    text-align: center;
+    padding: 2rem;
+    font-size: 1.5rem;
+}
+
+.loading-state {
+    text-align: center;
+    padding: 2rem;
+    color: #ccc;
+}
+
+.no-combat-state {
+    opacity: 0.6;
+    filter: grayscale(0.5);
+}
+
+/* Animations d'entrée */
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}

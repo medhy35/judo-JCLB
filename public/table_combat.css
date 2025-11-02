@@ -1,0 +1,813 @@
+/* ==========================================
+   TABLE DE COMBAT - STYLES CSS
+   Application Judo Manager
+   ========================================== */
+
+/* Variables CSS */
+:root {
+    --primary-color: #1976d2;
+    --secondary-color: #424242;
+    --success-color: #4caf50;
+    --warning-color: #ff9800;
+    --danger-color: #f44336;
+    --light-bg: #fafafa;
+    --rouge-color: #d32f2f;
+    --bleu-color: #1976d2;
+}
+
+/* ==========================================
+   BASE
+   ========================================== */
+
+body {
+    background-color: var(--light-bg);
+    font-family: 'Roboto', sans-serif;
+    overflow-x: hidden;
+}
+
+.navbar {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* ==========================================
+   ZONE DE COMBAT PRINCIPALE
+   ========================================== */
+
+.combat-zone {
+    background: linear-gradient(135deg, #ffffff, #f8f9fa);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    border: 2px solid #e9ecef;
+    margin-bottom: 2rem;
+}
+
+.combat-header {
+    background: linear-gradient(135deg, var(--secondary-color), #616161);
+    color: white;
+    padding: 1rem;
+    border-radius: 10px 10px 0 0;
+    text-align: center;
+}
+
+/* ==========================================
+   AFFICHAGE DES COMBATTANTS
+   ========================================== */
+
+.combattants-display {
+    display: grid;
+    grid-template-columns: 2fr 1fr 2fr;
+    gap: 1rem;
+    padding: 2rem;
+    align-items: center;
+}
+
+.combattant-rouge,
+.combattant-bleu {
+    padding: 1.5rem;
+    border-radius: 12px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.combattant-rouge {
+    background: linear-gradient(135deg, #ffebee, #ffcdd2);
+    border: 2px solid var(--rouge-color);
+}
+
+.combattant-bleu {
+    background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+    border: 2px solid var(--bleu-color);
+}
+
+.combattant-nom {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.combattant-rouge .combattant-nom {
+    color: var(--rouge-color);
+}
+
+.combattant-bleu .combattant-nom {
+    color: var(--bleu-color);
+}
+
+.combattant-equipe {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 1rem;
+}
+
+/* ==========================================
+   SCORES
+   ========================================== */
+
+.scores-display {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+}
+
+.score-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-weight: bold;
+    min-width: 60px;
+    text-align: center;
+    font-size: 1.1rem;
+}
+
+.score-rouge {
+    background: var(--rouge-color);
+    color: white;
+}
+
+.score-bleu {
+    background: var(--bleu-color);
+    color: white;
+}
+
+.score-ippon {
+    background: #ffd700;
+    color: #8b7300;
+    font-size: 1.3rem;
+    animation: pulse-gold 1s infinite alternate;
+}
+
+@keyframes pulse-gold {
+    from { background: #ffd700; }
+    to { background: #ffed4a; }
+}
+
+/* ==========================================
+   TIMER CENTRAL
+   ========================================== */
+
+.timer-central {
+    text-align: center;
+    padding: 2rem;
+}
+
+.timer-display {
+    font-family: 'Courier New', monospace;
+    font-size: 4rem;
+    font-weight: bold;
+    color: var(--secondary-color);
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
+
+.timer-display.warning {
+    color: var(--warning-color);
+    animation: pulse-warning 1s infinite;
+}
+
+.timer-display.danger {
+    color: var(--danger-color);
+    animation: pulse-danger 0.5s infinite;
+}
+
+@keyframes pulse-warning {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+@keyframes pulse-danger {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* ==========================================
+   ÉTAT DU COMBAT
+   ========================================== */
+
+.etat-combat {
+    font-size: 1.2rem;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    display: inline-block;
+    margin-bottom: 1rem;
+}
+
+.etat-prevu {
+    background: #e9ecef;
+    color: #495057;
+}
+
+.etat-en-cours {
+    background: var(--success-color);
+    color: white;
+    animation: pulse-success 2s infinite;
+}
+
+.etat-pause {
+    background: var(--warning-color);
+    color: white;
+}
+
+.etat-termine {
+    background: var(--secondary-color);
+    color: white;
+}
+
+@keyframes pulse-success {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.8; }
+}
+
+/* ==========================================
+   OSAEKOMI
+   ========================================== */
+
+.osaekomi-display {
+    background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+    border: 2px solid var(--warning-color);
+    border-radius: 12px;
+    padding: 1rem;
+    margin: 1rem 0;
+    text-align: center;
+    display: none;
+}
+
+.osaekomi-display.active {
+    display: block;
+    animation: pulse-osaekomi 1s infinite;
+}
+
+@keyframes pulse-osaekomi {
+    0%, 100% { border-color: var(--warning-color); }
+    50% { border-color: var(--danger-color); }
+}
+
+.osaekomi-timer {
+    font-family: 'Courier New', monospace;
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--warning-color);
+}
+
+/* ==========================================
+   CONTRÔLES
+   ========================================== */
+
+.controls-section {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+}
+
+.controls-header {
+    background: linear-gradient(135deg, var(--primary-color), #42a5f5);
+    color: white;
+    padding: 1rem;
+    border-radius: 10px 10px 0 0;
+    text-align: center;
+    font-weight: 500;
+}
+
+.controls-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    padding: 2rem;
+}
+
+.control-section {
+    text-align: center;
+}
+
+.control-section h6 {
+    color: var(--secondary-color);
+    margin-bottom: 1rem;
+    font-weight: 500;
+}
+
+.control-rouge h6 {
+    color: var(--rouge-color);
+}
+
+.control-bleu h6 {
+    color: var(--bleu-color);
+}
+
+.control-buttons {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+/* ==========================================
+   BOUTONS DE SCORE
+   ========================================== */
+
+.btn-score {
+    padding: 1rem;
+    font-weight: bold;
+    border-radius: 8px;
+    border: none;
+    transition: all 0.2s ease;
+    font-size: 1rem;
+}
+
+.btn-score:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.btn-score:active {
+    transform: translateY(0);
+}
+
+.btn-ippon {
+    background: linear-gradient(135deg, #ffd700, #ffed4a);
+    color: #8b7300;
+}
+
+.btn-wazari {
+    background: linear-gradient(135deg, #4fc3f7, #29b6f6);
+    color: white;
+}
+
+.btn-yuko {
+    background: linear-gradient(135deg, #81c784, #66bb6a);
+    color: white;
+}
+
+.btn-shido {
+    background: linear-gradient(135deg, #ef5350, #f44336);
+    color: white;
+}
+
+/* ==========================================
+   CONTRÔLES PRINCIPAUX
+   ========================================== */
+
+.main-controls {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin: 2rem 0;
+    flex-wrap: wrap;
+}
+
+.btn-main {
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    font-weight: bold;
+    border-radius: 10px;
+    border: none;
+    min-width: 120px;
+    transition: all 0.3s ease;
+}
+
+.btn-main:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+}
+
+.btn-start {
+    background: linear-gradient(135deg, var(--success-color), #66bb6a);
+    color: white;
+}
+
+.btn-pause {
+    background: linear-gradient(135deg, var(--warning-color), #ffa726);
+    color: white;
+}
+
+.btn-stop {
+    background: linear-gradient(135deg, var(--danger-color), #ef5350);
+    color: white;
+}
+
+.btn-reset {
+    background: linear-gradient(135deg, var(--secondary-color), #616161);
+    color: white;
+}
+
+.btn-next {
+    background: linear-gradient(135deg, var(--primary-color), #42a5f5);
+    color: white;
+}
+
+/* ==========================================
+   CONTRÔLES OSAEKOMI
+   ========================================== */
+
+.osaekomi-controls {
+    background: #fff8e1;
+    border: 1px solid #ffcc02;
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 1rem 0;
+}
+
+.osaekomi-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.btn-osaekomi {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    border: none;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.btn-osaekomi-rouge {
+    background: linear-gradient(135deg, var(--rouge-color), #ef5350);
+    color: white;
+}
+
+.btn-osaekomi-bleu {
+    background: linear-gradient(135deg, var(--bleu-color), #42a5f5);
+    color: white;
+}
+
+.btn-osaekomi-stop {
+    background: linear-gradient(135deg, #757575, #616161);
+    color: white;
+}
+
+/* ==========================================
+   INFORMATIONS TATAMI
+   ========================================== */
+
+.tatami-info {
+    background: white;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.combat-queue {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #e9ecef;
+    border-radius: 6px;
+    background: #f8f9fa;
+}
+
+.queue-item {
+    padding: 0.5rem;
+    border-bottom: 1px solid #e9ecef;
+    font-size: 0.9rem;
+}
+
+.queue-item.current {
+    background: #e3f2fd;
+    font-weight: 500;
+}
+
+.queue-item:last-child {
+    border-bottom: none;
+}
+
+/* ==========================================
+   CORRECTIONS
+   ========================================== */
+
+.correction-buttons {
+    border-top: 1px solid #e9ecef;
+    padding-top: 0.5rem;
+}
+
+.correction-buttons .btn {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.8rem;
+}
+
+.score-change-animation {
+    animation: scoreChange 0.5s ease;
+}
+
+@keyframes scoreChange {
+    0% { transform: scale(1); background-color: transparent; }
+    50% { transform: scale(1.1); background-color: rgba(255, 193, 7, 0.3); }
+    100% { transform: scale(1); background-color: transparent; }
+}
+
+/* ==========================================
+   LOADING & VICTORY OVERLAYS
+   ========================================== */
+
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.loading-spinner {
+    width: 60px;
+    height: 60px;
+    border: 6px solid #e9ecef;
+    border-top: 6px solid var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.victory-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    color: white;
+    text-align: center;
+}
+
+.victory-content {
+    animation: victoryPulse 2s infinite;
+}
+
+.victory-content h1 {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}
+
+.victory-content p {
+    font-size: 1.5rem;
+}
+
+@keyframes victoryPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+/* ==========================================
+   RESPONSIVE
+   ========================================== */
+
+@media (max-width: 768px) {
+    .combattants-display {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        padding: 1rem;
+    }
+
+    .timer-central {
+        order: -1;
+        padding: 1rem;
+    }
+
+    .timer-display {
+        font-size: 2.5rem;
+    }
+
+    .controls-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        padding: 1rem;
+    }
+
+    .main-controls {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .btn-main {
+        width: 100%;
+        max-width: 300px;
+    }
+}
+.timer-controls {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.btn-timer-adjust {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 50px;
+}
+
+.btn-timer-adjust:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-1px);
+}
+
+.btn-timer-adjust:active {
+    transform: translateY(0);
+}
+
+.btn-timer-edit {
+    background: rgba(33, 150, 243, 0.3);
+    border-color: rgba(33, 150, 243, 0.5);
+}
+
+.btn-timer-edit:hover {
+    background: rgba(33, 150, 243, 0.5);
+}
+
+/* Cacher les contrôles quand le combat est terminé */
+.timer-controls.hidden {
+    display: none;
+}
+
+/* =======================================
+   POPUP FIN DE RENCONTRE
+   ======================================= */
+.fin-rencontre-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 10000;
+    backdrop-filter: blur(10px);
+    animation: fadeIn 0.5s ease-out;
+}
+
+.fin-rencontre-overlay.show {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.fin-rencontre-content {
+    text-align: center;
+    padding: 4rem 3rem;
+    background: linear-gradient(135deg, #1565c0 0%, #0d47a1 100%);
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    max-width: 800px;
+    width: 90%;
+    animation: scaleIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    border: 5px solid #42a5f5;
+}
+
+@keyframes scaleIn {
+    from {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.fin-rencontre-icon {
+    font-size: 8rem;
+    color: #42a5f5;
+    margin-bottom: 1rem;
+    animation: wave 2s ease-in-out infinite;
+}
+
+@keyframes wave {
+    0%, 100% {
+        transform: rotate(-10deg);
+    }
+    50% {
+        transform: rotate(10deg);
+    }
+}
+
+.fin-rencontre-title {
+    font-size: 4.5rem;
+    font-weight: 900;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 8px;
+    margin-bottom: 1rem;
+    text-shadow: 0 0 30px rgba(66, 165, 245, 0.8);
+    animation: glow 2s ease-in-out infinite;
+}
+
+@keyframes glow {
+    0%, 100% {
+        text-shadow: 0 0 30px rgba(66, 165, 245, 0.8);
+    }
+    50% {
+        text-shadow: 0 0 50px rgba(66, 165, 245, 1), 0 0 70px rgba(66, 165, 245, 0.8);
+    }
+}
+
+.fin-rencontre-subtitle {
+    font-size: 1.8rem;
+    color: white;
+    opacity: 0.9;
+    margin-bottom: 2rem;
+    letter-spacing: 2px;
+}
+
+.score-final-container {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 2rem;
+    margin: 2rem 0;
+    backdrop-filter: blur(5px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.score-final-label {
+    font-size: 1.5rem;
+    color: white;
+    opacity: 0.8;
+    margin-bottom: 1rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.score-final-value {
+    font-size: 5rem;
+    font-weight: 900;
+    color: white;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+}
+
+.fin-rencontre-actions {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.fin-rencontre-actions .btn {
+    padding: 1rem 2rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    border-width: 3px;
+    transition: all 0.3s ease;
+}
+
+.fin-rencontre-actions .btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .fin-rencontre-title {
+        font-size: 3rem;
+        letter-spacing: 4px;
+    }
+
+    .fin-rencontre-icon {
+        font-size: 5rem;
+    }
+
+    .fin-rencontre-subtitle {
+        font-size: 1.3rem;
+    }
+
+    .score-final-value {
+        font-size: 3.5rem;
+    }
+
+    .fin-rencontre-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .fin-rencontre-actions .btn {
+        width: 100%;
+    }
+}

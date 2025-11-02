@@ -1,0 +1,1866 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Table de Combat - Judo Manager</title>
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="table_combat.css" rel="stylesheet">
+</head>
+
+<body>
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white">
+    <div class="container-fluid">
+        <a class="navbar-brand fw-bold text-primary" href="gestion_tatamis.html">
+            <i class="fas fa-arrow-left me-2"></i><span id="tatamiName">Table de Combat</span>
+        </a>
+
+        <div class="d-flex align-items-center">
+                <span class="badge bg-success me-3" id="statusIndicator">
+                    <i class="fas fa-circle me-1"></i>Connecté
+                </span>
+        </div>
+    </div>
+</nav>
+
+<!-- Main Content -->
+<div class="container-fluid py-3">
+    <!-- Informations du tatami -->
+    <div class="tatami-info" id="tatamiInfo">
+        <div class="row">
+            <div class="col-md-8">
+                <h6 class="mb-1"><i class="fas fa-th-large me-2"></i><span id="tatamiTitle">Tatami</span></h6>
+                <p class="text-muted mb-0">Combat <span id="combatIndex">0</span> sur <span id="totalCombats">0</span></p>
+            </div>
+            <div class="col-md-4 text-end">
+                <span class="badge bg-primary" id="confrontationScore">0 - 0</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Zone principale de combat -->
+    <div class="combat-zone" id="combatZone">
+        <div class="combat-header">
+            <h5 class="mb-0">Combat en cours</h5>
+        </div>
+
+        <div class="combattants-display">
+            <!-- Combattant Rouge -->
+            <div class="combattant-rouge">
+                <div class="combattant-nom" id="rougeNom">-</div>
+                <div class="combattant-equipe" id="rougeEquipe">-</div>
+                <div class="scores-display" id="rougeScores">
+                    <!-- Scores dynamiques -->
+                </div>
+            </div>
+
+            <!-- Timer central -->
+            <div class="timer-central">
+                <div class="etat-combat etat-prevu" id="etatCombat">Prêt</div>
+                <div class="timer-display" id="timerDisplay">4:00</div>
+                <!-- ⚠️ NOUVEAU : Contrôles rapides du timer -->
+                <div class="timer-controls" id="timerControls">
+                    <button class="btn-timer-adjust" onclick="adjustTimer(-30)" title="Retirer 30s">
+                        <i class="fas fa-minus"></i> 30s
+                    </button>
+                    <button class="btn-timer-adjust" onclick="adjustTimer(-10)" title="Retirer 10s">
+                        <i class="fas fa-minus"></i> 10s
+                    </button>
+                    <button class="btn-timer-adjust btn-timer-edit" onclick="showTimerEditModal()" title="Modifier">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn-timer-adjust" onclick="adjustTimer(10)" title="Ajouter 10s">
+                        <i class="fas fa-plus"></i> 10s
+                    </button>
+                    <button class="btn-timer-adjust" onclick="adjustTimer(30)" title="Ajouter 30s">
+                        <i class="fas fa-plus"></i> 30s
+                    </button>
+                </div>
+
+                <!-- Osaekomi -->
+                <div class="osaekomi-display" id="osaekomoDisplay">
+                    <div><strong>OSAEKOMI</strong></div>
+                    <div class="osaekomi-timer" id="osaekomoTimer">00</div>
+                    <div><small>Maintien au sol</small></div>
+                </div>
+            </div>
+
+            <!-- Combattant Bleu -->
+            <div class="combattant-bleu">
+                <div class="combattant-nom" id="bleuNom">-</div>
+                <div class="combattant-equipe" id="bleuEquipe">-</div>
+                <div class="scores-display" id="bleuScores">
+                    <!-- Scores dynamiques -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contrôles principaux -->
+    <div class="main-controls">
+        <button class="btn btn-main btn-start" id="btnStart">
+            <i class="fas fa-play me-2"></i>Démarrer
+        </button>
+        <button class="btn btn-main btn-pause" id="btnPause">
+            <i class="fas fa-pause me-2"></i>Pause
+        </button>
+        <button class="btn btn-main btn-stop" id="btnStop">
+            <i class="fas fa-stop me-2"></i>Arrêter
+        </button>
+        <button class="btn btn-main btn-reset" id="btnReset">
+            <i class="fas fa-undo me-2"></i>Reset
+        </button>
+    </div>
+
+    <!-- Contrôles de score -->
+    <div class="controls-section">
+        <div class="controls-header">
+            <h5 class="mb-0"><i class="fas fa-gamepad me-2"></i>Contrôles de Score</h5>
+        </div>
+
+        <div class="controls-grid">
+            <!-- Contrôles Rouge -->
+            <div class="control-section control-rouge">
+                <h6><i class="fas fa-user me-2"></i>Rouge</h6>
+                <div class="control-buttons">
+                    <button class="btn-score btn-ippon" onclick="marquerPoint('rouge', 'ippon')">
+                        <i class="fas fa-star me-1"></i>IPPON
+                    </button>
+                    <button class="btn-score btn-wazari" onclick="marquerPoint('rouge', 'wazari')">
+                        <i class="fas fa-medal me-1"></i>WAZARI
+                    </button>
+                    <button class="btn-score btn-yuko" onclick="marquerPoint('rouge', 'yuko')">
+                        <i class="fas fa-plus me-1"></i>YUKO
+                    </button>
+                    <button class="btn-score btn-shido" onclick="marquerPoint('rouge', 'shido')">
+                        <i class="fas fa-exclamation me-1"></i>SHIDO Rouge
+                    </button>
+                </div>
+
+                <!-- Boutons de correction -->
+                <div class="correction-buttons mt-2">
+                    <button class="btn btn-sm btn-outline-warning" onclick="showCorrectionModal('rouge')">
+                        <i class="fas fa-undo me-1"></i>Corriger
+                    </button>
+                </div>
+            </div>
+
+            <!-- Contrôles Bleu -->
+            <div class="control-section control-bleu">
+                <h6><i class="fas fa-user me-2"></i>Bleu</h6>
+                <div class="control-buttons">
+                    <button class="btn-score btn-ippon" onclick="marquerPoint('bleu', 'ippon')">
+                        <i class="fas fa-star me-1"></i>IPPON
+                    </button>
+                    <button class="btn-score btn-wazari" onclick="marquerPoint('bleu', 'wazari')">
+                        <i class="fas fa-medal me-1"></i>WAZARI
+                    </button>
+                    <button class="btn-score btn-yuko" onclick="marquerPoint('bleu', 'yuko')">
+                        <i class="fas fa-plus me-1"></i>YUKO
+                    </button>
+                    <button class="btn-score btn-shido" onclick="marquerPoint('bleu', 'shido')">
+                        <i class="fas fa-exclamation me-1"></i>SHIDO Bleu
+                    </button>
+                </div>
+
+                <!-- Boutons de correction -->
+                <div class="correction-buttons mt-2">
+                    <button class="btn btn-sm btn-outline-warning" onclick="showCorrectionModal('bleu')">
+                        <i class="fas fa-undo me-1"></i>Corriger
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contrôles Osaekomi -->
+        <div class="osaekomi-controls">
+            <h6 class="text-center mb-3"><i class="fas fa-clock me-2"></i>Osaekomi (Maintien au sol)</h6>
+            <div class="osaekomi-buttons">
+                <button class="btn-osaekomi btn-osaekomi-rouge" onclick="startOsaekomi('rouge')">
+                    <i class="fas fa-play me-1"></i>OSAEKOMI Rouge
+                </button>
+                <button class="btn-osaekomi btn-osaekomi-bleu" onclick="startOsaekomi('bleu')">
+                    <i class="fas fa-play me-1"></i>OSAEKOMI Bleu
+                </button>
+                <button class="btn-osaekomi btn-osaekomi-stop" onclick="stopOsaekomi()">
+                    <i class="fas fa-stop me-1"></i>TOKETA / STOP
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Actions de combat -->
+    <div class="main-controls">
+        <button class="btn btn-main btn-next" id="btnNext" style="display: none;">
+            <i class="fas fa-forward me-2"></i>Combat Suivant
+        </button>
+    </div>
+
+    <!-- File d'attente -->
+    <div class="controls-section" id="queueSection" style="display: none;">
+        <div class="controls-header">
+            <h5 class="mb-0"><i class="fas fa-list me-2"></i>Prochains Combats</h5>
+        </div>
+        <div class="p-3">
+            <div class="combat-queue" id="combatQueue">
+                <!-- Queue dynamique -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Correction -->
+<div class="modal fade" id="modalCorrection" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-undo me-2"></i>Correction du score
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <strong>Attention :</strong> Vous allez modifier le score du combattant <span id="correctionCombattant" class="fw-bold"></span>
+                </div>
+
+                <h6 class="mb-3">Score actuel :</h6>
+                <div id="scoreActuel" class="mb-3 p-2 border rounded bg-light">
+                    <!-- Score actuel -->
+                </div>
+
+                <h6 class="mb-3">Actions disponibles :</h6>
+
+                <!-- Retrait de points -->
+                <div class="mb-4">
+                    <h6 class="text-danger"><i class="fas fa-minus me-1"></i>Retirer des points</h6>
+                    <div class="btn-group-vertical w-100" role="group">
+                        <button type="button" class="btn btn-outline-danger" onclick="retirerPoint('ippon')" id="btnRetirerIppon" disabled>
+                            <i class="fas fa-star me-2"></i>Retirer IPPON
+                        </button>
+                        <button type="button" class="btn btn-outline-danger" onclick="retirerPoint('wazari')" id="btnRetirerWazari" disabled>
+                            <i class="fas fa-medal me-2"></i>Retirer 1 WAZARI
+                        </button>
+                        <button type="button" class="btn btn-outline-danger" onclick="retirerPoint('yuko')" id="btnRetirerYuko" disabled>
+                            <i class="fas fa-plus me-2"></i>Retirer 1 YUKO
+                        </button>
+                        <button type="button" class="btn btn-outline-info" onclick="retirerPoint('shido')" id="btnRetirerShido" disabled>
+                            <i class="fas fa-exclamation me-2"></i>Retirer 1 SHIDO
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Conversion rapide -->
+                <div class="mb-3">
+                    <h6 class="text-warning"><i class="fas fa-exchange-alt me-1"></i>Conversions rapides</h6>
+                    <div class="btn-group-vertical w-100" role="group">
+                        <button type="button" class="btn btn-outline-warning" onclick="convertirScore('ippon-wazari')" id="btnConvertIpponWazari" disabled>
+                            <i class="fas fa-arrow-right me-2"></i>IPPON → WAZARI
+                        </button>
+                        <button type="button" class="btn btn-outline-warning" onclick="convertirScore('ippon-yuko')" id="btnConvertIpponYuko" disabled>
+                            <i class="fas fa-arrow-right me-2"></i>IPPON → YUKO
+                        </button>
+                        <button type="button" class="btn btn-outline-warning" onclick="convertirScore('wazari-yuko')" id="btnConvertWazariYuko" disabled>
+                            <i class="fas fa-arrow-right me-2"></i>WAZARI → YUKO
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Remise à zéro -->
+                <div>
+                    <h6 class="text-secondary"><i class="fas fa-eraser me-1"></i>Remise à zéro</h6>
+                    <button type="button" class="btn btn-outline-secondary w-100" onclick="razScore()">
+                        <i class="fas fa-undo me-2"></i>Remettre tous les scores à zéro
+                    </button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Modification Timer -->
+<div class="modal fade" id="modalTimer" tabindex="-1">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-clock me-2"></i>Modifier le timer
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Ajustez la durée du combat selon la catégorie
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Durées prédéfinies :</label>
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-outline-primary" onclick="setTimerPreset(180)">
+                            3:00 (Cadets/Cadettes)
+                        </button>
+                        <button class="btn btn-outline-primary" onclick="setTimerPreset(240)">
+                            4:00 (Juniors)
+                        </button>
+                        <button class="btn btn-outline-primary" onclick="setTimerPreset(300)">
+                            5:00 (Seniors)
+                        </button>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="timerMinutes" class="form-label">Personnalisé :</label>
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <input type="number" id="timerMinutes" class="form-control"
+                                   min="0" max="10" placeholder="Minutes" value="4">
+                        </div>
+                        <div class="col-6">
+                            <input type="number" id="timerSeconds" class="form-control"
+                                   min="0" max="59" placeholder="Secondes" value="0">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <strong>Attention :</strong> Cette modification est immédiate
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-primary" onclick="applyCustomTimer()">
+                    <i class="fas fa-check me-2"></i>Appliquer
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Victory Overlay -->
+<div class="victory-overlay" id="victoryOverlay">
+    <div class="victory-content">
+        <h1><i class="fas fa-trophy"></i></h1>
+        <h2 id="victoryWinner">VICTOIRE!</h2>
+        <p id="victoryMethod">Par Ippon</p>
+        <button class="btn btn-primary btn-lg mt-3" onclick="hideVictory()">
+            Continuer
+        </button>
+    </div>
+</div>
+<div class="fin-rencontre-overlay" id="finRencontreOverlay">
+    <div class="fin-rencontre-content">
+        <div class="fin-rencontre-icon">
+            <i class="fas fa-flag-checkered"></i>
+        </div>
+        <h1 class="fin-rencontre-title">FIN DE LA RENCONTRE</h1>
+        <p class="fin-rencontre-subtitle">Tous les combats sont terminés</p>
+
+        <div class="score-final-container">
+            <div class="score-final-label">Score Final</div>
+            <div class="score-final-value" id="scoreFinalDisplay">0 - 0</div>
+        </div>
+
+        <div class="fin-rencontre-actions">
+            <button class="btn btn-outline-light btn-lg me-3" onclick="hideFinRencontre()">
+                <i class="fas fa-times me-2"></i>Fermer
+            </button>
+            <button class="btn btn-success btn-lg" onclick="retourGestionTatamis()">
+                <i class="fas fa-arrow-left me-2"></i>Retour Tatamis
+            </button>
+        </div>
+    </div>
+</div>
+
+
+<!-- Loading Overlay -->
+<div class="loading-overlay" id="loadingOverlay" style="display: none;">
+    <div class="loading-spinner"></div>
+</div>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+
+<script>
+    // =======================================
+    // TABLE DE COMBAT - SCRIPT COMPLET
+    // Application Judo Manager
+    // =======================================
+
+    // Variables globales
+    const socket = io();
+    let tatamiId = null;
+    let combat = null;
+    let tatami = null;
+    let timer = 240; // Timer local pour affichage
+    let timerInterval = null;
+    let osaekomiTimer = 0;
+    let osaekomiInterval = null;
+    let osaekomiState = { active: false, cote: null };
+    let correctionCote = null;
+    let CONFIG = null;
+
+    // =======================================
+    // INITIALISATION
+    // =======================================
+
+    document.addEventListener('DOMContentLoaded', async function() {
+        // Récupérer l'ID du tatami depuis l'URL
+        const urlParams = new URLSearchParams(window.location.search);
+        tatamiId = parseInt(urlParams.get('tatami'));
+
+        if (!tatamiId) {
+            showNotification('ID de tatami manquant', 'danger');
+            return;
+        }
+        await loadConfig();
+        loadData();
+        setupEventListeners();
+        setupWebSocket();
+    });
+
+    // =======================================
+    // CHARGEMENT DES DONNÉES
+    // =======================================
+
+    async function loadConfig() {
+        try {
+            CONFIG = await fetch('/api/config').then(r => r.json());
+            console.log('✅ Config chargée:', CONFIG);
+            timer = CONFIG.combat.dureeParDefaut || 240;
+        } catch (error) {
+            console.error('❌ Erreur chargement config:', error);
+            CONFIG = {
+                combat: {
+                    dureeParDefaut: 240,
+                    osaekomi: {
+                        yuko: 10,
+                        wazari: 15,
+                        ippon: 20
+                    },
+                    thresholds: {
+                        wazariForIppon: 2,
+                        shidoForDefeat: 3
+                    },
+                    timerSyncInterval: 10
+                },
+                display: {
+                    notificationDuration: 3000,
+                    maxCombatsQueue: 5,
+                    timerWarningThreshold: 30,
+                    timerDangerThreshold: 10
+                }
+            };
+        }
+    }
+
+    async function loadData() {
+        showLoading(true);
+        try {
+            // Utiliser les endpoints du contrôleur
+            const [tatamiResponse, combatResponse] = await Promise.all([
+                fetch(`/api/tatamis/${tatamiId}`),
+                fetch(`/api/tatamis/${tatamiId}/combat-actuel`)
+            ]);
+
+            if (tatamiResponse.ok) {
+                tatami = await tatamiResponse.json();
+            } else {
+                throw new Error('Tatami non trouvé');
+            }
+
+            if (combatResponse.ok) {
+                const combatData = await combatResponse.json();
+                combat = combatData; // Le service enrichit déjà le combat
+            }
+
+            updateTatamiInfo();
+            updateCombatDisplay();
+            updateQueue();
+        } catch (error) {
+            console.error('Erreur chargement:', error);
+            showNotification('Erreur de chargement', 'danger');
+        } finally {
+            showLoading(false);
+        }
+    }
+
+    // =======================================
+    // MISE À JOUR DE L'INTERFACE
+    // =======================================
+
+    function updateTatamiInfo() {
+        if (!tatami) return;
+
+        document.getElementById('tatamiName').textContent = `Table - ${tatami.nom}`;
+        document.getElementById('tatamiTitle').textContent = tatami.nom;
+
+        const currentIndex = tatami.indexCombatActuel || 0;
+        const totalCombats = tatami.combatsIds ? tatami.combatsIds.length : 0;
+
+        document.getElementById('combatIndex').textContent = currentIndex + 1;
+        document.getElementById('totalCombats').textContent = totalCombats;
+
+        // Score de confrontation (calculé par le service)
+        const score = tatami.scoreConfrontation || { rouge: 0, bleu: 0 };
+        document.getElementById('confrontationScore').textContent = `${score.rouge} - ${score.bleu}`;
+    }
+    // ⚠️ NOUVELLE FONCTION : Recharger uniquement le tatami pour le score
+    async function reloadTatamiScore() {
+        try {
+            const response = await fetch(`/api/tatamis/${tatamiId}`);
+            if (response.ok) {
+                tatami = await response.json();
+                updateTatamiInfo();
+            }
+        } catch (error) {
+            console.error('Erreur rechargement score:', error);
+        }
+    }
+
+    function updateCombatDisplay() {
+        if (!combat) {
+            showNoCombat();
+            return;
+        }
+
+        // Utiliser les données enrichies par combatService
+        document.getElementById('rougeNom').textContent = combat.rouge?.nom || 'Rouge';
+        document.getElementById('bleuNom').textContent = combat.bleu?.nom || 'Bleu';
+        document.getElementById('rougeEquipe').textContent = combat.rouge?.equipe || 'Équipe';
+        document.getElementById('bleuEquipe').textContent = combat.bleu?.equipe || 'Équipe';
+
+
+        const chronoActif = timerInterval !== null;
+        if (!chronoActif) {
+            timer = combat.timer || CONFIG?.combat?.dureeParDefaut || 240;
+        }
+        updateScoreDisplay();
+        updateTimerDisplay();
+        updateEtatCombat();
+    }
+
+    function updateScoreDisplay() {
+        if (!combat) return;
+
+        // Affichage rouge
+        let rougeHtml = '';
+        if (combat.rouge?.ippon || combat.ipponRouge) {
+            rougeHtml += '<div class="score-badge score-ippon">IPPON</div>';
+        }
+            const wazariRouge = combat.rouge?.wazari || combat.wazariRouge || 0;
+            const yukoRouge = combat.rouge?.yuko || combat.yukoRouge || 0;
+
+            if (wazariRouge > 0) {
+                rougeHtml += `<div class="score-badge score-rouge">${wazariRouge} WAZARI</div>`;
+            }
+            if (yukoRouge > 0) {
+                rougeHtml += `<div class="score-badge score-rouge">${yukoRouge} YUKO</div>`;
+            }
+
+
+        const shidoRouge = combat.rouge?.shido || combat.penalitesRouge || 0;
+        if (shidoRouge > 0) {
+            rougeHtml += `<div class="score-badge" style="background: #757575; color: white;">${shidoRouge} SHIDO</div>`;
+        }
+        document.getElementById('rougeScores').innerHTML = rougeHtml;
+
+        // Affichage bleu
+        let bleuHtml = '';
+        if (combat.bleu?.ippon || combat.ipponBleu) {
+            bleuHtml += '<div class="score-badge score-ippon">IPPON</div>';
+        } else {
+            const wazariBleu = combat.bleu?.wazari || combat.wazariBleu || 0;
+            const yukoBleu = combat.bleu?.yuko || combat.yukoBleu || 0;
+
+            if (wazariBleu > 0) {
+                bleuHtml += `<div class="score-badge score-bleu">${wazariBleu} WAZARI</div>`;
+            }
+            if (yukoBleu > 0) {
+                bleuHtml += `<div class="score-badge score-bleu">${yukoBleu} YUKO</div>`;
+            }
+        }
+
+        const shidoBleu = combat.bleu?.shido || combat.penalitesBleu || 0;
+        if (shidoBleu > 0) {
+            bleuHtml += `<div class="score-badge" style="background: #757575; color: white;">${shidoBleu} SHIDO</div>`;
+        }
+        document.getElementById('bleuScores').innerHTML = bleuHtml;
+    }
+
+    function updateTimerDisplay() {
+        const minutes = Math.floor(timer / 60);
+        const seconds = timer % 60;
+        const timeStr = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+
+        const timerEl = document.getElementById('timerDisplay');
+        timerEl.textContent = timeStr;
+
+        timerEl.className = 'timer-display';
+        const dangerThreshold = CONFIG?.display?.timerDangerThreshold || 10;
+        const warningThreshold = CONFIG?.display?.timerWarningThreshold || 30;
+
+        if (timer <= dangerThreshold) {
+            timerEl.classList.add('danger');
+        } else if (timer <= warningThreshold) {
+            timerEl.classList.add('warning');
+        }
+    }
+
+    function updateEtatCombat() {
+        if (!combat) return;
+
+        const etatEl = document.getElementById('etatCombat');
+        const etat = combat.etat || 'prévu';
+
+        etatEl.className = 'etat-combat';
+        etatEl.textContent = etat.charAt(0).toUpperCase() + etat.slice(1);
+
+        switch (etat) {
+            case 'prévu':
+                etatEl.classList.add('etat-prevu');
+                break;
+            case 'en cours':
+                etatEl.classList.add('etat-en-cours');
+                break;
+            case 'pause':
+                etatEl.classList.add('etat-pause');
+                break;
+            case 'terminé':
+                etatEl.classList.add('etat-termine');
+                showCombatTermine();
+                break;
+        }
+        updateTimerControlsVisibility();
+    }
+
+    function showNoCombat() {
+        document.getElementById('rougeNom').textContent = 'Aucun';
+        document.getElementById('rougeEquipe').textContent = 'combat';
+        document.getElementById('bleuNom').textContent = 'assigné';
+        document.getElementById('bleuEquipe').textContent = '';
+        document.getElementById('rougeScores').innerHTML = '';
+        document.getElementById('bleuScores').innerHTML = '';
+        document.getElementById('etatCombat').textContent = 'En attente';
+        document.getElementById('timerDisplay').textContent = '0:00';
+    }
+
+    // =======================================
+    // ACTIONS DE COMBAT
+    // =======================================
+
+    async function startCombat() {
+        if (!combat) return;
+
+        try {
+            const response = await fetch(`/api/combats/${combat.id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ etat: 'en cours' })
+            });
+
+            if (response.ok) {
+                const updatedCombat = await response.json();
+                combat = updatedCombat;
+                updateCombatDisplay();
+                startTimerDisplay();
+                showNotification('Combat démarré', 'success');
+            } else {
+                const error = await response.json();
+                showNotification(error.error || 'Erreur lors du démarrage', 'danger');
+            }
+        } catch (error) {
+            showNotification('Erreur de connexion', 'danger');
+        }
+    }
+
+    async function pauseCombat() {
+        if (!combat) return;
+
+        try {
+            const response = await fetch(`/api/combats/${combat.id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    etat: 'pause',
+                    timer: timer
+                })
+            });
+
+            if (response.ok) {
+                combat.etat = 'pause';
+                updateEtatCombat();
+                stopTimerDisplay();
+                showNotification('Combat en pause', 'warning');
+            }
+        } catch (error) {
+            showNotification('Erreur', 'danger');
+        }
+    }
+
+    async function stopCombat() {
+        if (!combat) return;
+        if (!confirm('Arrêter définitivement ce combat ?')) return;
+
+        try {
+            const response = await fetch(`/api/combats/${combat.id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    etat: 'terminé',
+                    timer: 0,
+                    dateFin: new Date().toISOString(),
+                    raisonFin: 'arret_manuel'
+                })
+            });
+
+            if (response.ok) {
+                const updatedCombat = await response.json();
+                combat = updatedCombat;
+                updateCombatDisplay();
+                stopTimerDisplay();
+                stopOsaekomi();
+
+                if (combat.vainqueur) {
+                    showVictory(combat.vainqueur, combat.raisonFin);
+                }
+
+                showNotification('Combat arrêté', 'info');
+            }
+        } catch (error) {
+            showNotification('Erreur', 'danger');
+        }
+    }
+
+    async function resetCombat() {
+        if (!combat) return;
+        if (!confirm('Remettre à zéro ce combat ? Tous les scores seront perdus.')) return;
+
+        try {
+            const response = await fetch(`/api/combats/${combat.id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    action: 'reset'
+                })
+            });
+
+            if (response.ok) {
+                const resetCombat = await response.json();
+                combat = resetCombat;
+                timer = combat.timer || 240;
+
+                updateCombatDisplay();
+                stopTimerDisplay();
+                cleanupOsaekomoDisplay();
+
+                document.getElementById('btnNext').style.display = 'none';
+                hideVictory();
+
+                showNotification('Combat remis à zéro', 'info');
+            } else {
+                const error = await response.json();
+                showNotification(error.error || 'Erreur de remise à zéro', 'danger');
+            }
+        } catch (error) {
+            showNotification('Erreur de connexion', 'danger');
+        }
+    }
+
+    async function combatSuivant() {
+        if (!tatami) return;
+
+        try {
+            const response = await fetch(`/api/tatamis/${tatamiId}/suivant`, {
+                method: 'POST'
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+
+                tatami = result.tatami;
+                combat = result.combatActuel;
+
+                updateTatamiInfo();
+                updateCombatDisplay();
+                updateQueue();
+
+                document.getElementById('btnNext').style.display = 'none';
+                hideVictory();
+
+                showNotification('Combat suivant', 'success');
+            } else {
+                const error = await response.json();
+                // ⚠️ NOUVEAU : Afficher le popup imposant au lieu d'une simple notification
+                if (error.error && error.error.includes('dernier combat')) {
+                    showFinRencontrePopup();
+                } else {
+                    showNotification(error.error || 'Pas de combat suivant', 'warning');
+                }
+            }
+        } catch (error) {
+            showNotification('Erreur', 'danger');
+        }
+    }
+
+    // =======================================
+    // MARQUAGE DES POINTS
+    // =======================================
+
+    async function marquerPoint(cote, type) {
+        if (!combat || combat.etat === 'terminé') return;
+
+        try {
+            const response = await fetch(`/api/combats/${combat.id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    action: 'marquer_point',
+                    cote: cote,
+                    type: type
+                })
+            });
+
+            if (response.ok) {
+                const updatedCombat = await response.json();
+                const timerLocal = timer;
+                combat = updatedCombat;
+                timer = timerLocal;
+                updateScoreDisplay();
+
+                if (combat.etat === 'terminé') {
+                    stopTimerDisplay();
+                    stopOsaekomi();
+                    showCombatTermine();
+
+                    setTimeout(() => {
+                        reloadTatamiScore();
+                    }, 500);
+
+                    if (combat.vainqueur) {
+                        const vainqueurNom = combat.vainqueur === 'rouge' ?
+                            combat.rouge.nom : combat.bleu.nom;
+                        showVictory(vainqueurNom, combat.raisonFin);
+                    }
+                }
+
+                showNotification(`${type.toUpperCase()} ${cote}`, 'success');
+            } else {
+                const error = await response.json();
+                showNotification(error.error || 'Erreur lors du marquage', 'danger');
+            }
+        } catch (error) {
+            showNotification('Erreur de connexion', 'danger');
+        }
+    }
+
+    // =======================================
+    // GESTION OSAEKOMI
+    // =======================================
+
+    async function startOsaekomi(cote) {
+        if (!combat || combat.etat !== 'en cours') return;
+
+        // Arrêter un osaekomi en cours
+        if (osaekomiState.active) {
+            await stopOsaekomi();
+        }
+
+        try {
+            const response = await fetch(`/api/combats/${combat.id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    action: 'start_osaekomi',
+                    cote: cote
+                })
+            });
+
+            if (response.ok) {
+                // Démarrer immédiatement l'affichage local
+                osaekomiState = { active: true, cote: cote };
+                osaekomiTimer = 0;
+
+                // Afficher le panneau osaekomi immédiatement
+                const osaekomoDisplay = document.getElementById('osaekomoDisplay');
+                osaekomoDisplay.classList.add('active');
+                document.getElementById('osaekomoTimer').textContent = '00';
+
+                // Sauvegarder l'état initial des scores pour la simulation
+                const initialState = JSON.parse(JSON.stringify(combat));
+
+                // Démarrer le timer d'affichage avec simulation temps réel
+                osaekomiInterval = setInterval(async () => {
+                    osaekomiTimer++;
+                    document.getElementById('osaekomoTimer').textContent =
+                        osaekomiTimer.toString().padStart(2, '0');
+
+                    // NOUVEAU : Simuler l'affichage des points en temps réel
+                    await simulerPointsOsaekomi(cote, osaekomiTimer, initialState);
+
+                    if (osaekomiTimer % 2 === 0) {
+                        socket.emit('osaekomi:update', {
+                            tatamiId: tatamiId,
+                            osaekomiCounter: osaekomiTimer,
+                            osaekomiCote: cote
+                        });
+                    }
+
+                    // Auto-arrêt à 20 secondes (seuil Ippon)
+                    const seuilIppon = CONFIG?.combat?.osaekomi?.ippon || 20;
+                    if (osaekomiTimer >= seuilIppon) {
+                        stopOsaekomi();
+                    }
+                }, 1000);
+
+                showNotification(`OSAEKOMI ${cote.toUpperCase()}`, 'warning');
+            } else {
+                const error = await response.json();
+                showNotification(error.error || 'Erreur osaekomi', 'danger');
+            }
+        } catch (error) {
+            showNotification('Erreur de connexion', 'danger');
+            cleanupOsaekomoDisplay();
+        }
+    }
+
+    async function stopOsaekomi() {
+        if (!osaekomiState.active) return;
+
+        const dureeOsaekomi = osaekomiTimer;
+        const coteOsaekomi = osaekomiState.cote;
+
+        // Nettoyer l'affichage local immédiatement
+        cleanupOsaekomoDisplay();
+
+        try {
+            const response = await fetch(`/api/combats/${combat.id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    action: 'stop_osaekomi',
+                    duree: dureeOsaekomi
+                })
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+
+                // Mettre à jour le combat avec les VRAIES données du backend
+                if (result.combat) {
+                    combat = result.combat;
+                    updateScoreDisplay(); // Ceci affichera les vrais scores du backend
+                }
+
+                // Afficher le résumé final (sans doubler les notifications)
+                if (dureeOsaekomi > 0) {
+                    const message = result.pointsMarques && result.pointsMarques.length > 0 ?
+                        `OSAEKOMI terminé (${dureeOsaekomi}s): ${result.pointsMarques.join(', ').toUpperCase()}` :
+                        `TOKETA après ${dureeOsaekomi}s`;
+
+                    showNotification(message, 'info');
+                }
+
+                // Vérifier si le combat est terminé
+                if (result.finCombat && combat.etat === 'terminé') {
+                    stopTimerDisplay();
+                    showCombatTermine();
+
+                    setTimeout(() => {
+                        reloadTatamiScore();
+                    }, 500);
+
+                    if (combat.vainqueur) {
+                        const vainqueurNom = combat.vainqueur === 'rouge' ?
+                            combat.rouge.nom : combat.bleu.nom;
+                        showVictory(vainqueurNom, combat.raisonFin || 'osaekomi_ippon');
+                    }
+                }
+            } else {
+                const error = await response.json();
+                showNotification(error.error || 'Erreur arrêt osaekomi', 'danger');
+
+                // En cas d'erreur, recharger les vraies données
+                loadData();
+            }
+        } catch (error) {
+            console.error('Erreur stop osaekomi:', error);
+            showNotification('Erreur de connexion', 'danger');
+
+            // En cas d'erreur, recharger les vraies données
+            loadData();
+        }
+    }
+
+    function cleanupOsaekomoDisplay() {
+        // Arrêter le timer d'affichage
+        if (osaekomiInterval) {
+            clearInterval(osaekomiInterval);
+            osaekomiInterval = null;
+        }
+
+        // Cacher l'affichage
+        const osaekomoDisplay = document.getElementById('osaekomoDisplay');
+        if (osaekomoDisplay) {
+            osaekomoDisplay.classList.remove('active');
+        }
+
+        // Reset des variables
+        osaekomiTimer = 0;
+        osaekomiState = { active: false, cote: null };
+
+        // Remettre l'affichage des scores à jour avec les vraies données
+        updateScoreDisplay();
+
+        // Notifier via WebSocket
+        socket.emit('osaekomi:stop', { tatamiId: tatamiId });
+    }
+
+    async function simulerPointsOsaekomi(cote, duree, initialState) {
+        const seuils = {
+            yuko: CONFIG?.combat?.osaekomi?.yuko || 10,
+            wazari: CONFIG?.combat?.osaekomi?.wazari || 15,
+            ippon: CONFIG?.combat?.osaekomi?.ippon || 20
+        };
+        const combatSimule = JSON.parse(JSON.stringify(combat)); // Partir du combat ACTUEL
+        const couleur = cote.charAt(0).toUpperCase() + cote.slice(1);
+
+        // Récupérer les scores actuels
+        let wazariActuel = combatSimule[`wazari${couleur}`] || 0;
+        let yukoActuel = combatSimule[`yuko${couleur}`] || 0;
+        let ipponActuel = combatSimule[`ippon${couleur}`] || false;
+
+        // Si déjà ippon, ne rien faire
+        if (ipponActuel) {
+            return;
+        }
+
+        if (duree >= seuils.ippon) {
+            // 20s = Ippon (s'ajoute aux scores existants)
+            combatSimule[`ippon${couleur}`] = true;
+            combatSimule[cote].ippon = true;
+
+            // IMPORTANT : Garder les scores précédents dans la simulation
+            // L'ippon ne masque pas les autres scores en simulation, seulement en compétition officielle
+            combatSimule[`wazari${couleur}`] = wazariActuel;
+            combatSimule[cote].wazari = wazariActuel;
+            combatSimule[`yuko${couleur}`] = yukoActuel;
+            combatSimule[cote].yuko = yukoActuel;
+
+        } else if (duree >= seuils.wazari) {
+            // 15s = +1 Wazari + 1 Yuko de cet osaekomi, puis conversion
+
+            // Cet osaekomi génère 1 yuko (de 10s à 15s)
+            let yukosTotal = yukoActuel + 1;
+
+            // Ajouter 1 wazari
+            let wazarisTotal = wazariActuel + 1;
+
+            // Conversion d'1 yuko
+            if (yukosTotal > 0) {
+                yukosTotal -= 1;
+            }
+
+            combatSimule[`wazari${couleur}`] = wazarisTotal;
+            combatSimule[cote].wazari = wazarisTotal;
+            combatSimule[`yuko${couleur}`] = yukosTotal;
+            combatSimule[cote].yuko = yukosTotal;
+
+            // VÉRIFIER SI 2 WAZARI = FIN DE COMBAT
+            const seuilWazari = CONFIG?.combat?.thresholds?.wazariForIppon || 2;
+            if (wazarisTotal >= seuilWazari) {
+                // Combat terminé par double wazari - arrêter l'osaekomi automatiquement
+                showNotification(`DOUBLE WAZARI - ${cote.toUpperCase()} GAGNE!`, 'success');
+                stopOsaekomi(); // Arrêter l'osaekomi immédiatement
+                return;
+            }
+
+        } else if (duree >= seuils.yuko) {
+            // 10s = +1 Yuko simple
+            combatSimule[`yuko${couleur}`] = yukoActuel + 1;
+            combatSimule[cote].yuko = yukoActuel + 1;
+        } else {
+            return; // Pas encore de seuil
+        }
+
+        // Mettre à jour l'affichage
+        const vraiCombat = combat;
+        combat = combatSimule;
+        updateScoreDisplay();
+
+        // Notifications aux seuils
+        const estNouveauSeuil = (duree === seuils.yuko) || (duree === seuils.wazari) || (duree === seuils.ippon);
+        if (estNouveauSeuil) {
+            if (duree === seuils.ippon) {
+                showNotification(`OSAEKOMI: IPPON!`, 'success');
+            } else if (duree === seuils.wazari) {
+                showNotification(`OSAEKOMI: +1 WAZARI!`, 'success');
+            } else if (duree === seuils.yuko) {
+                showNotification(`OSAEKOMI: +1 YUKO!`, 'success');
+            }
+        }
+
+        // Restaurer après un délai
+        setTimeout(() => {
+            combat = vraiCombat;
+        }, 100);
+    }
+
+    // =======================================
+    // FONCTIONS DE CORRECTION
+    // =======================================
+
+    function showCorrectionModal(cote) {
+        if (!combat) return;
+
+        correctionCote = cote;
+        const combattantNom = cote === 'rouge' ?
+            combat.rouge.nom : combat.bleu.nom;
+
+        document.getElementById('correctionCombattant').textContent = combattantNom;
+
+        updateScoreActuelModal();
+        updateCorrectionButtons();
+
+        const modal = new bootstrap.Modal(document.getElementById('modalCorrection'));
+        modal.show();
+    }
+
+    function updateScoreActuelModal() {
+        if (!combat || !correctionCote) return;
+
+        const scores = correctionCote === 'rouge' ? combat.rouge : combat.bleu;
+        let scoreHtml = '';
+
+        const ippon = scores?.ippon || (correctionCote === 'rouge' ? combat.ipponRouge : combat.ipponBleu);
+        const wazari = scores?.wazari || (correctionCote === 'rouge' ? combat.wazariRouge : combat.wazariBleu) || 0;
+        const yuko = scores?.yuko || (correctionCote === 'rouge' ? combat.yukoRouge : combat.yukoBleu) || 0;
+        const shido = scores?.shido || (correctionCote === 'rouge' ? combat.penalitesRouge : combat.penalitesBleu) || 0;
+
+        if (ippon) {
+            scoreHtml += '<span class="badge bg-warning text-dark me-2">IPPON</span>';
+        } else {
+            if (wazari > 0) {
+                scoreHtml += `<span class="badge bg-info me-2">${wazari} WAZARI</span>`;
+            }
+            if (yuko > 0) {
+                scoreHtml += `<span class="badge bg-success me-2">${yuko} YUKO</span>`;
+            }
+        }
+
+        if (shido > 0) {
+            scoreHtml += `<span class="badge bg-secondary me-2">${shido} SHIDO</span>`;
+        }
+
+        if (!scoreHtml) {
+            scoreHtml = '<span class="text-muted">Aucun score</span>';
+        }
+
+        document.getElementById('scoreActuel').innerHTML = scoreHtml;
+    }
+
+    function updateCorrectionButtons() {
+        if (!combat || !correctionCote) return;
+
+        const scores = correctionCote === 'rouge' ? combat.rouge : combat.bleu;
+
+        const ippon = scores?.ippon || (correctionCote === 'rouge' ? combat.ipponRouge : combat.ipponBleu);
+        const wazari = scores?.wazari || (correctionCote === 'rouge' ? combat.wazariRouge : combat.wazariBleu) || 0;
+        const yuko = scores?.yuko || (correctionCote === 'rouge' ? combat.yukoRouge : combat.yukoBleu) || 0;
+        const shido = scores?.shido || (correctionCote === 'rouge' ? combat.penalitesRouge : combat.penalitesBleu) || 0;
+
+        document.getElementById('btnRetirerIppon').disabled = !ippon;
+        document.getElementById('btnRetirerWazari').disabled = wazari <= 0;
+        document.getElementById('btnRetirerYuko').disabled = yuko <= 0;
+        document.getElementById('btnRetirerShido').disabled = shido <= 0;
+
+        document.getElementById('btnConvertIpponWazari').disabled = !ippon;
+        document.getElementById('btnConvertIpponYuko').disabled = !ippon;
+        document.getElementById('btnConvertWazariYuko').disabled = wazari <= 0;
+    }
+
+    async function retirerPoint(type) {
+        if (!combat || !correctionCote || combat.etat === 'terminé') return;
+
+        try {
+            const response = await fetch(`/api/combats/${combat.id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    action: 'correction',
+                    cote: correctionCote,
+                    operation: 'retirer',
+                    type: type
+                })
+            });
+
+            if (response.ok) {
+                const updatedCombat = await response.json();
+                combat = updatedCombat;
+
+                updateScoreDisplay();
+                updateScoreActuelModal();
+                updateCorrectionButtons();
+
+                animateScoreChange(correctionCote);
+
+                showNotification(`${type.toUpperCase()} retiré`, 'warning');
+            } else {
+                const error = await response.json();
+                showNotification(error.error || 'Erreur de correction', 'danger');
+            }
+        } catch (error) {
+            showNotification('Erreur de connexion', 'danger');
+        }
+    }
+
+    async function convertirScore(conversion) {
+        if (!combat || !correctionCote || combat.etat === 'terminé') return;
+
+        try {
+            const [from, to] = conversion.split('-');
+
+            const response = await fetch(`/api/combats/${combat.id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    action: 'correction',
+                    cote: correctionCote,
+                    operation: 'convertir',
+                    from: from,
+                    to: to
+                })
+            });
+
+            if (response.ok) {
+                const updatedCombat = await response.json();
+                combat = updatedCombat;
+
+                updateScoreDisplay();
+                updateScoreActuelModal();
+                updateCorrectionButtons();
+
+                animateScoreChange(correctionCote);
+
+                showNotification(`${from.toUpperCase()} converti en ${to.toUpperCase()}`, 'warning');
+            } else {
+                const error = await response.json();
+                showNotification(error.error || 'Erreur de conversion', 'danger');
+            }
+        } catch (error) {
+            showNotification('Erreur de connexion', 'danger');
+        }
+    }
+
+    async function razScore() {
+        if (!combat || !correctionCote) return;
+
+        const combattantNom = correctionCote === 'rouge' ? combat.rouge.nom : combat.bleu.nom;
+        const confirmation = confirm(
+            `Êtes-vous sûr de vouloir remettre à zéro tous les scores de ${combattantNom} ?`
+        );
+        if (!confirmation) return;
+
+        try {
+            const response = await fetch(`/api/combats/${combat.id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    action: 'correction',
+                    cote: correctionCote,
+                    operation: 'raz'
+                })
+            });
+
+            if (response.ok) {
+                const updatedCombat = await response.json();
+                combat = updatedCombat;
+
+                updateScoreDisplay();
+                updateScoreActuelModal();
+                updateCorrectionButtons();
+
+                animateScoreChange(correctionCote);
+
+                showNotification('Scores remis à zéro', 'warning');
+            } else {
+                const error = await response.json();
+                showNotification(error.error || 'Erreur de RAZ', 'danger');
+            }
+        } catch (error) {
+            showNotification('Erreur de connexion', 'danger');
+        }
+    }
+
+    // =======================================
+    // TIMER ET UTILITAIRES
+    // =======================================
+
+    function startTimerDisplay() {
+        stopTimerDisplay();
+
+        timerInterval = setInterval(() => {
+            if (timer > 0) {
+                timer--;
+                updateTimerDisplay();
+                const syncInterval = CONFIG?.combat?.timerSyncInterval || 10;
+                if (timer % syncInterval === 0) {
+                    syncTimerWithBackend();
+                }
+            } else {
+                stopTimerDisplay();
+                finirCombatTemps();
+            }
+        }, 1000);
+    }
+
+    function stopTimerDisplay() {
+        if (timerInterval) {
+            clearInterval(timerInterval);
+            timerInterval = null;
+        }
+    }
+
+    async function syncTimerWithBackend() {
+        if (!combat) return;
+
+        try {
+            await fetch(`/api/combats/${combat.id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ timer })
+            });
+        } catch (error) {
+            console.error('Erreur sync timer:', error);
+        }
+    }
+
+    async function finirCombatTemps() {
+        if (!combat) return;
+
+        stopTimerDisplay();
+        timer = 0;
+        updateTimerDisplay();
+
+        try {
+            const response = await fetch(`/api/combats/${combat.id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    etat: 'terminé',
+                    timer: 0,
+                    dateFin: new Date().toISOString(),
+                    raisonFin: 'temps_ecoule'
+                })
+            });
+
+            if (response.ok) {
+                const updatedCombat = await response.json();
+                combat = updatedCombat;
+
+                updateCombatDisplay();
+                updateEtatCombat();
+                showCombatTermine();
+
+                setTimeout(() => {
+                    reloadTatamiScore();
+                }, 500);
+
+                if (combat.vainqueur) {
+                    const vainqueurNom = combat.vainqueur === 'rouge' ?
+                        combat.rouge.nom : combat.bleu.nom;
+                    showVictory(vainqueurNom, 'temps_ecoule');
+                }
+
+                showNotification('Temps écoulé - Combat terminé', 'warning');
+            }
+        } catch (error) {
+            showNotification('Erreur', 'danger');
+        }
+    }
+
+    // =======================================
+    // MISE À JOUR DE LA FILE D'ATTENTE
+    // =======================================
+
+    async function updateQueue() {
+        if (!tatami || !tatami.combatsIds || tatami.combatsIds.length <= 1) {
+            document.getElementById('queueSection').style.display = 'none';
+            return;
+        }
+
+        document.getElementById('queueSection').style.display = 'block';
+
+        try {
+            const response = await fetch(`/api/tatamis/${tatamiId}/historique-combats`);
+
+            if (response.ok) {
+                const historique = await response.json();
+                const currentIndex = tatami.indexCombatActuel || 0;
+                let queueHtml = '';
+
+                const visibleRange = historique.slice(currentIndex, currentIndex + 4);
+
+                visibleRange.forEach((combatInfo, idx) => {
+                    const isCurrent = idx === 0;
+                    const statusIcon = isCurrent ?
+                        '<i class="fas fa-play-circle text-primary me-1"></i>' :
+                        '<i class="fas fa-clock text-muted me-1"></i>';
+
+                    queueHtml += `
+                    <div class="queue-item ${isCurrent ? 'current' : ''}">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span>
+                                ${statusIcon}
+                                <strong>${combatInfo.rouge.nom}</strong> vs
+                                <strong>${combatInfo.bleu.nom}</strong>
+                            </span>
+                            <small class="text-muted">#${combatInfo.index}</small>
+                        </div>
+                        <div class="small text-muted">
+                            ${combatInfo.rouge.equipe} vs ${combatInfo.bleu.equipe}
+                        </div>
+                    </div>
+                `;
+                });
+
+                if (!queueHtml) {
+                    queueHtml = '<div class="queue-item"><span class="text-muted">Aucun combat suivant</span></div>';
+                }
+
+                document.getElementById('combatQueue').innerHTML = queueHtml;
+            }
+        } catch (error) {
+            console.error('Erreur chargement file:', error);
+            document.getElementById('combatQueue').innerHTML =
+                '<div class="queue-item"><span class="text-muted">Erreur de chargement</span></div>';
+        }
+    }
+
+    // =======================================
+    // WEBSOCKET
+    // =======================================
+
+    function setupWebSocket() {
+        socket.on('connect', () => {
+            updateConnectionStatus('Connecté', 'success');
+        });
+
+        socket.on('disconnect', () => {
+            updateConnectionStatus('Déconnecté', 'danger');
+        });
+
+        socket.on('combats:update', (data) => {
+            if (data.combat && data.combat.id === combat?.id) {
+                combat = data.combat;
+
+                // Ne synchroniser le timer que si le chrono est ARRÊTÉ
+                if (!chronoActif && data.combat.timer !== undefined) {
+                    timer = data.combat.timer;
+                } else {
+                    // Préserver le timer local
+                    timer = timerLocal;
+                }
+
+                updateCombatDisplay();
+
+                // Vérifier si combat terminé par un autre client
+                if (combat.etat === 'terminé' && combat.vainqueur) {
+                    stopTimerDisplay();
+                    showCombatTermine();
+
+                    const vainqueurNom = combat.vainqueur === 'rouge' ?
+                        combat.rouge.nom : combat.bleu.nom;
+                    showVictory(vainqueurNom, combat.raisonFin);
+                }
+            }
+        });
+
+        socket.on('tatamis:update', (data) => {
+            if (data.tatami && data.tatami.id === tatamiId) {
+                tatami = data.tatami;
+                updateTatamiInfo();
+                updateQueue();
+            }
+        });
+
+        // Synchronisation osaekomi
+        socket.on('osaekomi:update', (data) => {
+            if (data.tatamiId === tatamiId && data.tatamiId !== tatamiId) {
+                osaekomiTimer = data.osaekomiCounter;
+                document.getElementById('osaekomoTimer').textContent =
+                    osaekomiTimer.toString().padStart(2, '0');
+                document.getElementById('osaekomoDisplay').classList.add('active');
+            }
+        });
+
+        socket.on('osaekomi:stop', (data) => {
+            if (data.tatamiId === tatamiId) {
+                cleanupOsaekomoDisplay();
+            }
+        });
+    }
+
+    // =======================================
+    // FONCTIONS D'AFFICHAGE
+    // =======================================
+
+    function showCombatTermine() {
+        document.getElementById('btnNext').style.display = 'block';
+        stopTimerDisplay();
+        cleanupOsaekomoDisplay();
+        reloadTatamiScore();
+    }
+
+    function showVictory(vainqueur, raison) {
+        const raisonTexte = {
+            'ippon': 'Par IPPON',
+            'double_wazari': 'Par double WAZARI',
+            'disqualification': 'Par disqualification',
+            'temps_ecoule': 'Aux points',
+            'arret_manuel': 'Combat arrêté',
+            'osaekomi_ippon': 'Par IPPON (Osaekomi)'
+        };
+
+        document.getElementById('victoryWinner').textContent = `${vainqueur} GAGNE!`;
+        document.getElementById('victoryMethod').textContent = raisonTexte[raison] || raison;
+        document.getElementById('victoryOverlay').style.display = 'flex';
+
+        document.getElementById('btnNext').style.display = 'block';
+    }
+
+    function hideVictory() {
+        document.getElementById('victoryOverlay').style.display = 'none';
+    }
+
+    // =======================================
+    // POPUP FIN DE RENCONTRE
+    // =======================================
+
+    /**
+     * Afficher le popup de fin de rencontre
+     */
+    function showFinRencontrePopup() {
+        if (!tatami) return;
+
+        // Mettre à jour le score final
+        const score = tatami.scoreConfrontation || { rouge: 0, bleu: 0 };
+        document.getElementById('scoreFinalDisplay').textContent =
+            `${score.rouge} - ${score.bleu}`;
+
+        // Afficher le popup
+        document.getElementById('finRencontreOverlay').classList.add('show');
+
+        // Cacher le bouton "Combat Suivant"
+        document.getElementById('btnNext').style.display = 'none';
+    }
+
+    /**
+     * Cacher le popup de fin de rencontre
+     */
+    function hideFinRencontre() {
+        document.getElementById('finRencontreOverlay').classList.remove('show');
+    }
+
+    /**
+     * Retourner à la gestion des tatamis
+     */
+    function retourGestionTatamis() {
+        window.location.href = 'gestion_tatamis.html';
+    }
+
+    // =======================================
+    // FONCTIONS UTILITAIRES
+    // =======================================
+
+    function animateScoreChange(cote) {
+        const scoreElement = cote === 'rouge' ?
+            document.getElementById('rougeScores') :
+            document.getElementById('bleuScores');
+
+        scoreElement.classList.add('score-change-animation');
+        setTimeout(() => {
+            scoreElement.classList.remove('score-change-animation');
+        }, 500);
+    }
+
+    function updateConnectionStatus(text, type) {
+        const indicator = document.getElementById('statusIndicator');
+        indicator.className = `badge bg-${type} me-3`;
+        indicator.innerHTML = `<i class="fas fa-circle me-1"></i>${text}`;
+    }
+
+    function showLoading(show) {
+        document.getElementById('loadingOverlay').style.display = show ? 'flex' : 'none';
+    }
+
+    function showNotification(message, type = 'info') {
+        const toast = document.createElement('div');
+        toast.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+        toast.style.cssText = 'top: 20px; right: 20px; z-index: 2000; min-width: 300px;';
+        toast.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" onclick="this.parentElement.remove()"></button>
+    `;
+
+        document.body.appendChild(toast);
+
+        setTimeout(() => {
+            if (toast.parentElement) {
+                toast.remove();
+            }
+        }, CONFIG?.display?.notificationDuration || 3000);
+    }
+
+    // =======================================
+    // GESTION DES ÉVÉNEMENTS
+    // =======================================
+
+    function setupEventListeners() {
+        // Contrôles principaux
+        document.getElementById('btnStart').addEventListener('click', startCombat);
+        document.getElementById('btnPause').addEventListener('click', pauseCombat);
+        document.getElementById('btnStop').addEventListener('click', stopCombat);
+        document.getElementById('btnReset').addEventListener('click', resetCombat);
+        document.getElementById('btnNext').addEventListener('click', combatSuivant);
+
+        // Raccourcis clavier
+        document.addEventListener('keydown', handleKeyboard);
+    }
+
+    // Gestion du clavier
+    function handleKeyboard(e) {
+        // Ignorer si on tape dans un input
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+        // Raccourcis de correction avec Ctrl
+        if (e.ctrlKey) {
+            switch (e.key.toLowerCase()) {
+                case 'c':
+                    e.preventDefault();
+                    showCorrectionModal('rouge');
+                    break;
+                case 'v':
+                    e.preventDefault();
+                    showCorrectionModal('bleu');
+                    break;
+            }
+            return;
+        }
+
+        switch (e.key.toLowerCase()) {
+            case ' ': // Espace - Start/Pause
+                e.preventDefault();
+                if (!combat) return;
+                if (combat.etat === 'en cours') {
+                    pauseCombat();
+                } else {
+                    startCombat();
+                }
+                break;
+            case 'r': // Reset
+                e.preventDefault();
+                resetCombat();
+                break;
+            case 'n': // Next
+                e.preventDefault();
+                if (combat && combat.etat === 'terminé') {
+                    combatSuivant();
+                }
+                break;
+            // Scores rouge (touches numériques)
+            case '1':
+                marquerPoint('rouge', 'ippon');
+                break;
+            case '2':
+                marquerPoint('rouge', 'wazari');
+                break;
+            case '3':
+                marquerPoint('rouge', 'yuko');
+                break;
+            case '4':
+                marquerPoint('rouge', 'shido');
+                break;
+            // Scores bleu
+            case '7':
+                marquerPoint('bleu', 'ippon');
+                break;
+            case '8':
+                marquerPoint('bleu', 'wazari');
+                break;
+            case '9':
+                marquerPoint('bleu', 'yuko');
+                break;
+            case '6':
+                marquerPoint('bleu', 'shido');
+                break;
+            // Osaekomi
+            case 'q':
+                startOsaekomi('rouge');
+                break;
+            case 'w':
+                startOsaekomi('bleu');
+                break;
+            case 's':
+                stopOsaekomi();
+                break;
+            case 'escape': // Échap pour fermer les modals
+                const openModals = document.querySelectorAll('.modal.show');
+                openModals.forEach(modal => {
+                    const modalInstance = bootstrap.Modal.getInstance(modal);
+                    if (modalInstance) modalInstance.hide();
+                });
+                break;
+            case 't': // T = Timer
+                e.preventDefault();
+                showTimerEditModal();
+                break;
+        }
+    }
+
+    // =======================================
+    // GESTION DU TIMER PERSONNALISÉ
+    // =======================================
+
+    /**
+     * Ajuster le timer de +/- X secondes
+     */
+    function adjustTimer(seconds) {
+        if (!combat) return;
+
+        // Empêcher les ajustements en combat terminé
+        if (combat.etat === 'terminé') {
+            showNotification('Impossible de modifier le timer sur un combat terminé', 'warning');
+            return;
+        }
+
+        timer = Math.max(0, timer + seconds);
+        updateTimerDisplay();
+
+        // Synchroniser avec le backend
+        syncTimerWithBackend();
+
+        const action = seconds > 0 ? 'ajouté' : 'retiré';
+        showNotification(`${Math.abs(seconds)}s ${action}`, 'info');
+    }
+
+    /**
+     * Afficher le modal de modification du timer
+     */
+    function showTimerEditModal() {
+        if (!combat) return;
+
+        if (combat.etat === 'terminé') {
+            showNotification('Impossible de modifier le timer sur un combat terminé', 'warning');
+            return;
+        }
+
+        // Pré-remplir avec le timer actuel
+        const minutes = Math.floor(timer / 60);
+        const seconds = timer % 60;
+
+        document.getElementById('timerMinutes').value = minutes;
+        document.getElementById('timerSeconds').value = seconds;
+
+        const modal = new bootstrap.Modal(document.getElementById('modalTimer'));
+        modal.show();
+    }
+
+    /**
+     * Appliquer une durée prédéfinie
+     */
+    function setTimerPreset(seconds) {
+        if (!combat) return;
+
+        timer = seconds;
+        updateTimerDisplay();
+
+        // Synchroniser avec le backend
+        syncTimerWithBackend();
+
+        // Fermer le modal
+        const modal = bootstrap.Modal.getInstance(document.getElementById('modalTimer'));
+        if (modal) modal.hide();
+
+        const minutes = Math.floor(seconds / 60);
+        showNotification(`Timer défini à ${minutes}:00`, 'success');
+    }
+
+    /**
+     * Appliquer un timer personnalisé
+     */
+    function applyCustomTimer() {
+        if (!combat) return;
+
+        const minutes = parseInt(document.getElementById('timerMinutes').value) || 0;
+        const seconds = parseInt(document.getElementById('timerSeconds').value) || 0;
+
+        if (minutes < 0 || minutes > 10) {
+            showNotification('Minutes invalides (0-10)', 'danger');
+            return;
+        }
+
+        if (seconds < 0 || seconds > 59) {
+            showNotification('Secondes invalides (0-59)', 'danger');
+            return;
+        }
+
+        timer = (minutes * 60) + seconds;
+        updateTimerDisplay();
+
+        // Synchroniser avec le backend
+        syncTimerWithBackend();
+
+        // Fermer le modal
+        const modal = bootstrap.Modal.getInstance(document.getElementById('modalTimer'));
+        if (modal) modal.hide();
+
+        showNotification(`Timer défini à ${minutes}:${seconds.toString().padStart(2, '0')}`, 'success');
+    }
+
+    /**
+     * Mettre à jour l'affichage des contrôles selon l'état du combat
+     */
+    function updateTimerControlsVisibility() {
+        const controls = document.getElementById('timerControls');
+        if (!controls) return;
+
+        // Cacher les contrôles si combat terminé
+        if (combat && combat.etat === 'terminé') {
+            controls.classList.add('hidden');
+        } else {
+            controls.classList.remove('hidden');
+        }
+    }
+
+    // =======================================
+    // RACCOURCIS GLOBAUX
+    // =======================================
+
+    // Exposer les fonctions principales pour les boutons HTML
+    window.marquerPoint = marquerPoint;
+    window.startOsaekomi = startOsaekomi;
+    window.stopOsaekomi = stopOsaekomi;
+    window.showCorrectionModal = showCorrectionModal;
+    window.retirerPoint = retirerPoint;
+    window.convertirScore = convertirScore;
+    window.razScore = razScore;
+    window.hideVictory = hideVictory;
+    window.hideFinRencontre = hideFinRencontre;
+    window.retourGestionTatamis = retourGestionTatamis;
+</script>
+</body>
+</html>

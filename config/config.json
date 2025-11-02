@@ -1,0 +1,103 @@
+{
+  "app": {
+    "name": "Système de Gestion Tournoi Judo",
+    "version": "1.0.0",
+    "environment": "development",
+    "port": 3000,
+    "maxUploadSize": "10mb",
+    "timezone": "Europe/Paris"
+  },
+  "combat": {
+    "dureeParDefaut": 240,
+    "dureeGoldenScore": 180,
+    "enableGoldenScore": true,
+    "pauseEntreRounds": 60,
+    "tempsPreparation": 30,
+    "osaekomi": {
+      "yuko": 10,
+      "wazari": 15,
+      "ippon": 20
+    },
+    "thresholds": {
+      "wazariForIppon": 2,
+      "shidoForDefeat": 3,
+      "maxShido": 3
+    },
+    "points": {
+      "ippon": 10,
+      "wazari": 7,
+      "yuko": 1,
+      "victoire": 1,
+      "defaite": 0,
+      "egalite": 0
+    }
+  },
+  "poules": {
+    "maxEquipesParPoule": 8,
+    "minEquipesParPoule": 2,
+    "typeRencontre": "round-robin",
+    "pointsVictoire": 1,
+    "pointsDefaite": 0,
+    "pointsEgalite": 0
+  },
+  "tableau": {
+    "phases": ["seizieme", "huitieme", "quart", "demi", "finale"],
+    "enablePetiteFinale": false,
+    "melangementAleatoire": true
+  },
+  "tatamis": {
+    "nombreMax": 10,
+    "autoLiberation": false,
+    "delaiAutoLiberation": 300,
+    "affichagePublic": true
+  },
+  "equipes": {
+    "minCombattantsParEquipe": 1,
+    "maxCombattantsParEquipe": 20,
+    "categoriesObligatoires": ["M-60", "M-66", "M-73", "M-81", "M-90", "M+90", "F-48", "F-52", "F-57", "F-63", "F-70", "F+70"]
+  },
+  "combattants": {
+    "categoriesPoids": {
+      "masculin": ["-60", "-66", "-73", "-81", "-90", "+90"],
+      "feminin": ["-48", "-52", "-57", "-63", "-70", "+70"]
+    },
+    "ceintures": ["blanche", "jaune", "orange", "verte", "bleue", "marron", "noire"]
+  },
+  "websockets": {
+    "enabled": true,
+    "heartbeatInterval": 30000,
+    "reconnectAttempts": 5,
+    "reconnectDelay": 3000,
+    "broadcastStats": true
+  },
+  "database": {
+    "autoSave": true,
+    "autoSaveInterval": 60000,
+    "backupEnabled": true,
+    "backupInterval": 3600000,
+    "maxBackups": 10
+  },
+  "display": {
+    "refreshInterval": 1000,
+    "showTimer": true,
+    "showScores": true,
+    "showClassement": true,
+    "animationsEnabled": true,
+    "theme": "default"
+  },
+  "security": {
+    "enableCORS": true,
+    "allowedOrigins": ["*"],
+    "rateLimit": {
+      "enabled": false,
+      "windowMs": 900000,
+      "max": 100
+    }
+  },
+  "logs": {
+    "maxEntries": 1000,
+    "level": "info",
+    "saveToFile": false,
+    "retentionDays": 30
+  }
+}

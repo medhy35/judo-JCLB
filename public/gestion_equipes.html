@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Gestion des Équipes - Judo Manager</title>
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #1976d2;
+            --secondary-color: #424242;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --danger-color: #f44336;
+            --light-bg: #fafafa;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .navbar {
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .main-card {
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border: none;
+        }
+
+        .equipe-card {
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            cursor: pointer;
+        }
+
+        .equipe-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        }
+
+        .equipe-card.selected {
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(25,118,210,0.2);
+        }
+
+        .equipe-color-indicator {
+            width: 4px;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            border-radius: 8px 0 0 8px;
+        }
+
+        .combattant-item {
+            border-left: 3px solid transparent;
+            transition: all 0.2s ease;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .combattant-item:hover {
+            background-color: #f8f9fa;
+            border-left-color: var(--primary-color);
+        }
+
+        .stats-badge {
+            background: linear-gradient(135deg, var(--primary-color), #42a5f5);
+            color: white;
+            border-radius: 20px;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .poids-badge {
+            background: #e3f2fd;
+            color: #1565c0;
+            border: 1px solid #bbdefb;
+        }
+
+        .sexe-badge.M {
+            background: #e8f5e8;
+            color: #2e7d32;
+            border: 1px solid #c8e6c8;
+        }
+
+        .sexe-badge.F {
+            background: #fce4ec;
+            color: #c2185b;
+            border: 1px solid #f8bbd9;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: #6c757d;
+        }
+
+        .search-box {
+            background: white;
+            border-radius: 25px;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+
+        .search-box:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(25,118,210,0.1);
+        }
+
+        .filter-chips {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-chip {
+            background: #e9ecef;
+            border: none;
+            border-radius: 20px;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .filter-chip:hover {
+            background: #dee2e6;
+        }
+
+        .filter-chip.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .fab-button {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, var(--primary-color), #42a5f5);
+            color: white;
+            font-size: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .fab-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #e9ecef;
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+
+<body>
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white">
+    <div class="container-fluid">
+        <a class="navbar-brand fw-bold text-primary" href="dashboard_moderne.html">
+            <i class="fas fa-arrow-left me-2"></i>Gestion des Équipes
+        </a>
+
+        <div class="d-flex align-items-center">
+                <span class="badge bg-success me-3" id="statusIndicator">
+                    <i class="fas fa-circle me-1"></i>Connecté
+                </span>
+        </div>
+    </div>
+</nav>
+
+<!-- Main Content -->
+<div class="container-fluid py-4">
+    <!-- Header avec actions -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h2 class="fw-light mb-1">Équipes & Combattants</h2>
+            <p class="text-muted">Gérez vos équipes et leurs combattants</p>
+        </div>
+        <div class="col-md-6 text-end">
+            <button class="btn btn-outline-primary me-2" id="exportBtn">
+                <i class="fas fa-download me-2"></i>Exporter
+            </button>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalEquipe">
+                <i class="fas fa-plus me-2"></i>Nouvelle équipe
+            </button>
+        </div>
+    </div>
+
+    <!-- Barre de recherche et filtres -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <div class="position-relative">
+                <i class="fas fa-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
+                <input type="text" class="form-control search-box ps-5" id="searchInput"
+                       placeholder="Rechercher une équipe ou un combattant...">
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="filter-chips">
+                <button class="filter-chip active" data-filter="all">Tout</button>
+                <button class="filter-chip" data-filter="M">Masculin</button>
+                <button class="filter-chip" data-filter="F">Féminin</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Layout principal -->
+    <div class="row">
+        <!-- Liste des équipes -->
+        <div class="col-lg-4 mb-4">
+            <div class="card main-card">
+                <div class="card-header bg-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0">
+                            <i class="fas fa-users me-2"></i>Équipes
+                        </h6>
+                        <span class="stats-badge" id="equipesCount">0</span>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div id="equipesContainer" style="max-height: 600px; overflow-y: auto;">
+                        <!-- Loading spinner -->
+                        <div class="text-center p-4" id="equipesLoading">
+                            <div class="loading-spinner mx-auto mb-2"></div>
+                            <p class="text-muted mb-0">Chargement...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Détail de l'équipe sélectionnée -->
+        <div class="col-lg-8">
+            <div class="card main-card">
+                <div class="card-header bg-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0" id="equipeDetailTitle">
+                            <i class="fas fa-user-ninja me-2"></i>Sélectionnez une équipe
+                        </h6>
+                        <div id="equipeActions" class="d-none">
+                            <button class="btn btn-sm btn-outline-primary me-2" id="editEquipeBtn">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-success" data-bs-toggle="modal" data-bs-target="#modalCombattant">
+                                <i class="fas fa-plus me-1"></i>Combattant
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="equipeDetailContent">
+                        <div class="empty-state">
+                            <i class="fas fa-users fa-3x mb-3"></i>
+                            <p class="mb-0">Sélectionnez une équipe dans la liste de gauche pour voir ses détails</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bouton FAB -->
+<button class="fab-button" data-bs-toggle="modal" data-bs-target="#modalEquipe">
+    <i class="fas fa-plus"></i>
+</button>
+
+<!-- Modal Équipe -->
+<div class="modal fade" id="modalEquipe" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalEquipeTitle">
+                    <i class="fas fa-users me-2"></i>Nouvelle équipe
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="formEquipe">
+                <div class="modal-body">
+                    <input type="hidden" id="equipeEditId">
+                    <div class="mb-3">
+                        <label for="equipeId" class="form-label">ID de l'équipe *</label>
+                        <input type="text" id="equipeId" class="form-control" required
+                               placeholder="Ex: equipe_rouge">
+                        <small class="form-text text-muted">Identifiant unique (pas d'espaces)</small>
+                    </div>
+                    <div class="mb-3">
+                        <label for="equipeNom" class="form-label">Nom de l'équipe *</label>
+                        <input type="text" id="equipeNom" class="form-control" required
+                               placeholder="Ex: Dragons Rouge">
+                    </div>
+                    <div class="mb-3">
+                        <label for="equipeCouleur" class="form-label">Couleur</label>
+                        <select class="form-select" id="equipeCouleur">
+                            <option value="primary">Bleu</option>
+                            <option value="danger">Rouge</option>
+                            <option value="success">Vert</option>
+                            <option value="warning">Jaune</option>
+                            <option value="info">Cyan</option>
+                            <option value="secondary">Gris</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-2"></i>Enregistrer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Combattant -->
+<div class="modal fade" id="modalCombattant" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalCombattantTitle">
+                    <i class="fas fa-user-ninja me-2"></i>Nouveau combattant
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="formCombattant">
+                <div class="modal-body">
+                    <input type="hidden" id="combattantEditId">
+                    <input type="hidden" id="combattantEquipeId">
+                    <div class="mb-3">
+                        <label for="combattantNom" class="form-label">Nom complet *</label>
+                        <input type="text" id="combattantNom" class="form-control" required
+                               placeholder="Ex: Jean Dupont">
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="combattantSexe" class="form-label">Sexe *</label>
+                            <select class="form-select" id="combattantSexe" required>
+                                <option value="">-- Choisir --</option>
+                                <option value="M">Masculin</option>
+                                <option value="F">Féminin</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="combattantPoids" class="form-label">Catégorie *</label>
+                            <select class="form-select" id="combattantPoids" required>
+                                <option value="">-- Choisir catégorie --</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-2"></i>Ajouter
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+
+<script>
+    // Variables globales
+    const socket = io();
+    let equipes = [];
+    let combattants = [];
+    let selectedEquipeId = null;
+    let currentFilter = 'all';
+    let CONFIG = null;
+
+    // Initialisation
+    document.addEventListener('DOMContentLoaded', async function() {
+        await loadConfig();
+        loadData();
+        setupEventListeners();
+        setupWebSocket();
+    });
+
+    async function loadConfig() {
+        try {
+            CONFIG = await fetch('/api/config').then(r => r.json());
+            console.log('Config chargée:', CONFIG);
+        } catch (error) {
+            console.error('Erreur chargement config:', error);
+            CONFIG = {
+                combattants: {
+                    categoriesPoids: {
+                        masculin: ["-60", "-66", "-73", "-81", "-90", "+90"],
+                        feminin: ["-48", "-52", "-57", "-63", "-70", "+70"]
+                    }
+                },
+                equipes: {
+                    maxCombattantsParEquipe: 20
+                },
+                display: {
+                    notificationDuration: 3000
+                }
+            };
+        }
+    }
+
+    // Chargement des données
+    async function loadData() {
+        try {
+            const [equipesData, combattantsData] = await Promise.all([
+                fetch('/api/equipes').then(r => r.json()),
+                fetch('/api/combattants').then(r => r.json())
+            ]);
+
+            equipes = equipesData;
+            combattants = combattantsData;
+
+            renderEquipes();
+            updateStats();
+        } catch (error) {
+            console.error('Erreur chargement:', error);
+            showNotification('Erreur de chargement des données', 'danger');
+        }
+    }
+
+    // Rendu des équipes
+    function renderEquipes() {
+        const container = document.getElementById('equipesContainer');
+        const loading = document.getElementById('equipesLoading');
+
+        if (loading) {
+            loading.style.display = 'none';
+        }
+
+        if (equipes.length === 0) {
+            container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-users fa-2x mb-2"></i>
+                        <p class="mb-2">Aucune équipe créée</p>
+                        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalEquipe">
+                            Créer la première équipe
+                        </button>
+                    </div>
+                `;
+            return;
+        }
+
+        const html = equipes.map(equipe => {
+            const combattantsEquipe = combattants.filter(c => c.equipeId === equipe.id);
+            const isSelected = selectedEquipeId === equipe.id;
+
+            return `
+                    <div class="equipe-card p-3 m-2 position-relative ${isSelected ? 'selected' : ''}"
+                         onclick="selectEquipe('${equipe.id}')" data-equipe-id="${equipe.id}">
+                        <div class="equipe-color-indicator bg-${equipe.couleur}"></div>
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h6 class="mb-1 fw-bold">${equipe.nom}</h6>
+                                <small class="text-muted">ID: ${equipe.id}</small>
+                            </div>
+                            <span class="badge bg-light text-dark">${combattantsEquipe.length}</span>
+                        </div>
+                        <div class="mt-2">
+                            <small class="text-muted">
+                                ${combattantsEquipe.filter(c => c.sexe === 'M').length} H /
+                                ${combattantsEquipe.filter(c => c.sexe === 'F').length} F
+                            </small>
+                        </div>
+                    </div>
+                `;
+        }).join('');
+
+        container.innerHTML = html;
+    }
+
+    function updateCategoriesOptions() {
+        const sexeSelect = document.getElementById('combattantSexe');
+        const poidsSelect = document.getElementById('combattantPoids');
+
+        const sexe = sexeSelect.value;
+
+        // Réinitialiser
+        poidsSelect.innerHTML = '<option value="">-- Choisir catégorie --</option>';
+
+        if (!sexe || !CONFIG) return;
+
+        // Récupérer les catégories selon le sexe
+        const categories = sexe === 'M'
+            ? CONFIG.combattants.categoriesPoids.masculin
+            : CONFIG.combattants.categoriesPoids.feminin;
+
+        // Générer les options
+        categories.forEach(poids => {
+            const option = document.createElement('option');
+            option.value = poids;
+            option.textContent = `${poids} kg`;
+            poidsSelect.appendChild(option);
+        });
+    }
+
+    // Sélection d'une équipe
+    function selectEquipe(equipeId) {
+        selectedEquipeId = equipeId;
+        renderEquipes(); // Re-render pour mettre à jour la sélection
+        renderEquipeDetail();
+    }
+
+    // Rendu du détail de l'équipe
+    function renderEquipeDetail() {
+        const equipe = equipes.find(e => e.id === selectedEquipeId);
+        if (!equipe) return;
+
+        const combattantsEquipe = combattants.filter(c => c.equipeId === equipe.id);
+
+        // Filtrer selon le filtre actuel
+        const combattantsFiltered = currentFilter === 'all' ? combattantsEquipe :
+            combattantsEquipe.filter(c => c.sexe === currentFilter);
+
+        // Mettre à jour le titre
+        document.getElementById('equipeDetailTitle').innerHTML = `
+                <i class="fas fa-users me-2 text-${equipe.couleur}"></i>${equipe.nom}
+            `;
+        document.getElementById('equipeActions').classList.remove('d-none');
+
+        // Stocker l'ID pour les actions
+        document.getElementById('combattantEquipeId').value = equipe.id;
+
+        const content = document.getElementById('equipeDetailContent');
+
+        if (combattantsFiltered.length === 0) {
+            content.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-user-ninja fa-3x mb-3"></i>
+                        <p class="mb-2">Aucun combattant ${currentFilter === 'all' ? '' : (currentFilter === 'M' ? 'masculin' : 'féminin')}</p>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCombattant">
+                            <i class="fas fa-plus me-2"></i>Ajouter le premier combattant
+                        </button>
+                    </div>
+                `;
+            return;
+        }
+
+        // Grouper par catégorie de poids
+        const groupes = {};
+        combattantsFiltered.forEach(c => {
+            const key = `${c.sexe}-${c.poids}`;
+            if (!groupes[key]) {
+                groupes[key] = { sexe: c.sexe, poids: c.poids, combattants: [] };
+            }
+            groupes[key].combattants.push(c);
+        });
+
+        const html = `
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center">
+                            <div class="rounded-circle bg-${equipe.couleur} me-3" style="width: 40px; height: 40px;"></div>
+                            <div>
+                                <h5 class="mb-0">${equipe.nom}</h5>
+                                <small class="text-muted">${combattantsEquipe.length} combattant(s)</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <div class="d-flex gap-2 justify-content-end">
+                            <span class="badge bg-info">${combattantsEquipe.filter(c => c.sexe === 'M').length} Hommes</span>
+                            <span class="badge bg-pink">${combattantsEquipe.filter(c => c.sexe === 'F').length} Femmes</span>
+                        </div>
+                    </div>
+                </div>
+
+                <hr>
+
+                ${Object.values(groupes).map(groupe => `
+                    <div class="mb-4">
+                        <h6 class="text-muted mb-2">
+                            <i class="fas fa-weight me-2"></i>
+                            ${groupe.sexe === 'M' ? 'Masculin' : 'Féminin'} ${groupe.poids} kg
+                        </h6>
+                        <div class="list-group">
+                            ${groupe.combattants.map(combattant => `
+                                <div class="list-group-item combattant-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-1">${combattant.nom}</h6>
+                                        <div class="d-flex gap-2">
+                                            <span class="badge poids-badge">${combattant.poids} kg</span>
+                                            <span class="badge sexe-badge ${combattant.sexe}">${combattant.sexe === 'M' ? 'Masculin' : 'Féminin'}</span>
+                                        </div>
+                                    </div>
+                                    <div class="btn-group btn-group-sm">
+                                        <button class="btn btn-outline-primary" onclick="editCombattant(${combattant.id})">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn btn-outline-danger" onclick="deleteCombattant(${combattant.id})">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `).join('')}
+            `;
+
+        content.innerHTML = html;
+    }
+
+    // Mise à jour des statistiques
+    function updateStats() {
+        document.getElementById('equipesCount').textContent = equipes.length;
+    }
+
+    // Configuration des événements
+    function setupEventListeners() {
+
+        document.getElementById('combattantSexe').addEventListener('change', updateCategoriesOptions);
+        // Recherche
+        document.getElementById('searchInput').addEventListener('input', handleSearch);
+
+        // Filtres
+        document.querySelectorAll('.filter-chip').forEach(chip => {
+            chip.addEventListener('click', function() {
+                document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                currentFilter = this.dataset.filter;
+                if (selectedEquipeId) {
+                    renderEquipeDetail();
+                }
+            });
+        });
+
+        // Export
+        document.getElementById('exportBtn').addEventListener('click', function() {
+            const data = {
+                equipes: equipes,
+                combattants: combattants,
+                dateExport: new Date().toISOString()
+            };
+
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `equipes_combattants_${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            showNotification('Export terminé', 'success');
+        });
+
+        // Formulaires
+        document.getElementById('formEquipe').addEventListener('submit', handleEquipeSubmit);
+        document.getElementById('formCombattant').addEventListener('submit', handleCombattantSubmit);
+
+        // Bouton édition équipe
+        document.getElementById('editEquipeBtn').addEventListener('click', () => {
+            editEquipe(selectedEquipeId);
+        });
+    }
+
+    // Gestion de la recherche
+    function handleSearch(e) {
+        const query = e.target.value.toLowerCase();
+        const equipeCards = document.querySelectorAll('.equipe-card');
+
+        equipeCards.forEach(card => {
+            const equipeId = card.dataset.equipeId;
+            const equipe = equipes.find(e => e.id === equipeId);
+            const combattantsEquipe = combattants.filter(c => c.equipeId === equipeId);
+
+            const matchEquipe = equipe.nom.toLowerCase().includes(query) ||
+                equipe.id.toLowerCase().includes(query);
+            const matchCombattant = combattantsEquipe.some(c =>
+                c.nom.toLowerCase().includes(query)
+            );
+
+            card.style.display = (matchEquipe || matchCombattant) ? 'block' : 'none';
+        });
+    }
+
+    // Soumission équipe
+    async function handleEquipeSubmit(e) {
+        e.preventDefault();
+
+        const editId = document.getElementById('equipeEditId').value;
+        const formData = {
+            id: document.getElementById('equipeId').value.trim(),
+            nom: document.getElementById('equipeNom').value.trim(),
+            couleur: document.getElementById('equipeCouleur').value
+        };
+
+        try {
+            const url = editId ? `/api/equipes/${editId}` : '/api/equipes';
+            const method = editId ? 'PATCH' : 'POST';
+
+            const response = await fetch(url, {
+                method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+
+            if (response.ok) {
+                const modal = bootstrap.Modal.getInstance(document.getElementById('modalEquipe'));
+                modal.hide();
+                e.target.reset();
+
+                showNotification(editId ? 'Équipe modifiée' : 'Équipe créée', 'success');
+                loadData();
+            } else {
+                const error = await response.json();
+                showNotification(error.error || 'Erreur', 'danger');
+            }
+        } catch (error) {
+            showNotification('Erreur de connexion', 'danger');
+        }
+    }
+
+    // Soumission combattant
+    async function handleCombattantSubmit(e) {
+        e.preventDefault();
+
+        const editId = document.getElementById('combattantEditId').value;
+        const formData = {
+            nom: document.getElementById('combattantNom').value.trim(),
+            sexe: document.getElementById('combattantSexe').value,
+            poids: document.getElementById('combattantPoids').value,
+            equipeId: document.getElementById('combattantEquipeId').value
+        };
+
+        if (!editId && CONFIG) {
+            const combattantsEquipe = combattants.filter(c => c.equipeId === formData.equipeId);
+            const maxCombattants = CONFIG.equipes.maxCombattantsParEquipe || 20;
+
+            if (combattantsEquipe.length >= maxCombattants) {
+                showNotification(`Maximum ${maxCombattants} combattants par équipe atteint`, 'danger');
+                return;
+            }
+        }
+
+        try {
+            const url = editId ? `/api/combattants/${editId}` : '/api/combattants';
+            const method = editId ? 'PATCH' : 'POST';
+
+            const response = await fetch(url, {
+                method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+
+            if (response.ok) {
+                const modal = bootstrap.Modal.getInstance(document.getElementById('modalCombattant'));
+                modal.hide();
+                e.target.reset();
+
+                showNotification(editId ? 'Combattant modifié' : 'Combattant ajouté', 'success');
+                loadData().then(() => {
+                    if (selectedEquipeId) renderEquipeDetail();
+                });
+            } else {
+                const error = await response.json();
+                showNotification(error.error || 'Erreur', 'danger');
+            }
+        } catch (error) {
+            showNotification('Erreur de connexion', 'danger');
+        }
+    }
+
+    // Édition d'une équipe
+    function editEquipe(equipeId) {
+        const equipe = equipes.find(e => e.id === equipeId);
+        if (!equipe) return;
+
+        document.getElementById('modalEquipeTitle').innerHTML = '<i class="fas fa-edit me-2"></i>Modifier l\'équipe';
+        document.getElementById('equipeEditId').value = equipe.id;
+        document.getElementById('equipeId').value = equipe.id;
+        document.getElementById('equipeNom').value = equipe.nom;
+        document.getElementById('equipeCouleur').value = equipe.couleur;
+
+        // Désactiver le champ ID en édition
+        document.getElementById('equipeId').disabled = true;
+
+        const modal = new bootstrap.Modal(document.getElementById('modalEquipe'));
+        modal.show();
+    }
+
+    // Édition d'un combattant
+    function editCombattant(combattantId) {
+        const combattant = combattants.find(c => c.id === combattantId);
+        if (!combattant) return;
+
+        document.getElementById('modalCombattantTitle').innerHTML = '<i class="fas fa-edit me-2"></i>Modifier le combattant';
+        document.getElementById('combattantEditId').value = combattant.id;
+        document.getElementById('combattantNom').value = combattant.nom;
+        document.getElementById('combattantSexe').value = combattant.sexe;
+        updateCategoriesOptions();
+        document.getElementById('combattantPoids').value = combattant.poids;
+        document.getElementById('combattantEquipeId').value = combattant.equipeId;
+
+        const modal = new bootstrap.Modal(document.getElementById('modalCombattant'));
+        modal.show();
+    }
+
+    // Suppression d'un combattant
+    async function deleteCombattant(combattantId) {
+        const combattant = combattants.find(c => c.id === combattantId);
+        if (!combattant) return;
+
+        if (!confirm(`Supprimer ${combattant.nom} ?`)) return;
+
+        try {
+            const response = await fetch(`/api/combattants/${combattantId}`, {
+                method: 'DELETE'
+            });
+
+            if (response.ok) {
+                showNotification('Combattant supprimé', 'success');
+                loadData().then(() => {
+                    if (selectedEquipeId) renderEquipeDetail();
+                });
+            } else {
+                const error = await response.json();
+                showNotification(error.error || 'Erreur de suppression', 'danger');
+            }
+        } catch (error) {
+            showNotification('Erreur de connexion', 'danger');
+        }
+    }
+
+    // WebSocket
+    function setupWebSocket() {
+        socket.on('connect', () => {
+            updateConnectionStatus('Connecté', 'success');
+        });
+
+        socket.on('disconnect', () => {
+            updateConnectionStatus('Déconnecté', 'danger');
+        });
+
+        socket.on('equipes:update', () => {
+            loadData();
+        });
+
+        socket.on('combattants:update', () => {
+            loadData().then(() => {
+                if (selectedEquipeId) renderEquipeDetail();
+            });
+        });
+    }
+
+    function updateConnectionStatus(text, type) {
+        const indicator = document.getElementById('statusIndicator');
+        indicator.className = `badge bg-${type} me-3`;
+        indicator.innerHTML = `<i class="fas fa-circle me-1"></i>${text}`;
+    }
+
+    // Notifications
+    function showNotification(message, type = 'info') {
+        const toast = document.createElement('div');
+        toast.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+        toast.style.cssText = 'top: 20px; right: 20px; z-index: 2000; min-width: 300px;';
+        toast.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" onclick="this.parentElement.remove()"></button>
+            `;
+
+        document.body.appendChild(toast);
+
+        setTimeout(() => {
+            if (toast.parentElement) {
+                toast.remove();
+            }
+        }, CONFIG?.display?.notificationDuration || 3000);
+    }
+
+    // Reset modal au hide
+    document.getElementById('modalEquipe').addEventListener('hidden.bs.modal', function() {
+        document.getElementById('formEquipe').reset();
+        document.getElementById('equipeEditId').value = '';
+        document.getElementById('equipeId').disabled = false;
+        document.getElementById('modalEquipeTitle').innerHTML = '<i class="fas fa-users me-2"></i>Nouvelle équipe';
+    });
+
+    document.getElementById('modalCombattant').addEventListener('hidden.bs.modal', function() {
+        document.getElementById('formCombattant').reset();
+        document.getElementById('combattantEditId').value = '';
+        document.getElementById('modalCombattantTitle').innerHTML = '<i class="fas fa-user-ninja me-2"></i>Nouveau combattant';
+        document.getElementById('combattantPoids').innerHTML = '<option value="">-- Choisir catégorie --</option>';
+    });
+</script>
+</body>
+</html>
