@@ -14,8 +14,8 @@
     "pauseEntreRounds": 60,
     "tempsPreparation": 30,
     "osaekomi": {
-      "yuko": 10,
-      "wazari": 15,
+      "yuko": 5,
+      "wazari": 10,
       "ippon": 20
     },
     "thresholds": {
@@ -24,8 +24,8 @@
       "maxShido": 3
     },
     "points": {
-      "ippon": 10,
-      "wazari": 7,
+      "ippon": 100,
+      "wazari": 10,
       "yuko": 1,
       "victoire": 1,
       "defaite": 0,
