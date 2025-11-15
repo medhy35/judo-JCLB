@@ -354,16 +354,12 @@
 <!-- Navigation -->
 <nav class="navbar navbar-expand-lg navbar-light bg-white">
     <div class="container-fluid">
-        <a class="navbar-brand fw-bold text-primary" href="dashboard_moderne.html">
+        <a class="navbar-brand fw-bold text-primary" href="index.html">
             <i class="fas fa-arrow-left me-2"></i>Gestion des Tatamis
         </a>
 
-        <div class="d-flex align-items-center">
-                <span class="badge bg-success me-3" id="statusIndicator">
-                    <i class="fas fa-circle me-1"></i>Connecté
-                </span>
+
         </div>
-    </div>
 </nav>
 
 <!-- Main Content -->
@@ -553,11 +549,10 @@
 
 <!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="/socket.io/socket.io.js"></script>
 
 <script>
     // Variables globales
-    const socket = io();
+
     let tatamis = [];
     let combats = [];
     let poules = [];
@@ -567,9 +562,9 @@
     // Initialisation
     document.addEventListener('DOMContentLoaded', async function() {
         await loadConfig();
-        loadData();
+        await loadData();
         setupEventListeners();
-        setupWebSocket();
+        setupAutoRefresh();
     });
 
     async function loadConfig() {
@@ -602,6 +597,7 @@
                 fetch('/api/combats').then(r => r.json()),
                 fetch('/api/poules').then(r => r.json())
             ]);
+            console.log('📦 [DEBUG] tatamisData reçu:', tatamisData);
 
             tatamis = tatamisData;
             combats = combatsData;
@@ -1014,7 +1010,7 @@
                 modal.hide();
 
                 showNotification(editId ? 'Tatami modifié' : 'Tatami créé', 'success');
-                loadData();
+                await loadData();
             } else {
                 const error = await response.json();
                 showNotification(error.error || 'Erreur', 'danger');
@@ -1068,7 +1064,7 @@
                 modal.hide();
 
                 showNotification(`Combats assignés avec succès`, 'success');
-                loadData();
+                await loadData();
             } else {
                 const error = await response.json();
                 showNotification(error.error || 'Erreur lors de l\'assignation', 'danger');
@@ -1093,7 +1089,7 @@
 
             await Promise.all(promises);
             showNotification('Tous les tatamis ont été mis en pause', 'success');
-            loadData();
+            await loadData();
         } catch (error) {
             showNotification('Erreur lors de la pause générale', 'danger');
         }
@@ -1133,7 +1129,7 @@
             });
 
             showNotification('Tatami mis en pause', 'success');
-            loadData();
+            await loadData();
         } catch (error) {
             showNotification('Erreur', 'danger');
         }
@@ -1148,7 +1144,7 @@
             });
 
             showNotification('Tatami repris', 'success');
-            loadData();
+            await loadData();
         } catch (error) {
             showNotification('Erreur', 'danger');
         }
@@ -1164,7 +1160,7 @@
             });
 
             showNotification('Tatami libéré', 'success');
-            loadData();
+            await loadData();
         } catch (error) {
             showNotification('Erreur', 'danger');
         }
@@ -1209,7 +1205,7 @@
 
             if (response.ok) {
                 showNotification('Tatami supprimé', 'success');
-                loadData();
+                await loadData();
             } else {
                 const error = await response.json();
                 showNotification(error.error || 'Erreur lors de la suppression', 'danger');
@@ -1232,32 +1228,13 @@
     }
 
     // WebSocket
-    function setupWebSocket() {
-        socket.on('connect', () => {
-            updateConnectionStatus('Connecté', 'success');
-        });
-
-        socket.on('disconnect', () => {
-            updateConnectionStatus('Déconnecté', 'danger');
-        });
-
-        socket.on('tatamis:update', () => {
+    // refresh
+    function setupAutoRefresh() {
+        // Refresh automatique toutes les 3 secondes
+        // Page de gestion avec actions fréquentes
+        setInterval(() => {
             loadData();
-        });
-
-        socket.on('combats:update', () => {
-            loadData(); // Recharger pour mettre à jour les états des combats
-        });
-
-        socket.on('poules:update', () => {
-            loadData(); // Recharger pour mettre à jour les rencontres disponibles
-        });
-    }
-
-    function updateConnectionStatus(text, type) {
-        const indicator = document.getElementById('statusIndicator');
-        indicator.className = `badge bg-${type} me-3`;
-        indicator.innerHTML = `<i class="fas fa-circle me-1"></i>${text}`;
+        }, 3000);
     }
 
     // Notifications

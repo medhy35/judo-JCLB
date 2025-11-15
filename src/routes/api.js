@@ -10,21 +10,21 @@ const combattantsController = require('../controllers/combattants');
 const poulesController = require('../controllers/poules');
 
 // Import des services
-const dataService = require('../services/dataService');
+const dataService = require('../services/databaseAdapter');
 const classementService = require('../services/classementService');
 const tatamiService = require('../services/tatamiService');
-const socketEvents = require('../utils/socketEvents');
+
 const combatService = require("../services/combatService");
 const configService = require('../services/configService');
 const backupService = require('../services/backupService');
+const sseManager = require('../services/sseManager');
 
 // Middleware pour ajouter les services aux requêtes
 router.use((req, res, next) => {
     req.services = {
         data: dataService,
         classement: classementService,
-        tatami: tatamiService,
-        socket: socketEvents
+        tatami: tatamiService
     };
     next();
 });
@@ -41,7 +41,7 @@ const withBroadcast = (controllerMethod, broadcastType) => {
                     case 'tatamis':
                         if (res.locals.tatami) {
                             // ⚠️ OPTIMISATION : Ne broadcaster QUE le tatami modifié
-                            socketEvents.broadcastToRoom(`tatami-${res.locals.tatami.id}`, 'tatamis:update', {
+                            sseManager.broadcast(res.locals.tatami.id, 'tatami_update', {
                                 tatami: res.locals.tatami,
                                 combatActuel: res.locals.combatActuel
                             });
@@ -50,29 +50,21 @@ const withBroadcast = (controllerMethod, broadcastType) => {
                     case 'combats':
                         if (res.locals.combat) {
                             // ⚠️ Trouver le tatami concerné
-                            const tatamis = require('../services/dataService').readFile('tatamis');
+                            const tatamis = await require('../services/databaseAdapter').getAllTatamis();
                             const tatami = tatamis.find(t =>
                                 t.combatsIds && t.combatsIds.includes(res.locals.combat.id)
                             );
 
                             if (tatami) {
                                 // Broadcaster seulement aux spectateurs de CE tatami
-                                socketEvents.broadcastToRoom(`tatami-${tatami.id}`, 'combats:update', {
+                                sseManager.broadcast(tatami.id, 'combat_update', {
                                     tatamiId: tatami.id,
                                     combat: res.locals.combat
                                 });
                             }
                         }
                         break;
-                    case 'equipes':
-                        if (req.equipe) socketEvents.broadcastEquipeUpdate(req.equipe);
-                        break;
-                    case 'combattants':
-                        if (req.combattant) socketEvents.broadcastCombattantUpdate(req.combattant);
-                        break;
-                    case 'poules':
-                        if (req.poules) socketEvents.broadcastPoulesUpdate(req.poules);
-                        break;
+
                 }
             }
         } catch (error) {
@@ -109,7 +101,7 @@ router.patch('/tatamis/:id/assigner', withBroadcast(async (req, res) => {
 
 router.patch('/tatamis/:id/etat', withBroadcast(async (req, res) => {
     await tatamisController.changerEtat(req, res);
-    req.tatami = dataService.findById('tatamis', +req.params.id);
+    req.tatami = await dataService.getTatamiById(+req.params.id);
 }, 'tatamis'));
 
 router.patch('/tatamis/:id/liberer', withBroadcast(async (req, res) => {
@@ -118,7 +110,7 @@ router.patch('/tatamis/:id/liberer', withBroadcast(async (req, res) => {
 }, 'tatamis'));
 
 router.post('/tatamis/:id/suivant', withBroadcast(async (req, res) => {
-    const result = tatamiService.combatSuivant(+req.params.id);
+    const result = await tatamiService.combatSuivant(+req.params.id);
     if (result.success) {
         req.tatami = result.tatami;
         req.combatActuel = result.combatActuel;
@@ -129,7 +121,7 @@ router.post('/tatamis/:id/suivant', withBroadcast(async (req, res) => {
 }, 'tatamis'));
 
 router.post('/tatamis/:id/precedent', withBroadcast(async (req, res) => {
-    const result = tatamiService.combatPrecedent(+req.params.id);
+    const result = await tatamiService.combatPrecedent(+req.params.id);
     if (result.success) {
         req.tatami = result.tatami;
         req.combatActuel = result.combatActuel;
@@ -143,14 +135,48 @@ router.delete('/tatamis/:id', withBroadcast(async (req, res) => {
     await tatamisController.delete(req, res);
 }, 'tatamis'));
 
+// GET /api/tatamis/:id/events - SSE stream
+router.get('/tatamis/:id/events', async (req, res) => {
+    const tatamiId = parseInt(req.params.id);
+
+    // Configuration SSE
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+    res.setHeader('X-Accel-Buffering', 'no'); // Pour Nginx
+
+    // Heartbeat toutes les 30 secondes
+    const heartbeat = setInterval(() => {
+        res.write(': heartbeat\n\n');
+    }, 30000);
+
+    // Nettoyer à la déconnexion
+    req.on('close', () => {
+        clearInterval(heartbeat);
+        // Retirer le client de la liste
+        sseManager.removeClient(tatamiId, res);
+    });
+
+    // Ajouter le client
+    sseManager.addClient(tatamiId, res);
+
+    // Envoyer état initial
+    const tatami = await dataService.getTatamiById(tatamiId);
+    const combat = await tatamiService.getCombatActuel(tatamiId);
+
+    res.write(`event: init\ndata: ${JSON.stringify({ tatami, combat })}\n\n`);
+});
+
 // ==========================================
 // ROUTES COMBATS
 // ==========================================
 router.get('/combats', async (req, res) => {
     try {
-        const combats = dataService.readFile('combats');
+        const combats = await dataService.getAllCombats();
         const combatService = require('../services/combatService');
-        const combatsEnrichis = combats.map(c => combatService.enrichCombat(c));
+        const combatsEnrichis = await Promise.all(
+            combats.map(c => combatService.enrichCombatAsync(c))
+        );
         res.json(combatsEnrichis);
     } catch (error) {
         console.error('Erreur récupération combats:', error);
@@ -160,12 +186,12 @@ router.get('/combats', async (req, res) => {
 
 router.get('/combats/:id', async (req, res) => {
     try {
-        const combat = dataService.findById('combats', +req.params.id);
+        const combat = await dataService.getCombatById(+req.params.id);
         if (!combat) {
             return res.status(404).json({ error: 'Combat introuvable' });
         }
         const combatService = require('../services/combatService');
-        res.json(combatService.enrichCombat(combat));
+        res.json(await combatService.enrichCombatAsync(combat));
     } catch (error) {
         console.error('Erreur récupération combat:', error);
         res.status(500).json({ error: 'Erreur serveur' });
@@ -182,75 +208,81 @@ router.patch('/combats/:id', withBroadcast(async (req, res) => {
     await combatsController.update(req, res);
 
     // Mise à jour automatique des classements si combat terminé
-    const combat = dataService.findById('combats', combatId);
+    const combat = await dataService.getCombatById(combatId);
     if (combat && combat.etat === 'terminé') {
-        classementService.mettreAJourClassements(combat);
+        await classementService.mettreAJourClassements(combat);
 
         // Mettre à jour le score de confrontation du tatami
-        const tatamis = dataService.readFile('tatamis');
+        const tatamis = await dataService.getAllTatamis();
         const tatami = tatamis.find(t => t.combatsIds && t.combatsIds.includes(combatId));
         if (tatami) {
-            tatamiService.calculerScoreConfrontation(tatami.id);
+            await tatamiService.calculerScoreConfrontation(tatami.id);
             req.tatamiId = tatami.id;
         }
         const tableau = dataService.readFile('tableau');
-        const phases = configService.getCombatConfig().tableau.phases;
+        const combatConfig = configService.getCombatConfig();
 
-        for (const phase of phases) {
-            if (tableau[phase]) {
-                const match = tableau[phase].find(m =>
-                    m.combatsIds && m.combatsIds.includes(combatId)
-                );
+        if (combatConfig?.tableau?.phases && tableau) {
+            const phases = combatConfig.tableau.phases;
+            for (const phase of phases) {
+                if (tableau[phase]) {
+                    const match = tableau[phase].find(m =>
+                        m.combatsIds && m.combatsIds.includes(combatId)
+                    );
 
-                if (match) {
-                    // Recalculer le score du match
-                    const combatService = require('../services/combatService');
-                    const combats = dataService.readFile('combats');
+                    if (match) {
+                        // Recalculer le score du match
+                        const combatService = require('../services/combatService');
+                        const combats = await dataService.getAllCombats();
 
-                    let scoreA = 0;
-                    let scoreB = 0;
-                    let tousTermines = true;
+                        let scoreA = 0;
+                        let scoreB = 0;
+                        let tousTermines = true;
 
-                    match.combatsIds.forEach(cId => {
-                        const c = combats.find(combat => combat.id === cId);
-                        if (!c || c.etat !== 'terminé') {
-                            tousTermines = false;
-                            return;
+                        for (const cId of match.combatsIds) {
+                            const c = combats.find(combat => combat.id === cId);
+                            if (!c || c.etat !== 'terminé') {
+                                tousTermines = false;
+                                continue;
+                            }
+
+                            const cEnrichi = await combatService.enrichCombatAsync(c);
+                            const vainqueur = combatService.determinerVainqueur(c);
+                            const rougeEstEquipeA = cEnrichi.rouge.equipeId === match.equipeA;
+
+                            if (vainqueur === 'rouge') {
+                                if (rougeEstEquipeA) scoreA++;
+                                else scoreB++;
+                            } else if (vainqueur === 'bleu') {
+                                if (rougeEstEquipeA) scoreB++;
+                                else scoreA++;
+                            }
                         }
 
-                        const cEnrichi = combatService.enrichCombat(c);
-                        const vainqueur = combatService.determinerVainqueur(c);
-                        const rougeEstEquipeA = cEnrichi.rouge.equipeId === match.equipeA;
+                        match.scoreA = scoreA;
+                        match.scoreB = scoreB;
 
-                        if (vainqueur === 'rouge') {
-                            if (rougeEstEquipeA) scoreA++;
-                            else scoreB++;
-                        } else if (vainqueur === 'bleu') {
-                            if (rougeEstEquipeA) scoreB++;
-                            else scoreA++;
+                        if (tousTermines && !match.vainqueur) {
+                            match.vainqueur = scoreA > scoreB ? 'A' : (scoreB > scoreA ? 'B' : null);
+                            if (match.vainqueur) {
+                                match.dateFinMatch = new Date().toISOString();
+                            }
                         }
-                    });
 
-                    match.scoreA = scoreA;
-                    match.scoreB = scoreB;
+                        dataService.writeFile('tableau', tableau);
 
-                    if (tousTermines && !match.vainqueur) {
-                        match.vainqueur = scoreA > scoreB ? 'A' : (scoreB > scoreA ? 'B' : null);
-                        if (match.vainqueur) {
-                            match.dateFinMatch = new Date().toISOString();
-                        }
+                        dataService.addLog('Score match tableau mis à jour', {
+                            phase, matchId: match.id, scoreA, scoreB,
+                            vainqueur: match.vainqueur, tousTermines
+                        });
+
+                        break;
                     }
-
-                    dataService.writeFile('tableau', tableau);
-
-                    dataService.addLog('Score match tableau mis à jour', {
-                        phase, matchId: match.id, scoreA, scoreB,
-                        vainqueur: match.vainqueur, tousTermines
-                    });
-
-                    break;
                 }
             }
+        }
+        else {
+            console.log('ℹ️ Pas de phases de tableau configurées, skip calcul tableau');
         }
     }
 
@@ -281,7 +313,7 @@ router.patch('/equipes/:id', withBroadcast(async (req, res) => {
 
 router.patch('/equipes/:id/score', withBroadcast(async (req, res) => {
     await equipesController.updateScore(req, res);
-    req.equipe = dataService.findById('equipes', req.params.id);
+    req.equipe = await dataService.getEquipeById(req.params.id);
 }, 'equipes'));
 
 router.delete('/equipes/:id', withBroadcast(async (req, res) => {
@@ -329,7 +361,7 @@ router.patch('/poules/:id', withBroadcast(async (req, res) => {
 
 router.patch('/poules/:id/classement', withBroadcast(async (req, res) => {
     await poulesController.updateClassement(req, res);
-    req.poules = dataService.readFile('poules');
+    req.poules = await dataService.getAllPoules();
 }, 'poules'));
 
 router.delete('/poules', withBroadcast(async (req, res) => {
@@ -340,7 +372,7 @@ router.delete('/poules', withBroadcast(async (req, res) => {
 // Assignation de combat depuis une poule
 router.post('/poules/assign-combat', withBroadcast(async (req, res) => {
     await poulesController.assignCombat(req, res);
-    req.poules = dataService.readFile('poules');
+    req.poules = await dataService.getAllPoules();
     req.tatami = res.locals.tatami;
 }, 'poules'));
 
@@ -446,7 +478,7 @@ router.post('/tableau/assign/:phase/:id', async (req, res) => {
 
         // Générer les combats
         const combatService = require('../services/combatService');
-        const combats = combatService.genererCombatsEquipes(match.equipeA, match.equipeB);
+        const combats = await combatService.genererCombatsEquipes(match.equipeA, match.equipeB);
 
         if (combats.length === 0) {
             return res.status(400).json({ error: 'Aucun combat généré' });
@@ -454,7 +486,7 @@ router.post('/tableau/assign/:phase/:id', async (req, res) => {
 
         // Assigner au tatami
         const tatamiService = require('../services/tatamiService');
-        const result = tatamiService.assignerCombats(tatamiId, combats.map(c => c.id));
+        const result = await tatamiService.assignerCombats(tatamiId, combats.map(c => c.id));
 
         if (!result.success) {
             return res.status(400).json(result);
@@ -501,18 +533,18 @@ router.patch('/tableau/:phase/:id', (req, res) => {
 });
 
 // Calculer le score d'un match tableau basé sur les combats terminés
-router.get('/tableau/:phase/:id/calculer-score', (req, res) => {
+router.get('/tableau/:phase/:id/calculer-score', async (req, res) => {
     try {
-        const { phase, id } = req.params;
+        const {phase, id} = req.params;
         const tableau = dataService.readFile('tableau');
         const match = tableau[phase]?.find(m => m.id === +id);
 
         if (!match) {
-            return res.status(404).json({ error: 'Match introuvable' });
+            return res.status(404).json({error: 'Match introuvable'});
         }
 
         if (!match.combatsIds || match.combatsIds.length === 0) {
-            return res.json({ scoreA: 0, scoreB: 0, termine: false });
+            return res.json({scoreA: 0, scoreB: 0, termine: false});
         }
 
         const combats = dataService.readFile('combats');
@@ -522,14 +554,14 @@ router.get('/tableau/:phase/:id/calculer-score', (req, res) => {
         let scoreB = 0;
         let tousTermines = true;
 
-        match.combatsIds.forEach(combatId => {
+        for (const combatId of match.combatsIds) {
             const combat = combats.find(c => c.id === combatId);
             if (!combat || combat.etat !== 'terminé') {
                 tousTermines = false;
-                return;
+                continue;
             }
 
-            const combatEnrichi = combatService.enrichCombat(combat);
+            const combatEnrichi = await combatService.enrichCombatAsync(combat);
             const vainqueur = combatService.determinerVainqueur(combat);
 
             // Déterminer si rouge = equipeA ou equipeB
@@ -542,7 +574,7 @@ router.get('/tableau/:phase/:id/calculer-score', (req, res) => {
                 if (rougeEstEquipeA) scoreB++;
                 else scoreA++;
             }
-        });
+        }
 
         // Si tous les combats sont terminés, mettre à jour automatiquement
         if (tousTermines && match.vainqueur === null) {
@@ -573,7 +605,7 @@ router.get('/tableau/:phase/:id/calculer-score', (req, res) => {
 
     } catch (error) {
         console.error('Erreur calcul score:', error);
-        res.status(500).json({ error: 'Erreur serveur' });
+        res.status(500).json({error: 'Erreur serveur'});
     }
 });
 
@@ -666,7 +698,7 @@ router.post('/config/import', (req, res) => {
         }
 
         dataService.addLog('Configuration importée');
-        socketEvents.broadcast('config:update', configService.getAll());
+
 
         res.json({
             success: true,
@@ -681,7 +713,7 @@ router.post('/config/reset', (req, res) => {
     try {
         configService.reset();
         dataService.addLog('Configuration réinitialisée');
-        socketEvents.broadcast('config:update', configService.getAll());
+
 
         res.json({
             success: true,
@@ -735,7 +767,7 @@ router.patch('/config', (req, res) => {
         }
 
         dataService.addLog('Configuration mise à jour', { updates });
-        socketEvents.broadcast('config:update', configService.getAll());
+
 
         res.json({
             success: true,
@@ -755,14 +787,14 @@ router.post('/logs', (req, res) => {
     res.json({ success: true });
 });
 
-router.get('/logs', (req, res) => {
-    const logs = dataService.readFile('logs');
+router.get('/logs', async (req, res) => {
+    const logs = await dataService.getAllLogs();
     res.json(logs.slice(-100)); // Derniers 100 logs
 });
 
 // Export/Import
-router.get('/export', (req, res) => {
-    const exportData = dataService.exportAll();
+router.get('/export', async (req, res) => {
+    const exportData = await dataService.exportAll();
     res.setHeader('Content-Disposition', 'attachment; filename="backup_judo.json"');
     res.json(exportData);
 });
@@ -770,7 +802,7 @@ router.get('/export', (req, res) => {
 router.post('/import', (req, res) => {
     try {
         dataService.importAll(req.body);
-        socketEvents.broadcast('data:update', { message: 'Données importées' });
+
         dataService.addLog('Données importées depuis un fichier');
         res.json({ success: true });
     } catch (error) {
@@ -783,7 +815,7 @@ router.post('/import', (req, res) => {
 router.post('/reset', (req, res) => {
     try {
         dataService.resetAll();
-        socketEvents.broadcast('data:update', { message: 'Données réinitialisées' });
+
         dataService.addLog('Toutes les données ont été réinitialisées');
         res.json({ success: true });
     } catch (error) {
@@ -793,8 +825,8 @@ router.post('/reset', (req, res) => {
 });
 
 // Statistiques globales
-router.get('/stats', (req, res) => {
-    const rapport = classementService.genererRapportCompetition();
+router.get('/stats', async (req, res) => {
+    const rapport = await classementService.genererRapportCompetition();
     res.json(rapport);
 });
 
@@ -813,7 +845,7 @@ router.post('/backups/restore/:filename', (req, res) => {
     const result = backupService.restoreBackup(filename);
 
     if (result.success) {
-        socketEvents.broadcast('data:restored', { filename });
+        console.log(`✅ Backup ${filename} restauré avec succès`);
     }
     res.json(result);
 });

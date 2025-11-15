@@ -21,12 +21,13 @@
         <a class="navbar-brand fw-bold text-primary" href="gestion_tatamis.html">
             <i class="fas fa-arrow-left me-2"></i><span id="tatamiName">Table de Combat</span>
         </a>
-
         <div class="d-flex align-items-center">
-                <span class="badge bg-success me-3" id="statusIndicator">
-                    <i class="fas fa-circle me-1"></i>Connecté
-                </span>
+            <span class="badge bg-success me-3" id="statusIndicator">
+                <i class="fas fa-circle me-1"></i>Connecté
+            </span>
         </div>
+
+
     </div>
 </nav>
 
@@ -392,7 +393,7 @@
 
 <!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="/socket.io/socket.io.js"></script>
+
 
 <script>
     // =======================================
@@ -401,7 +402,8 @@
     // =======================================
 
     // Variables globales
-    const socket = io();
+    const API_URL = '/api';
+    let eventSource = null;
     let tatamiId = null;
     let combat = null;
     let tatami = null;
@@ -412,6 +414,8 @@
     let osaekomiState = { active: false, cote: null };
     let correctionCote = null;
     let CONFIG = null;
+    let reconnectAttempts = 0;
+    const MAX_RECONNECT_ATTEMPTS = 5;
 
     // =======================================
     // INITIALISATION
@@ -428,9 +432,91 @@
         }
         await loadConfig();
         loadData();
+        connectSSE(tatamiId);
         setupEventListeners();
-        setupWebSocket();
+
     });
+
+    // ========================================
+    // CONNEXION SSE AU TATAMI
+    // ========================================
+
+
+    function connectSSE(tatamiId) {
+        if (eventSource) {
+            eventSource.close();
+        }
+
+        eventSource = new EventSource(`${API_URL}/tatamis/${tatamiId}/events`);
+
+        eventSource.addEventListener('init', (event) => {
+            const data = JSON.parse(event.data);
+            console.log('📡 État initial reçu:', data);
+
+            if (data.tatami) {
+                tatami = data.tatami;
+                //updateTatamiInfo(data.tatami);
+            }
+            if (data.combat) {
+                combat = data.combat;
+                updateCombatDisplay();
+            }
+
+            reconnectAttempts = 0;
+            updateConnectionStatus(true);
+        });
+
+        eventSource.addEventListener('tatami_update', (event) => {
+            const data = JSON.parse(event.data);
+            console.log('🔄 Mise à jour tatami:', data);
+
+            if (data.tatami) {
+                tatami = data.tatami;
+                updateTatamiInfo();
+            }
+            if (data.combatActuel) {
+                combat = data.combatActuel;
+                updateCombatDisplay();
+                updateQueue();
+            }
+        });
+
+        eventSource.addEventListener('combat_update', (event) => {
+            const data = JSON.parse(event.data);
+            console.log('⚔️ Mise à jour combat:', data);
+
+            if (data.combat) {
+                combat = data.combat;
+                updateCombatDisplay();
+            }
+        });
+
+        eventSource.onerror = (error) => {
+            console.error('❌ Erreur SSE:', error);
+            updateConnectionStatus(false);
+
+            if (reconnectAttempts < MAX_RECONNECT_ATTEMPTS) {
+                reconnectAttempts++;
+                const delay = Math.min(1000 * Math.pow(2, reconnectAttempts), 30000);
+                console.log(`🔄 Reconnexion dans ${delay / 1000}s...`);
+                setTimeout(() => connectSSE(tatamiId), delay);
+            }
+        };
+    }
+
+    function updateConnectionStatus(connected) {
+        const indicator = document.getElementById('statusIndicator');
+        if (!indicator) return;
+
+        if (connected) {
+            indicator.className = 'badge bg-success me-3';
+            indicator.innerHTML = '<i class="fas fa-circle me-1"></i>Connecté';
+        } else {
+            indicator.className = 'badge bg-danger me-3';
+            indicator.innerHTML = '<i class="fas fa-circle me-1"></i>Déconnecté';
+        }
+    }
+
 
     // =======================================
     // CHARGEMENT DES DONNÉES
@@ -518,6 +604,7 @@
         const score = tatami.scoreConfrontation || { rouge: 0, bleu: 0 };
         document.getElementById('confrontationScore').textContent = `${score.rouge} - ${score.bleu}`;
     }
+
     // ⚠️ NOUVELLE FONCTION : Recharger uniquement le tatami pour le score
     async function reloadTatamiScore() {
         try {
@@ -532,10 +619,15 @@
     }
 
     function updateCombatDisplay() {
+        console.log('🟢 [DEBUG] updateCombatDisplay() appelé');
+        console.log('🟢 [DEBUG] combat:', combat);
         if (!combat) {
             showNoCombat();
             return;
         }
+        console.log('🟢 [DEBUG] Affichage du combat ID:', combat.id);
+        console.log('🟢 [DEBUG] Rouge:', combat.rouge?.nom);
+        console.log('🟢 [DEBUG] Bleu:', combat.bleu?.nom);
 
         // Utiliser les données enrichies par combatService
         document.getElementById('rougeNom').textContent = combat.rouge?.nom || 'Rouge';
@@ -546,7 +638,7 @@
 
         const chronoActif = timerInterval !== null;
         if (!chronoActif) {
-            timer = combat.timer || CONFIG?.combat?.dureeParDefaut || 240;
+            timer = combat.tempsEcoule || combat.temps_ecoule || combat.dureeCombat || CONFIG?.combat?.dureeParDefaut || 240;
         }
         updateScoreDisplay();
         updateTimerDisplay();
@@ -558,11 +650,13 @@
 
         // Affichage rouge
         let rougeHtml = '';
-        if (combat.rouge?.ippon || combat.ipponRouge) {
+        const ipponRouge = combat.rouge?.ippon || combat.rouge_ippon || combat.ipponRouge || false;
+
+        if (ipponRouge) {
             rougeHtml += '<div class="score-badge score-ippon">IPPON</div>';
         }
-            const wazariRouge = combat.rouge?.wazari || combat.wazariRouge || 0;
-            const yukoRouge = combat.rouge?.yuko || combat.yukoRouge || 0;
+            const wazariRouge = combat.rouge?.wazari || combat.rouge_wazari || 0;
+            const yukoRouge = combat.rouge?.yuko || combat.rouge_yuko || 0;
 
             if (wazariRouge > 0) {
                 rougeHtml += `<div class="score-badge score-rouge">${wazariRouge} WAZARI</div>`;
@@ -572,7 +666,7 @@
             }
 
 
-        const shidoRouge = combat.rouge?.shido || combat.penalitesRouge || 0;
+        const shidoRouge = combat.rouge?.shido || combat.rouge_shido || 0;
         if (shidoRouge > 0) {
             rougeHtml += `<div class="score-badge" style="background: #757575; color: white;">${shidoRouge} SHIDO</div>`;
         }
@@ -580,11 +674,11 @@
 
         // Affichage bleu
         let bleuHtml = '';
-        if (combat.bleu?.ippon || combat.ipponBleu) {
+        if (combat.bleu?.ippon || combat.bleu_ippon) {
             bleuHtml += '<div class="score-badge score-ippon">IPPON</div>';
         } else {
-            const wazariBleu = combat.bleu?.wazari || combat.wazariBleu || 0;
-            const yukoBleu = combat.bleu?.yuko || combat.yukoBleu || 0;
+            const wazariBleu = combat.bleu?.wazari || combat.bleu_wazari || 0;
+            const yukoBleu = combat.bleu?.yuko || combat.bleu_yuko || 0;
 
             if (wazariBleu > 0) {
                 bleuHtml += `<div class="score-badge score-bleu">${wazariBleu} WAZARI</div>`;
@@ -594,7 +688,7 @@
             }
         }
 
-        const shidoBleu = combat.bleu?.shido || combat.penalitesBleu || 0;
+        const shidoBleu = combat.bleu?.shido || combat.bleu_shido || 0;
         if (shidoBleu > 0) {
             bleuHtml += `<div class="score-badge" style="background: #757575; color: white;">${shidoBleu} SHIDO</div>`;
         }
@@ -696,12 +790,15 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     etat: 'pause',
-                    timer: timer
+                    temps_ecoule: timer
                 })
             });
 
             if (response.ok) {
-                combat.etat = 'pause';
+                const updatedCombat = await response.json();
+                const savedTimer = timer;
+                combat = updatedCombat;
+                timer = savedTimer;
                 updateEtatCombat();
                 stopTimerDisplay();
                 showNotification('Combat en pause', 'warning');
@@ -721,15 +818,14 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     etat: 'terminé',
-                    timer: 0,
-                    dateFin: new Date().toISOString(),
-                    raisonFin: 'arret_manuel'
+                    temps_ecoule: 0,
+                    date_fin: new Date().toISOString(),
+                    raison_fin: 'arret_manuel'
                 })
             });
 
             if (response.ok) {
-                const updatedCombat = await response.json();
-                combat = updatedCombat;
+                combat = await response.json();
                 updateCombatDisplay();
                 stopTimerDisplay();
                 stopOsaekomi();
@@ -781,30 +877,56 @@
     }
 
     async function combatSuivant() {
-        if (!tatami) return;
+        console.log('🔵 [DEBUG] Début combatSuivant()');
+        console.log('🔵 [DEBUG] tatami actuel:', tatami);
+        console.log('🔵 [DEBUG] combat actuel:', combat);
+
+        if (!tatami) {
+            console.error('❌ [DEBUG] Pas de tatami !');
+            return;
+        }
 
         try {
+            console.log('🔵 [DEBUG] Envoi requête POST /api/tatamis/' + tatamiId + '/suivant');
+
             const response = await fetch(`/api/tatamis/${tatamiId}/suivant`, {
                 method: 'POST'
             });
 
+            console.log('🔵 [DEBUG] Response status:', response.status);
+            console.log('🔵 [DEBUG] Response ok:', response.ok);
+
             if (response.ok) {
                 const result = await response.json();
+                console.log('✅ [DEBUG] Résultat reçu:', result);
 
+                // Mettre à jour les variables globales
+                const ancienCombat = combat?.id;
                 tatami = result.tatami;
                 combat = result.combatActuel;
 
+                console.log('🔵 [DEBUG] Ancien combat ID:', ancienCombat);
+                console.log('🔵 [DEBUG] Nouveau combat:', combat);
+                console.log('🔵 [DEBUG] Nouveau tatami:', tatami);
+
+                // Mettre à jour l'affichage
                 updateTatamiInfo();
                 updateCombatDisplay();
                 updateQueue();
 
+                // Réinitialiser le timer
+                timer = combat?.temps_ecoule || CONFIG?.combat?.dureeParDefaut || 240;
+                console.log('🔵 [DEBUG] Timer réinitialisé à:', timer);
+
+                // Cacher le bouton suivant et le popup de victoire
                 document.getElementById('btnNext').style.display = 'none';
                 hideVictory();
 
                 showNotification('Combat suivant', 'success');
             } else {
                 const error = await response.json();
-                // ⚠️ NOUVEAU : Afficher le popup imposant au lieu d'une simple notification
+                console.error('❌ [DEBUG] Erreur backend:', error);
+
                 if (error.error && error.error.includes('dernier combat')) {
                     showFinRencontrePopup();
                 } else {
@@ -812,6 +934,7 @@
                 }
             }
         } catch (error) {
+            console.error('❌ [DEBUG] Erreur catch:', error);
             showNotification('Erreur', 'danger');
         }
     }
@@ -820,6 +943,27 @@
     // MARQUAGE DES POINTS
     // =======================================
 
+    function getScoreUpdate(cote, type) {
+        const updates = {};
+
+        switch (type) {
+            case 'ippon':
+                updates[`${cote}_ippon`] = 1;
+                break;
+            case 'wazari':
+                updates[`${cote}_wazari`] = (combat[`${cote}_wazari`] || 0) + 1;
+                break;
+            case 'yuko':
+                updates[`${cote}_yuko`] = (combat[`${cote}_yuko`] || 0) + 1;
+                break;
+            case 'shido':
+                updates[`${cote}_shido`] = (combat[`${cote}_shido`] || 0) + 1;
+                break;
+        }
+
+        return updates;
+    }
+
     async function marquerPoint(cote, type) {
         if (!combat || combat.etat === 'terminé') return;
 
@@ -827,15 +971,15 @@
             const response = await fetch(`/api/combats/${combat.id}`, {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    action: 'marquer_point',
-                    cote: cote,
-                    type: type
-                })
+                body: JSON.stringify(getScoreUpdate(cote, type))
             });
 
             if (response.ok) {
                 const updatedCombat = await response.json();
+                // ⚠️ AJOUTER CE LOG POUR DEBUG
+                console.log('🎯 Combat reçu du backend:', updatedCombat);
+                console.log('🔴 Rouge:', updatedCombat.rouge);
+                console.log('🔵 Bleu:', updatedCombat.bleu);
                 const timerLocal = timer;
                 combat = updatedCombat;
                 timer = timerLocal;
@@ -845,6 +989,8 @@
                     stopTimerDisplay();
                     stopOsaekomi();
                     showCombatTermine();
+                    showNotification(`${type.toUpperCase()} marqué pour ${cote}`, 'success');
+
 
                     setTimeout(() => {
                         reloadTatamiScore();
@@ -884,8 +1030,9 @@
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    action: 'start_osaekomi',
-                    cote: cote
+                    osaekomi_actif: true,
+                    osaekomi_cote: cote,
+                    osaekomi_debut: new Date().toISOString()
                 })
             });
 
@@ -912,11 +1059,7 @@
                     await simulerPointsOsaekomi(cote, osaekomiTimer, initialState);
 
                     if (osaekomiTimer % 2 === 0) {
-                        socket.emit('osaekomi:update', {
-                            tatamiId: tatamiId,
-                            osaekomiCounter: osaekomiTimer,
-                            osaekomiCote: cote
-                        });
+
                     }
 
                     // Auto-arrêt à 20 secondes (seuil Ippon)
@@ -938,13 +1081,17 @@
     }
 
     async function stopOsaekomi() {
-        if (!osaekomiState.active) return;
+        // ⚠️ NE PAS vérifier osaekomiState.active car ça peut être désynchronisé !
+        // À la place, vérifier si un osaekomi est actif dans le combat backend
 
         const dureeOsaekomi = osaekomiTimer;
         const coteOsaekomi = osaekomiState.cote;
 
-        // Nettoyer l'affichage local immédiatement
-        cleanupOsaekomoDisplay();
+        // Arrêter le timer local immédiatement
+        if (osaekomiInterval) {
+            clearInterval(osaekomiInterval);
+            osaekomiInterval = null;
+        }
 
         try {
             const response = await fetch(`/api/combats/${combat.id}`, {
@@ -959,13 +1106,15 @@
             if (response.ok) {
                 const result = await response.json();
 
-                // Mettre à jour le combat avec les VRAIES données du backend
+                // ✅ D'ABORD : Mettre à jour le combat avec les VRAIES données du backend
                 if (result.combat) {
                     combat = result.combat;
-                    updateScoreDisplay(); // Ceci affichera les vrais scores du backend
                 }
 
-                // Afficher le résumé final (sans doubler les notifications)
+                // ✅ ENSUITE : Nettoyer l'affichage osaekomi
+                cleanupOsaekomoDisplay();
+
+                // Afficher le résumé final
                 if (dureeOsaekomi > 0) {
                     const message = result.pointsMarques && result.pointsMarques.length > 0 ?
                         `OSAEKOMI terminé (${dureeOsaekomi}s): ${result.pointsMarques.join(', ').toUpperCase()}` :
@@ -991,17 +1140,18 @@
                 }
             } else {
                 const error = await response.json();
+                console.error('Erreur stop osaekomi:', error);
                 showNotification(error.error || 'Erreur arrêt osaekomi', 'danger');
 
-                // En cas d'erreur, recharger les vraies données
-                loadData();
+                // En cas d'erreur, nettoyer quand même
+                cleanupOsaekomoDisplay();
             }
         } catch (error) {
             console.error('Erreur stop osaekomi:', error);
             showNotification('Erreur de connexion', 'danger');
 
-            // En cas d'erreur, recharger les vraies données
-            loadData();
+            // En cas d'erreur, nettoyer quand même
+            cleanupOsaekomoDisplay();
         }
     }
 
@@ -1023,10 +1173,10 @@
         osaekomiState = { active: false, cote: null };
 
         // Remettre l'affichage des scores à jour avec les vraies données
-        updateScoreDisplay();
+        //updateScoreDisplay();
 
-        // Notifier via WebSocket
-        socket.emit('osaekomi:stop', { tatamiId: tatamiId });
+
+
     }
 
     async function simulerPointsOsaekomi(cote, duree, initialState) {
@@ -1035,88 +1185,56 @@
             wazari: CONFIG?.combat?.osaekomi?.wazari || 15,
             ippon: CONFIG?.combat?.osaekomi?.ippon || 20
         };
-        const combatSimule = JSON.parse(JSON.stringify(combat)); // Partir du combat ACTUEL
-        const couleur = cote.charAt(0).toUpperCase() + cote.slice(1);
 
-        // Récupérer les scores actuels
-        let wazariActuel = combatSimule[`wazari${couleur}`] || 0;
-        let yukoActuel = combatSimule[`yuko${couleur}`] || 0;
-        let ipponActuel = combatSimule[`ippon${couleur}`] || false;
+        const estNouveauSeuil = (duree === seuils.yuko) || (duree === seuils.wazari) || (duree === seuils.ippon);
+        if (!estNouveauSeuil) return;
 
-        // Si déjà ippon, ne rien faire
-        if (ipponActuel) {
-            return;
-        }
+        // ✅ SIMULATION VISUELLE
+        const combatSimule = JSON.parse(JSON.stringify(combat));
 
-        if (duree >= seuils.ippon) {
-            // 20s = Ippon (s'ajoute aux scores existants)
-            combatSimule[`ippon${couleur}`] = true;
+        if (duree === seuils.ippon) {
+            const wazariActuel = combatSimule[`${cote}_wazari`] || 0;
+            if (wazariActuel > 0) {
+                combatSimule[`${cote}_wazari`] = wazariActuel - 1;
+                combatSimule[cote].wazari = wazariActuel - 1;
+            }
+            combatSimule[`${cote}_ippon`] = 1;
             combatSimule[cote].ippon = true;
+            showNotification(`OSAEKOMI: IPPON!`, 'success');
 
-            // IMPORTANT : Garder les scores précédents dans la simulation
-            // L'ippon ne masque pas les autres scores en simulation, seulement en compétition officielle
-            combatSimule[`wazari${couleur}`] = wazariActuel;
-            combatSimule[cote].wazari = wazariActuel;
-            combatSimule[`yuko${couleur}`] = yukoActuel;
+        } else if (duree === seuils.wazari) {
+            const wazariActuel = combatSimule[`${cote}_wazari`] || 0;
+            const yukoActuel = combatSimule[`${cote}_yuko`] || 0;
+
+            combatSimule[`${cote}_wazari`] = wazariActuel + 1;
+            combatSimule[cote].wazari = wazariActuel + 1;
+            combatSimule[`${cote}_yuko`] = yukoActuel;
             combatSimule[cote].yuko = yukoActuel;
 
-        } else if (duree >= seuils.wazari) {
-            // 15s = +1 Wazari + 1 Yuko de cet osaekomi, puis conversion
+            showNotification(`OSAEKOMI: +1 WAZARI!`, 'success');
 
-            // Cet osaekomi génère 1 yuko (de 10s à 15s)
-            let yukosTotal = yukoActuel + 1;
-
-            // Ajouter 1 wazari
-            let wazarisTotal = wazariActuel + 1;
-
-            // Conversion d'1 yuko
-            if (yukosTotal > 0) {
-                yukosTotal -= 1;
-            }
-
-            combatSimule[`wazari${couleur}`] = wazarisTotal;
-            combatSimule[cote].wazari = wazarisTotal;
-            combatSimule[`yuko${couleur}`] = yukosTotal;
-            combatSimule[cote].yuko = yukosTotal;
-
-            // VÉRIFIER SI 2 WAZARI = FIN DE COMBAT
-            const seuilWazari = CONFIG?.combat?.thresholds?.wazariForIppon || 2;
-            if (wazarisTotal >= seuilWazari) {
-                // Combat terminé par double wazari - arrêter l'osaekomi automatiquement
+            if (wazariActuel + 1 >= 2) {
                 showNotification(`DOUBLE WAZARI - ${cote.toUpperCase()} GAGNE!`, 'success');
-                stopOsaekomi(); // Arrêter l'osaekomi immédiatement
+                stopOsaekomi();
                 return;
             }
 
-        } else if (duree >= seuils.yuko) {
-            // 10s = +1 Yuko simple
-            combatSimule[`yuko${couleur}`] = yukoActuel + 1;
+        } else if (duree === seuils.yuko) {
+            const yukoActuel = combatSimule[`${cote}_yuko`] || 0;
+            combatSimule[`${cote}_yuko`] = yukoActuel + 1;
             combatSimule[cote].yuko = yukoActuel + 1;
-        } else {
-            return; // Pas encore de seuil
+            showNotification(`OSAEKOMI: +1 YUKO!`, 'success');
         }
 
-        // Mettre à jour l'affichage
+        // Afficher simulation
         const vraiCombat = combat;
         combat = combatSimule;
         updateScoreDisplay();
 
-        // Notifications aux seuils
-        const estNouveauSeuil = (duree === seuils.yuko) || (duree === seuils.wazari) || (duree === seuils.ippon);
-        if (estNouveauSeuil) {
-            if (duree === seuils.ippon) {
-                showNotification(`OSAEKOMI: IPPON!`, 'success');
-            } else if (duree === seuils.wazari) {
-                showNotification(`OSAEKOMI: +1 WAZARI!`, 'success');
-            } else if (duree === seuils.yuko) {
-                showNotification(`OSAEKOMI: +1 YUKO!`, 'success');
-            }
-        }
-
-        // Restaurer après un délai
         setTimeout(() => {
             combat = vraiCombat;
-        }, 100);
+            updateScoreDisplay();
+        }, 300);
     }
 
     // =======================================
@@ -1335,14 +1453,20 @@
     }
 
     async function syncTimerWithBackend() {
-        if (!combat) return;
+        if (!combat || combat.etat === 'terminé') return;
 
         try {
-            await fetch(`/api/combats/${combat.id}`, {
+            const response = await fetch(`/api/combats/${combat.id}`, {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ timer })
+                body: JSON.stringify({
+                    temps_ecoule: timer
+                })
             });
+            if (!response.ok) {
+                const error = await response.json();
+                console.warn('⚠️ Erreur sync timer (non-bloquante):', error);
+            }
         } catch (error) {
             console.error('Erreur sync timer:', error);
         }
@@ -1361,15 +1485,14 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     etat: 'terminé',
-                    timer: 0,
-                    dateFin: new Date().toISOString(),
-                    raisonFin: 'temps_ecoule'
+                    temps_ecoule: 0,
+                    date_fin: new Date().toISOString(),
+                    raison_fin: 'temps_ecoule'
                 })
             });
 
             if (response.ok) {
-                const updatedCombat = await response.json();
-                combat = updatedCombat;
+                combat = await response.json();
 
                 updateCombatDisplay();
                 updateEtatCombat();
@@ -1451,68 +1574,10 @@
     }
 
     // =======================================
-    // WEBSOCKET
+    // SSE
     // =======================================
 
-    function setupWebSocket() {
-        socket.on('connect', () => {
-            updateConnectionStatus('Connecté', 'success');
-        });
 
-        socket.on('disconnect', () => {
-            updateConnectionStatus('Déconnecté', 'danger');
-        });
-
-        socket.on('combats:update', (data) => {
-            if (data.combat && data.combat.id === combat?.id) {
-                combat = data.combat;
-
-                // Ne synchroniser le timer que si le chrono est ARRÊTÉ
-                if (!chronoActif && data.combat.timer !== undefined) {
-                    timer = data.combat.timer;
-                } else {
-                    // Préserver le timer local
-                    timer = timerLocal;
-                }
-
-                updateCombatDisplay();
-
-                // Vérifier si combat terminé par un autre client
-                if (combat.etat === 'terminé' && combat.vainqueur) {
-                    stopTimerDisplay();
-                    showCombatTermine();
-
-                    const vainqueurNom = combat.vainqueur === 'rouge' ?
-                        combat.rouge.nom : combat.bleu.nom;
-                    showVictory(vainqueurNom, combat.raisonFin);
-                }
-            }
-        });
-
-        socket.on('tatamis:update', (data) => {
-            if (data.tatami && data.tatami.id === tatamiId) {
-                tatami = data.tatami;
-                updateTatamiInfo();
-                updateQueue();
-            }
-        });
-
-        // Synchronisation osaekomi
-        socket.on('osaekomi:update', (data) => {
-            if (data.tatamiId === tatamiId && data.tatamiId !== tatamiId) {
-                osaekomiTimer = data.osaekomiCounter;
-                document.getElementById('osaekomoTimer').textContent =
-                    osaekomiTimer.toString().padStart(2, '0');
-                document.getElementById('osaekomoDisplay').classList.add('active');
-            }
-        });
-
-        socket.on('osaekomi:stop', (data) => {
-            if (data.tatamiId === tatamiId) {
-                cleanupOsaekomoDisplay();
-            }
-        });
-    }
 
     // =======================================
     // FONCTIONS D'AFFICHAGE
@@ -1682,39 +1747,39 @@
                 }
                 break;
             // Scores rouge (touches numériques)
-            case '1':
+            case 'a':
                 marquerPoint('rouge', 'ippon');
                 break;
-            case '2':
+            case 's':
                 marquerPoint('rouge', 'wazari');
                 break;
-            case '3':
+            case 'w':
                 marquerPoint('rouge', 'yuko');
                 break;
-            case '4':
+            case 'e':
                 marquerPoint('rouge', 'shido');
                 break;
             // Scores bleu
-            case '7':
+            case 'p':
                 marquerPoint('bleu', 'ippon');
                 break;
-            case '8':
+            case 'l':
                 marquerPoint('bleu', 'wazari');
                 break;
-            case '9':
+            case 'k':
                 marquerPoint('bleu', 'yuko');
                 break;
-            case '6':
+            case 'i':
                 marquerPoint('bleu', 'shido');
                 break;
             // Osaekomi
-            case 'q':
+            case '1':
                 startOsaekomi('rouge');
                 break;
-            case 'w':
+            case '2':
                 startOsaekomi('bleu');
                 break;
-            case 's':
+            case '3':
                 stopOsaekomi();
                 break;
             case 'escape': // Échap pour fermer les modals

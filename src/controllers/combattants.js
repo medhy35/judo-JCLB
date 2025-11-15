@@ -1,5 +1,5 @@
 // src/controllers/combattants.js
-const dataService = require('../services/dataService');
+const dataService = require('../services/databaseAdapter');
 const configService = require('../services/configService');
 
 class CombattantsController {
@@ -8,7 +8,7 @@ class CombattantsController {
      */
     async getAll(req, res) {
         try {
-            const combattants = dataService.readFile('combattants');
+            const combattants = await dataService.getAllCombattants();
             res.json(combattants);
         } catch (error) {
             console.error('Erreur récupération combattants:', error);
@@ -22,14 +22,14 @@ class CombattantsController {
     async getById(req, res) {
         try {
             const combattantId = +req.params.id;
-            const combattant = dataService.findById('combattants', combattantId);
+            const combattant = await dataService.getCombattantById(combattantId);
 
             if (!combattant) {
                 return res.status(404).json({ error: 'Combattant introuvable' });
             }
 
             // Ajouter les informations de l'équipe
-            const equipe = dataService.findById('equipes', combattant.equipeId);
+            const equipe = await dataService.getEquipeById(combattant.equipeId || combattant.equipe_id);
             const combattantComplet = {
                 ...combattant,
                 equipe: equipe ? { id: equipe.id, nom: equipe.nom, couleur: equipe.couleur } : null
@@ -54,7 +54,7 @@ class CombattantsController {
             }
 
             // Vérifier que l'équipe existe
-            const equipe = dataService.findById('equipes', equipeId);
+            const equipe = await dataService.getEquipeById(equipeId);
             if (!equipe) {
                 return res.status(400).json({ error: 'Équipe introuvable' });
             }
@@ -80,7 +80,7 @@ class CombattantsController {
                     categoriesValides
                 });
             }
-            const combattantsEquipe = dataService.getEquipeCombattants(equipeId);
+            const combattantsEquipe = await dataService.getCombattantsByEquipe(equipeId);
             const maxCombattants = configService.get('equipes.maxCombattantsParEquipe', 20);
 
             if (combattantsEquipe.length >= maxCombattants) {
@@ -97,7 +97,7 @@ class CombattantsController {
                 dateCreation: new Date().toISOString()
             };
 
-            const combattant = dataService.add('combattants', newCombattant);
+            const combattant = await dataService.createCombattant(newCombattant);
             dataService.addLog(`Nouveau combattant créé: ${nom}`, {
                 combattantId: combattant.id,
                 equipeId,
@@ -120,7 +120,7 @@ class CombattantsController {
             const combattantId = +req.params.id;
             const updates = req.body;
 
-            const combattant = dataService.findById('combattants', combattantId);
+            const combattant = await dataService.getCombattantById(combattantId);
             if (!combattant) {
                 return res.status(404).json({ error: 'Combattant non trouvé' });
             }
@@ -137,7 +137,7 @@ class CombattantsController {
 
             // Vérifications spécifiques
             if (updatesFiltered.equipeId) {
-                const equipe = dataService.findById('equipes', updatesFiltered.equipeId);
+                const equipe = await dataService.getEquipeById(updatesFiltered.equipeId);
                 if (!equipe) {
                     return res.status(400).json({ error: 'Équipe introuvable' });
                 }
@@ -151,7 +151,7 @@ class CombattantsController {
                 updatesFiltered.nom = updatesFiltered.nom.trim();
             }
 
-            const updatedCombattant = dataService.update('combattants', combattantId, updatesFiltered);
+            const updatedCombattant = await dataService.updateCombattant(combattantId, updatesFiltered);
 
             dataService.addLog(`Combattant modifié: ${updatedCombattant.nom}`, {
                 combattantId,
@@ -173,7 +173,7 @@ class CombattantsController {
             const combattantId = +req.params.id;
 
             // Vérifier s'il y a des combats avec ce combattant
-            const combats = dataService.readFile('combats');
+            const combats = await dataService.getAllCombats();
             const combatsActifs = combats.filter(c =>
                 (c.rouge && (c.rouge.id === combattantId || c.rouge === combattantId)) ||
                 (c.bleu && (c.bleu.id === combattantId || c.bleu === combattantId))
@@ -185,7 +185,7 @@ class CombattantsController {
                 });
             }
 
-            const deleted = dataService.remove('combattants', combattantId);
+            const deleted = await dataService.deleteCombattant(combattantId);
             if (!deleted) {
                 return res.status(404).json({ error: 'Combattant introuvable' });
             }
@@ -205,12 +205,12 @@ class CombattantsController {
         try {
             const equipeId = req.params.equipeId;
 
-            const equipe = dataService.findById('equipes', equipeId);
+            const equipe = await dataService.getEquipeById(equipeId);
             if (!equipe) {
                 return res.status(404).json({ error: 'Équipe introuvable' });
             }
 
-            const combattants = dataService.getEquipeCombattants(equipeId);
+            const combattants = await dataService.getCombattantsByEquipe(equipeId);
             res.json(combattants);
         } catch (error) {
             console.error('Erreur récupération combattants par équipe:', error);
@@ -225,7 +225,7 @@ class CombattantsController {
         try {
             const { poids, sexe } = req.query;
 
-            let combattants = dataService.readFile('combattants');
+            let combattants = await dataService.getAllCombattants();
 
             if (poids) {
                 combattants = combattants.filter(c => c.poids === poids);
@@ -236,7 +236,7 @@ class CombattantsController {
             }
 
             // Enrichir avec les informations des équipes
-            const equipes = dataService.readFile('equipes');
+            const equipes = await dataService.getAllEquipes();
             const combattantsEnrichis = combattants.map(c => {
                 const equipe = equipes.find(e => e.id === c.equipeId);
                 return {
@@ -259,19 +259,23 @@ class CombattantsController {
         try {
             const combattantId = +req.params.id;
 
-            const combattant = dataService.findById('combattants', combattantId);
+            const combattant = await dataService.getCombattantById(combattantId);
             if (!combattant) {
                 return res.status(404).json({ error: 'Combattant introuvable' });
             }
 
             const combatService = require('../services/combatService');
-            const stats = combatService.getStatsCombattant(combattantId);
+            const stats = await combatService.getStatsCombattant(combattantId);
 
-            const combats = dataService.readFile('combats');
-            const combatsCombattant = combats.filter(c =>
+            const combats = await dataService.getAllCombats();
+            const combatsCombattantFiltered = combats.filter(c =>
                 (c.rouge && (c.rouge.id === combattantId || c.rouge === combattantId)) ||
                 (c.bleu && (c.bleu.id === combattantId || c.bleu === combattantId))
-            ).map(c => combatService.enrichCombat(c));
+            );
+
+            const combatsCombattant = await Promise.all(
+                combatsCombattantFiltered.map(c => combatService.enrichCombat(c))
+            );
 
             res.json({
                 combattant,

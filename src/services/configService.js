@@ -30,8 +30,8 @@ class ConfigService {
                 pauseEntreRounds: 60,
                 tempsPreparation: 30,
                 osaekomi: {
-                    yuko: 10,
-                    wazari: 15,
+                    yuko: 5,
+                    wazari: 10,
                     ippon: 20
                 },
                 thresholds: {
@@ -40,8 +40,8 @@ class ConfigService {
                     maxShido: 3
                 },
                 points: {
-                    ippon: 10,
-                    wazari: 7,
+                    ippon: 100,
+                    wazari: 10,
                     yuko: 1,
                     victoire: 1,
                     defaite: 0,
@@ -49,7 +49,7 @@ class ConfigService {
                 }
             },
             poules: {
-                maxEquipesParPoule: 8,
+                maxEquipesParPoule: 10,
                 minEquipesParPoule: 2,
                 typeRencontre: "round-robin",
                 pointsVictoire: 1,

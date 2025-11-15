@@ -468,10 +468,10 @@
 </div>
 
 <!-- Scripts -->
-<script src="/socket.io/socket.io.js"></script>
+
 <script>
     // Configuration
-    const socket = io();
+    let eventSource = null;
     const urlParams = new URLSearchParams(window.location.search);
     const tatamiId = parseInt(urlParams.get('tatami'));
 
@@ -498,6 +498,7 @@
 
         // Actualiser toutes les 5 secondes
         //setInterval(loadData, 5000);
+        setupSSE();
     }
 
     // Chargement des données

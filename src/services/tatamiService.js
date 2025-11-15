@@ -1,5 +1,5 @@
 // src/services/tatamiService.js
-const dataService = require('./dataService');
+const dataService = require('./databaseAdapter');
 const combatService = require('./combatService');
 const classementService = require('./classementService');
 
@@ -9,34 +9,38 @@ class TatamiService {
      * @param {number} tatamiId
      * @returns {Object} Score de confrontation mis à jour
      */
-    calculerScoreConfrontation(tatamiId) {
-        const tatami = dataService.findById('tatamis', tatamiId);
+    async calculerScoreConfrontation(tatamiId) {
+        const tatami = await dataService.getTatamiById(tatamiId);
         if (!tatami || !tatami.combatsIds) {
-            return { rouge: 0, bleu: 0 };
+            return {rouge: 0, bleu: 0};
         }
 
-        const combats = dataService.readFile('combats');
+        const combats = await dataService.getAllCombats();
         let scoreRouge = 0;
         let scoreBleu = 0;
 
-        tatami.combatsIds.forEach(combatId => {
+        for (const combatId of tatami.combatsIds) {
             const combat = combats.find(c => c.id === combatId);
-            if (!combat || combat.etat !== 'terminé') return;
+            if (!combat || combat.etat !== 'terminé') continue;
 
-            const combatEnrichi = combatService.enrichCombat(combat);
+            const combatEnrichi = await combatService.enrichCombatAsync(combat);
 
             // Calculer les points de chaque côté
-            const pointsRouge = combatService.calculerPointsCombat(combat, combatEnrichi.rouge.equipeId);
-            const pointsBleu = combatService.calculerPointsCombat(combat, combatEnrichi.bleu.equipeId);
+            const pointsRouge = combatService.calculerPointsCombat(combatEnrichi, combatEnrichi.rouge.equipeId);
+            const pointsBleu = combatService.calculerPointsCombat(combatEnrichi, combatEnrichi.bleu.equipeId);
 
             scoreRouge += pointsRouge;
             scoreBleu += pointsBleu;
-        });
+        }
 
-        const scoreConfrontation = { rouge: scoreRouge, bleu: scoreBleu };
+        // ✅ CORRIGER : Utiliser les noms de colonnes PostgreSQL
+        const updates = {
+            score_rouge: scoreRouge,
+            score_bleu: scoreBleu
+        };
 
         // Mettre à jour le tatami
-        dataService.update('tatamis', tatamiId, { scoreConfrontation });
+        await dataService.updateTatami(tatamiId, updates);
 
         dataService.addLog(`Score confrontation calculé pour ${tatami.nom}`, {
             tatamiId,
@@ -44,7 +48,7 @@ class TatamiService {
             scoreBleu
         });
 
-        return scoreConfrontation;
+        return {rouge: scoreRouge, bleu: scoreBleu};
     }
 
     /**
@@ -52,19 +56,20 @@ class TatamiService {
      * @param {number} tatamiId
      * @returns {Object|null}
      */
-    getCombatActuel(tatamiId) {
-        const tatami = dataService.findById('tatamis', tatamiId);
+    async getCombatActuel(tatamiId) {
+        const tatami = await dataService.getTatamiById(tatamiId);
+
         if (!tatami) return null;
 
-        const index = tatami.indexCombatActuel || 0;
+        const index = tatami.index_combat_actuel || tatami.indexCombatActuel || 0;
         const combatId = tatami.combatsIds?.[index];
         if (!combatId) return null;
 
-        const combat = dataService.findById('combats', combatId);
+        const combat = await dataService.getCombatById(combatId);
         if (!combat) return null;
 
         // Enrichir le combat avec toutes les données
-        return combatService.enrichCombat(combat);
+        return await combatService.enrichCombatAsync(combat);
     }
 
     /**
@@ -72,22 +77,25 @@ class TatamiService {
      * @param {number} tatamiId
      * @returns {Object} Résultat de l'opération
      */
-    combatSuivant(tatamiId) {
-        const tatami = dataService.findById('tatamis', tatamiId);
+    async combatSuivant(tatamiId) {
+        const tatami = await dataService.getTatamiById(tatamiId);
         if (!tatami) {
-            return { success: false, error: 'Tatami introuvable' };
+            return {success: false, error: 'Tatami introuvable'};
         }
 
-        const indexActuel = tatami.indexCombatActuel || 0;
+        const indexActuel = tatami.index_combat_actuel || tatami.indexCombatActuel || 0;
         const nombreCombats = tatami.combatsIds?.length || 0;
+        console.log('🔧 [Backend] combatSuivant - indexActuel:', indexActuel);
+        console.log('🔧 [Backend] combatSuivant - nombreCombats:', nombreCombats);
+
 
         if (indexActuel >= nombreCombats - 1) {
-            return { success: false, error: 'Déjà au dernier combat' };
+            return {success: false, error: 'Déjà au dernier combat'};
         }
 
         const nouvelIndex = indexActuel + 1;
         const updates = {
-            indexCombatActuel: nouvelIndex,
+            index_combat_actuel: nouvelIndex,
             historique: [
                 ...(tatami.historique || []),
                 {
@@ -99,9 +107,12 @@ class TatamiService {
             ]
         };
 
-        dataService.update('tatamis', tatamiId, updates);
+        console.log('🔧 [Backend] Mise à jour tatami avec:', updates);
+        await dataService.updateTatami(tatamiId, updates);
 
-        const combatActuel = this.getCombatActuel(tatamiId);
+        const combatActuel = await this.getCombatActuel(tatamiId);
+        const tatamiMisAJour = await dataService.getTatamiById(tatamiId);
+        console.log('🔧 [Backend] Nouveau combat:', combatActuel?.id);
 
         dataService.addLog(`${tatami.nom} - Combat suivant`, {
             tatamiId,
@@ -113,7 +124,7 @@ class TatamiService {
             success: true,
             index: nouvelIndex,
             combatActuel,
-            tatami: dataService.findById('tatamis', tatamiId)
+            tatami:  tatamiMisAJour
         };
     }
 
@@ -122,21 +133,22 @@ class TatamiService {
      * @param {number} tatamiId
      * @returns {Object} Résultat de l'opération
      */
-    combatPrecedent(tatamiId) {
-        const tatami = dataService.findById('tatamis', tatamiId);
+    async combatPrecedent(tatamiId) {
+        const tatami = await dataService.getTatamiById(tatamiId);
         if (!tatami) {
-            return { success: false, error: 'Tatami introuvable' };
+            return {success: false, error: 'Tatami introuvable'};
         }
 
-        const indexActuel = tatami.indexCombatActuel || 0;
+        const indexActuel = tatami.index_combat_actuel || tatami.indexCombatActuel || 0;
+
 
         if (indexActuel <= 0) {
-            return { success: false, error: 'Déjà au premier combat' };
+            return {success: false, error: 'Déjà au premier combat'};
         }
 
         const nouvelIndex = indexActuel - 1;
         const updates = {
-            indexCombatActuel: nouvelIndex,
+            index_combat_actuel: nouvelIndex,
             historique: [
                 ...(tatami.historique || []),
                 {
@@ -148,9 +160,9 @@ class TatamiService {
             ]
         };
 
-        dataService.update('tatamis', tatamiId, updates);
+        await dataService.updateTatami(tatamiId, updates);
 
-        const combatActuel = this.getCombatActuel(tatamiId);
+        const combatActuel = await this.getCombatActuel(tatamiId);
 
         dataService.addLog(`${tatami.nom} - Combat précédent`, {
             tatamiId,
@@ -162,7 +174,7 @@ class TatamiService {
             success: true,
             index: nouvelIndex,
             combatActuel,
-            tatami: dataService.findById('tatamis', tatamiId)
+            tatami: await dataService.getTatamiById(tatamiId)
         };
     }
 
@@ -172,22 +184,22 @@ class TatamiService {
      * @param {Array} combatsIds
      * @returns {Object} Résultat de l'assignation
      */
-    assignerCombats(tatamiId, combatsIds) {
-        const tatami = dataService.findById('tatamis', tatamiId);
+    async assignerCombats(tatamiId, combatsIds) {
+        const tatami = await dataService.getTatamiById(tatamiId);
         if (!tatami) {
-            return { success: false, error: 'Tatami introuvable' };
+            return {success: false, error: 'Tatami introuvable'};
         }
 
         if (!Array.isArray(combatsIds) || combatsIds.length === 0) {
-            return { success: false, error: 'Liste de combats invalide' };
+            return {success: false, error: 'Liste de combats invalide'};
         }
 
         // Vérifier que tous les combats existent
         const combatsValides = [];
         for (const combatId of combatsIds) {
-            const combat = dataService.findById('combats', combatId);
+            const combat = await dataService.getCombatById(combatId);
             if (!combat) {
-                return { success: false, error: `Combat ${combatId} introuvable` };
+                return {success: false, error: `Combat ${combatId} introuvable`};
             }
             combatsValides.push(combatId);
         }
@@ -195,7 +207,7 @@ class TatamiService {
         // Mettre à jour le tatami
         const updates = {
             combatsIds: [...(tatami.combatsIds || []), ...combatsValides],
-            indexCombatActuel: 0,
+            index_combat_actuel: 0,
             etat: 'occupé',
             historique: [
                 ...(tatami.historique || []),
@@ -208,10 +220,10 @@ class TatamiService {
             ]
         };
 
-        const tatamiMisAJour = dataService.update('tatamis', tatamiId, updates);
+        const tatamiMisAJour = await dataService.updateTatami(tatamiId, updates);
 
         // Mise à jour des poules
-        this._mettreAJourPoules(combatsValides);
+        await this._mettreAJourPoules(combatsValides);
 
         dataService.addLog(`${combatsValides.length} combats assignés au ${tatami.nom}`, {
             tatamiId,
@@ -222,7 +234,7 @@ class TatamiService {
             success: true,
             tatami: tatamiMisAJour,
             combatsAssignes: combatsValides.length,
-            combatActuel: this.getCombatActuel(tatamiId)
+            combatActuel: await this.getCombatActuel(tatamiId)
         };
     }
 
@@ -231,17 +243,18 @@ class TatamiService {
      * @param {number} tatamiId
      * @returns {Object} Résultat de la libération
      */
-    libererTatami(tatamiId) {
-        const tatami = dataService.findById('tatamis', tatamiId);
+    async libererTatami(tatamiId) {
+        const tatami = await dataService.getTatamiById(tatamiId);
         if (!tatami) {
-            return { success: false, error: 'Tatami introuvable' };
+            return {success: false, error: 'Tatami introuvable'};
         }
 
         const updates = {
             combatsIds: [],
-            indexCombatActuel: 0,
+            index_combat_actuel: 0,
             etat: 'libre',
-            scoreConfrontation: { rouge: 0, bleu: 0 },
+            score_rouge: 0,
+            score_bleu: 0,
             historique: [
                 ...(tatami.historique || []),
                 {
@@ -252,7 +265,7 @@ class TatamiService {
             ]
         };
 
-        const tatamiLibere = dataService.update('tatamis', tatamiId, updates);
+        const tatamiLibere = await dataService.updateTatami(tatamiId, updates);
 
         dataService.addLog(`Tatami ${tatami.nom} libéré`, {
             tatamiId,
@@ -270,18 +283,19 @@ class TatamiService {
      * @param {number} tatamiId
      * @returns {Array}
      */
-    getHistoriqueCombats(tatamiId) {
-        const tatami = dataService.findById('tatamis', tatamiId);
+    async getHistoriqueCombats(tatamiId) {
+        const tatami = await dataService.getTatamiById(tatamiId);
         if (!tatami) return [];
 
-        const combats = dataService.readFile('combats');
+        const combats = await dataService.getAllCombats();
         const historique = [];
 
-        (tatami.combatsIds || []).forEach((combatId, index) => {
+        for (const combatId of (tatami.combatsIds || [])) {
+            const index = (tatami.combatsIds || []).indexOf(combatId);
             const combat = combats.find(c => c.id === combatId);
-            if (!combat) return;
+            if (!combat) continue;
 
-            const combatEnrichi = combatService.enrichCombat(combat);
+            const combatEnrichi = await combatService.enrichCombatAsync(combat);
             const vainqueur = combatService.determinerVainqueur(combat);
 
             historique.push({
@@ -293,18 +307,18 @@ class TatamiService {
                 rouge: {
                     nom: combatEnrichi.rouge.nom,
                     equipe: combatEnrichi.rouge.equipe,
-                    points: combatService.calculerPointsCombat(combat, combatEnrichi.rouge.equipeId)
+                    points: combatService.calculerPointsCombat(combatEnrichi, combatEnrichi.rouge.equipeId)
                 },
                 bleu: {
                     nom: combatEnrichi.bleu.nom,
                     equipe: combatEnrichi.bleu.equipe,
-                    points: combatService.calculerPointsCombat(combat, combatEnrichi.bleu.equipeId)
+                    points: combatService.calculerPointsCombat(combatEnrichi, combatEnrichi.bleu.equipeId)
                 },
                 vainqueur,
                 duree: combat.dateFin && combat.dateCreation ?
                     Math.round((new Date(combat.dateFin) - new Date(combat.dateCreation)) / 1000) : null
             });
-        });
+        }
 
         return historique;
     }
@@ -314,11 +328,11 @@ class TatamiService {
      * @param {number} tatamiId
      * @returns {Object}
      */
-    getStatsTatami(tatamiId) {
-        const tatami = dataService.findById('tatamis', tatamiId);
+    async getStatsTatami(tatamiId) {
+        const tatami = await dataService.getTatamiById(tatamiId);
         if (!tatami) return null;
 
-        const historique = this.getHistoriqueCombats(tatamiId);
+        const historique = await this.getHistoriqueCombats(tatamiId);
         const combatsTermines = historique.filter(h => h.etat === 'terminé');
 
         const stats = {
@@ -342,7 +356,10 @@ class TatamiService {
                 combatPlusLong: null,
                 combatPlusCourt: null
             },
-            scores: tatami.scoreConfrontation || { rouge: 0, bleu: 0 }
+            scores: {
+                rouge: tatami.score_rouge || 0,
+                bleu: tatami.score_bleu || 0
+            }
         };
 
         // Calcul des temps
@@ -365,10 +382,10 @@ class TatamiService {
      * @param {number} tatamiId
      * @returns {Object} État de disponibilité
      */
-    verifierDisponibilite(tatamiId) {
-        const tatami = dataService.findById('tatamis', tatamiId);
+    async verifierDisponibilite(tatamiId) {
+        const tatami = await dataService.getTatamiById(tatamiId);
         if (!tatami) {
-            return { disponible: false, raison: 'Tatami introuvable' };
+            return {disponible: false, raison: 'Tatami introuvable'};
         }
 
         if (tatami.etat === 'occupé') {
@@ -377,7 +394,7 @@ class TatamiService {
                 disponible: false,
                 raison: 'Tatami occupé',
                 combatsRestants,
-                combatActuel: this.getCombatActuel(tatamiId)
+                combatActuel: await this.getCombatActuel(tatamiId)
             };
         }
 
@@ -399,16 +416,16 @@ class TatamiService {
      * Met à jour les poules après assignation de combats
      * @private
      */
-    _mettreAJourPoules(combatsIds) {
-        const poules = dataService.readFile('poules');
-        const combats = dataService.readFile('combats');
+    async _mettreAJourPoules(combatsIds) {
+        const poules = await dataService.getAllPoules();
+        const combats = await dataService.getAllCombats();
         let poulesModifiees = false;
 
-        combatsIds.forEach(combatId => {
+        for (const combatId of combatsIds) {
             const combat = combats.find(c => c.id === combatId);
-            if (!combat) return;
+            if (!combat) continue;
 
-            const combatEnrichi = combatService.enrichCombat(combat);
+            const combatEnrichi = await combatService.enrichCombatAsync(combat);
             const equipeRougeId = combatEnrichi.rouge.equipeId;
             const equipeBleuId = combatEnrichi.bleu.equipeId;
 
@@ -430,10 +447,10 @@ class TatamiService {
                     }
                 }
             });
-        });
+        }
 
         if (poulesModifiees) {
-            dataService.writeFile('poules', poules);
+            await dataService.createPoules(poules);
             dataService.addLog('Poules mises à jour après assignation', {
                 combatsIds
             });
@@ -446,32 +463,32 @@ class TatamiService {
      * @param {Object} resultatCombat Résultat du combat terminé
      * @returns {Object}
      */
-    terminerEtSuivant(tatamiId, resultatCombat) {
-        const tatami = dataService.findById('tatamis', tatamiId);
+    async terminerEtSuivant(tatamiId, resultatCombat) {
+        const tatami = await dataService.getTatamiById(tatamiId);
         if (!tatami) {
-            return { success: false, error: 'Tatami introuvable' };
+            return {success: false, error: 'Tatami introuvable'};
         }
 
-        const combatActuel = this.getCombatActuel(tatamiId);
+        const combatActuel = await this.getCombatActuel(tatamiId);
         if (!combatActuel) {
-            return { success: false, error: 'Aucun combat actuel' };
+            return {success: false, error: 'Aucun combat actuel'};
         }
 
         // Terminer le combat actuel
-        const combatTermine = dataService.update('combats', combatActuel.id, {
+        const combatTermine = await dataService.updateCombat(combatActuel.id, {
             ...resultatCombat,
             etat: 'terminé',
             dateFin: new Date().toISOString()
         });
 
         // Mettre à jour les classements
-        classementService.mettreAJourClassements(combatTermine);
+        await classementService.mettreAJourClassements(combatTermine);
 
         // Recalculer le score de confrontation
-        this.calculerScoreConfrontation(tatamiId);
+        await this.calculerScoreConfrontation(tatamiId);
 
         // Passer au combat suivant si possible
-        const suivantResult = this.combatSuivant(tatamiId);
+        const suivantResult = await this.combatSuivant(tatamiId);
 
         dataService.addLog(`Combat terminé et passage au suivant sur ${tatami.nom}`, {
             tatamiId,
@@ -491,19 +508,19 @@ class TatamiService {
      * Obtient tous les tatamis avec leurs combats actuels
      * @returns {Array}
      */
-    getTatamisAvecCombats() {
-        const tatamis = dataService.readFile('tatamis');
+    async getTatamisAvecCombats() {
+        const tatamis = await dataService.getAllTatamis();
 
-        return tatamis.map(tatami => ({
+        return await Promise.all(tatamis.map(async tatami => ({
             ...tatami,
-            combatActuel: this.getCombatActuel(tatami.id),
+            combatActuel: await this.getCombatActuel(tatami.id),
             stats: {
                 combatsTotal: tatami.combatsIds?.length || 0,
                 combatsRestants: Math.max(0, (tatami.combatsIds?.length || 0) - (tatami.indexCombatActuel || 0)),
                 progression: tatami.combatsIds?.length > 0 ?
                     Math.round(((tatami.indexCombatActuel || 0) / tatami.combatsIds.length) * 100) : 0
             }
-        }));
+        })));
     }
 
 

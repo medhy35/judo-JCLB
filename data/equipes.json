@@ -1,38 +1,3 @@
 [
-  {
-    "id": "JCLB",
-    "nom": "Limeil",
-    "couleur": "primary",
-    "dateCreation": "2025-10-16T17:57:43.131Z",
-    "victoires": 0,
-    "points": 0,
-    "scoreGlobal": 0
-  },
-  {
-    "id": "Sucy",
-    "nom": "Sucy",
-    "couleur": "danger",
-    "dateCreation": "2025-10-16T17:57:58.357Z",
-    "victoires": 0,
-    "points": 0,
-    "scoreGlobal": 0
-  },
-  {
-    "id": "Aubervilliers",
-    "nom": "Aubervilliers",
-    "couleur": "primary",
-    "dateCreation": "2025-10-16T17:59:07.359Z",
-    "victoires": 0,
-    "points": 0,
-    "scoreGlobal": 0
-  },
-  {
-    "id": "Marolles",
-    "nom": "Marolles",
-    "couleur": "danger",
-    "dateCreation": "2025-10-16T17:59:17.201Z",
-    "victoires": 0,
-    "points": 0,
-    "scoreGlobal": 0
-  }
+
 ]

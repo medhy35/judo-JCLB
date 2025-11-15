@@ -1,18 +1,36 @@
 {
   "name": "judolimeil-server",
-  "version": "1.0.0",
-  "description": "Serveur de gestion de tournoi de judo",
+  "version": "2.0.0",
+  "description": "Serveur de gestion de tournoi de judo avec PostgreSQL",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "node server.js"
+    "dev": "NODE_ENV=development node server.js",
+    "migrate": "node scripts/migrate-to-postgres.js",
+    "db:setup": "psql -U postgres -f database/schema.sql",
+    "db:backup": "pg_dump -U postgres judo_tournament > backups/backup-$(date +%Y%m%d-%H%M%S).sql",
+    "db:restore": "psql -U postgres judo_tournament < backups/latest.sql",
+    "test": "echo 'Tests à implémenter' && exit 0"
   },
   "dependencies": {
     "express": "^4.18.2",
-    "socket.io": "^4.8.0"
+    "socket.io": "^4.8.0",
+    "pg": "^8.11.3",
+    "dotenv": "^16.3.1"
   },
-  "keywords": ["judo", "tournoi", "competition"],
+  "devDependencies": {},
+  "keywords": [
+    "judo",
+    "tournoi",
+    "competition",
+    "postgresql",
+    "websockets"
+  ],
   "author": "",
   "license": "ISC",
-  "type": "commonjs"
+  "type": "commonjs",
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  }
 }

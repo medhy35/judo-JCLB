@@ -268,11 +268,7 @@
             <i class="fas fa-arrow-left me-2"></i>Gestion des Poules
         </a>
 
-        <div class="d-flex align-items-center">
-                <span class="badge bg-success me-3" id="statusIndicator">
-                    <i class="fas fa-circle me-1"></i>Connecté
-                </span>
-        </div>
+
     </div>
 </nav>
 
@@ -445,11 +441,11 @@
 
 <!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="/socket.io/socket.io.js"></script>
+
 
 <script>
     // Variables globales
-    const socket = io();
+
     let poules = [];
     let equipes = [];
     let tatamis = [];
@@ -460,7 +456,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         loadData();
         setupEventListeners();
-        setupWebSocket();
+        setupAutoRefresh();
     });
 
     // Chargement des données
@@ -1150,36 +1146,12 @@
     }
 
     // WebSocket
-    function setupWebSocket() {
-        socket.on('connect', () => {
-            updateConnectionStatus('Connecté', 'success');
-        });
-
-        socket.on('disconnect', () => {
-            updateConnectionStatus('Déconnecté', 'danger');
-        });
-
-        socket.on('poules:update', () => {
+    function setupAutoRefresh() {
+        // Refresh automatique toutes les 4 secondes
+        // 4s car page complexe avec beaucoup de calculs
+        setInterval(() => {
             loadData();
-        });
-
-        socket.on('tatamis:update', () => {
-            loadData();
-        });
-
-        socket.on('combats:update', () => {
-            loadData(); // Recharger pour mettre à jour l'état des rencontres
-        });
-
-        socket.on('classement:update', () => {
-            loadData(); // Recharger pour mettre à jour les classements
-        });
-    }
-
-    function updateConnectionStatus(text, type) {
-        const indicator = document.getElementById('statusIndicator');
-        indicator.className = `badge bg-${type} me-3`;
-        indicator.innerHTML = `<i class="fas fa-circle me-1"></i>${text}`;
+        }, 4000);
     }
 
     // Notifications

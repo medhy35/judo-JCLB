@@ -1,5 +1,5 @@
 // src/utils/socketEvents.js
-const dataService = require('../services/dataService');
+const dataService = require('../services/databaseAdapter');
 
 class SocketEvents {
     constructor() {

@@ -1,5 +1,5 @@
 // src/services/classementService.js
-const dataService = require('./dataService');
+const dataService = require('./databaseAdapter');
 const combatService = require('./combatService');
 const configService = require('./configService');
 
@@ -12,12 +12,12 @@ class ClassementService {
      * @param {number} pouleId
      * @returns {Object} Poule avec classement mis à jour
      */
-    calculerClassementPoule(pouleId) {
-        const poule = dataService.findById('poules', pouleId);
+    async calculerClassementPoule(pouleId) {
+        const poule = await dataService.getPouleById(pouleId);
         if (!poule) return null;
 
-        const combats = dataService.readFile('combats');
-        const equipes = dataService.readFile('equipes');
+        const combats = await dataService.getAllCombats();
+        const equipes = await dataService.getAllEquipes();
         const poulesConfig = configService.get('poules');
 
         // Initialiser les stats pour chaque équipe de la poule
@@ -39,8 +39,8 @@ class ClassementService {
         });
 
         // Analyser les CONFRONTATIONS (rencontres) au lieu des combats individuels
-        poule.rencontres.forEach(rencontre => {
-            if (!rencontre.combatsIds || rencontre.combatsIds.length === 0) return;
+        for (const rencontre of poule.rencontres) {
+            if (!rencontre.combatsIds || rencontre.combatsIds.length === 0) continue;
 
             // Vérifier si tous les combats de cette rencontre sont terminés
             const combatsRencontre = rencontre.combatsIds.map(id =>
@@ -48,12 +48,12 @@ class ClassementService {
             ).filter(c => c && c.etat === 'terminé');
 
             // Si tous les combats ne sont pas terminés, ignorer cette rencontre
-            if (combatsRencontre.length !== rencontre.combatsIds.length) return;
+            if (combatsRencontre.length !== rencontre.combatsIds.length) continue;
 
             const equipeAId = rencontre.equipeA;
             const equipeBId = rencontre.equipeB;
 
-            if (!statsEquipes[equipeAId] || !statsEquipes[equipeBId]) return;
+            if (!statsEquipes[equipeAId] || !statsEquipes[equipeBId]) continue;
 
             // Calculer le résultat de la CONFRONTATION
             let victoiresA = 0;
@@ -61,8 +61,8 @@ class ClassementService {
             let pointsTotauxA = 0;
             let pointsTotauxB = 0;
 
-            combatsRencontre.forEach(combat => {
-                const combatEnrichi = combatService.enrichCombat(combat);
+            for (const combat of combatsRencontre) {
+                const combatEnrichi = await combatService.enrichCombatAsync(combat);
                 const equipeRougeId = combatEnrichi.rouge.equipeId;
                 const equipeBleuId = combatEnrichi.bleu.equipeId;
 
@@ -73,7 +73,7 @@ class ClassementService {
                 } else if (equipeRougeId === equipeBId) {
                     estRougeEquipeA = false;
                 } else {
-                    return; // Combat ne concerne pas cette rencontre
+                    continue; // Combat ne concerne pas cette rencontre
                 }
 
                 // Compter les victoires par combat
@@ -87,8 +87,8 @@ class ClassementService {
                 }
 
                 // Compter les points techniques marqués
-                const pointsRouge = combatService.calculerPointsCombat(combat, equipeRougeId);
-                const pointsBleu = combatService.calculerPointsCombat(combat, equipeBleuId);
+                const pointsRouge = combatService.calculerPointsCombat(combatEnrichi, equipeRougeId);
+                const pointsBleu = combatService.calculerPointsCombat(combatEnrichi, equipeBleuId);
 
                 if (estRougeEquipeA) {
                     pointsTotauxA += pointsRouge;
@@ -97,7 +97,7 @@ class ClassementService {
                     pointsTotauxA += pointsBleu;
                     pointsTotauxB += pointsRouge;
                 }
-            });
+            }
 
             // Mettre à jour les stats des équipes
             const statsA = statsEquipes[equipeAId];
@@ -147,7 +147,7 @@ class ClassementService {
                     // Pas de points attribués en cas d'égalité parfaite
                 }
             }
-        });
+        }
 
         // Calculer les différentiels
         Object.values(statsEquipes).forEach(stats => {
@@ -175,7 +175,7 @@ class ClassementService {
             derniereMiseAJour: new Date().toISOString()
         };
 
-        dataService.update('poules', pouleId, pouleMAJ);
+        await dataService.updatePoule(pouleId, pouleMAJ);
         dataService.addLog(`Classement de poule calculé: ${poule.nom}`, {
             pouleId,
             nbEquipes: classement.length
@@ -188,9 +188,9 @@ class ClassementService {
      * Calcule le classement général de toutes les poules
      * @returns {Array} Classement général
      */
-    calculerClassementGeneral() {
-        const poules = dataService.readFile('poules');
-        const equipes = dataService.readFile('equipes');
+    async calculerClassementGeneral() {
+        const poules = await dataService.getAllPoules();
+        const equipes = await dataService.getAllEquipes();
 
         // Agréger les stats de toutes les poules
         const statsGlobales = {};
@@ -260,10 +260,10 @@ class ClassementService {
      * Met à jour automatiquement tous les classements après un combat terminé
      * @param {Object} combat Combat terminé
      */
-    mettreAJourClassements(combat) {
+    async mettreAJourClassements(combat) {
         if (combat.etat !== 'terminé') return;
 
-        const poules = dataService.readFile('poules');
+        const poules = await dataService.getAllPoules();
         const poulesAMettreAJour = [];
 
         // Trouver les poules concernées par ce combat
@@ -278,9 +278,9 @@ class ClassementService {
         });
 
         // Mettre à jour les classements des poules concernées
-        poulesAMettreAJour.forEach(pouleId => {
-            this.calculerClassementPoule(pouleId);
-        });
+        for (const pouleId of poulesAMettreAJour) {
+            await this.calculerClassementPoule(pouleId);
+        }
 
         dataService.addLog('Classements mis à jour après combat', {
             combatId: combat.id,
@@ -293,19 +293,21 @@ class ClassementService {
      * @param {string} equipeId
      * @returns {Object}
      */
-    getStatsEquipe(equipeId) {
-        const equipe = dataService.findById('equipes', equipeId);
+    async getStatsEquipe(equipeId) {
+        const equipe = await dataService.getEquipeById(equipeId);
         if (!equipe) return null;
 
-        const combats = dataService.readFile('combats');
-        const combattants = dataService.getEquipeCombattants(equipeId);
+        const combats = await dataService.getAllCombats();
+        const combattants = await dataService.getCombattantsByEquipe(equipeId);
 
         // Combats de l'équipe
-        const combatsEquipe = combats.filter(c => {
-            const combatEnrichi = combatService.enrichCombat(c);
-            return combatEnrichi.rouge.equipeId === equipeId ||
-                combatEnrichi.bleu.equipeId === equipeId;
-        });
+        const combatsEquipe = [];
+        for (const c of combats) {
+            const combatEnrichi = await combatService.enrichCombatAsync(c);
+            if (combatEnrichi.rouge.equipeId === equipeId || combatEnrichi.bleu.equipeId === equipeId) {
+                combatsEquipe.push(c);
+            }
+        }
 
         const stats = {
             equipe,
@@ -328,8 +330,8 @@ class ClassementService {
         };
 
         // Analyser chaque combat
-        combatsEquipe.forEach(combat => {
-            const combatEnrichi = combatService.enrichCombat(combat);
+        for (const combat of combatsEquipe) {
+            const combatEnrichi = await combatService.enrichCombatAsync(combat);
             const estRouge = combatEnrichi.rouge.equipeId === equipeId;
 
             // États des combats
@@ -346,9 +348,9 @@ class ClassementService {
                 }
 
                 // Points marqués
-                const pointsMarques = combatService.calculerPointsCombat(combat, equipeId);
+                const pointsMarques = combatService.calculerPointsCombat(combatEnrichi, equipeId);
                 const adversaireId = estRouge ? combatEnrichi.bleu.equipeId : combatEnrichi.rouge.equipeId;
-                const pointsEncaisses = combatService.calculerPointsCombat(combat, adversaireId);
+                const pointsEncaisses = combatService.calculerPointsCombat(combatEnrichi, adversaireId);
 
                 stats.points.marques += pointsMarques;
                 stats.points.encaisses += pointsEncaisses;
@@ -380,7 +382,7 @@ class ClassementService {
                     stats.categories[categorie].defaites++;
                 }
             }
-        });
+        }
 
         stats.points.differentiel = stats.points.marques - stats.points.encaisses;
 
@@ -393,8 +395,8 @@ class ClassementService {
      * @param {number} limite
      * @returns {Array}
      */
-    getTopEquipes(critere = 'points', limite = 10) {
-        const classement = this.calculerClassementGeneral();
+    async getTopEquipes(critere = 'points', limite = 10) {
+        const classement = await this.calculerClassementGeneral();
 
         let trie;
         switch (critere) {
@@ -418,17 +420,18 @@ class ClassementService {
      * Génère un rapport complet de compétition
      * @returns {Object}
      */
-    genererRapportCompetition() {
-        const equipes = dataService.readFile('equipes');
-        const combats = dataService.readFile('combats');
-        const poules = dataService.readFile('poules');
-        const tatamis = dataService.readFile('tatamis');
+    async genererRapportCompetition() {
+        const equipes = await dataService.getAllEquipes();
+        const combats = await dataService.getAllCombats();
+        const poules = await dataService.getAllPoules();
+        const tatamis = await dataService.getAllTatamis();
+        const combattants = await dataService.getAllCombattants();
 
         const rapport = {
             dateGeneration: new Date().toISOString(),
             statistiques: {
                 equipes: equipes.length,
-                combattants: dataService.readFile('combattants').length,
+                combattants: combattants.length,
                 combats: {
                     total: combats.length,
                     termines: combats.filter(c => c.etat === 'terminé').length,
@@ -443,13 +446,13 @@ class ClassementService {
                 }
             },
             classements: {
-                general: this.calculerClassementGeneral(),
-                parPoule: poules.map(poule => this.calculerClassementPoule(poule.id))
+                general: await this.calculerClassementGeneral(),
+                parPoule: await Promise.all(poules.map(poule => this.calculerClassementPoule(poule.id)))
             },
             topPerformances: {
-                plusVictorieuses: this.getTopEquipes('victoires', 5),
-                meilleurDifferentiel: this.getTopEquipes('differentiel', 5),
-                plusGrandesMarqueuses: this.getTopEquipes('pointsMarques', 5)
+                plusVictorieuses: await this.getTopEquipes('victoires', 5),
+                meilleurDifferentiel: await this.getTopEquipes('differentiel', 5),
+                plusGrandesMarqueuses: await this.getTopEquipes('pointsMarques', 5)
             }
         };
 
@@ -466,12 +469,12 @@ class ClassementService {
      * @param {Object} rencontre
      * @returns {boolean}
      */
-    isRencontreTerminee(rencontre) {
+    async isRencontreTerminee(rencontre) {
         if (!rencontre.combatsIds || rencontre.combatsIds.length === 0) {
             return false;
         }
 
-        const combats = dataService.readFile('combats');
+        const combats = await dataService.getAllCombats();
         const combatsRencontre = rencontre.combatsIds.map(id =>
             combats.find(c => c.id === id)
         ).filter(Boolean);
@@ -485,8 +488,8 @@ class ClassementService {
      * @param {Object} rencontre
      * @returns {Object} Résultat de la rencontre
      */
-    calculerResultatRencontre(rencontre) {
-        if (!this.isRencontreTerminee(rencontre)) {
+    async calculerResultatRencontre(rencontre) {
+        if (!await this.isRencontreTerminee(rencontre)) {
             return {
                 equipeA: rencontre.equipeA,
                 equipeB: rencontre.equipeB,
@@ -497,7 +500,7 @@ class ClassementService {
             };
         }
 
-        const combats = dataService.readFile('combats');
+        const combats = await dataService.getAllCombats();
         const combatsRencontre = rencontre.combatsIds
             .map(id => combats.find(c => c.id === id))
             .filter(Boolean);
@@ -507,9 +510,9 @@ class ClassementService {
         let pointsA = 0;
         let pointsB = 0;
 
-        combatsRencontre.forEach(combat => {
+        for (const combat of combatsRencontre) {
             const vainqueur = combatService.determinerVainqueur(combat);
-            const combatEnrichi = combatService.enrichCombat(combat);
+            const combatEnrichi = await combatService.enrichCombatAsync(combat);
 
             // Identifier quelle équipe correspond à A ou B
             const equipeRouge = combatEnrichi.rouge.equipeId;
@@ -521,7 +524,7 @@ class ClassementService {
             } else if (equipeRouge === rencontre.equipeB) {
                 estRougeEquipeA = false;
             } else {
-                return; // Combat ne concerne pas cette rencontre
+                continue; // Combat ne concerne pas cette rencontre
             }
 
             // Compter les victoires
@@ -534,8 +537,8 @@ class ClassementService {
             }
 
             // Compter les points
-            const pointsRouge = combatService.calculerPointsCombat(combat, equipeRouge);
-            const pointsBleu = combatService.calculerPointsCombat(combat, equipeBleu);
+            const pointsRouge = combatService.calculerPointsCombat(combatEnrichi, equipeRouge);
+            const pointsBleu = combatService.calculerPointsCombat(combatEnrichi, equipeBleu);
 
             if (estRougeEquipeA) {
                 pointsA += pointsRouge;
@@ -544,7 +547,7 @@ class ClassementService {
                 pointsA += pointsBleu;
                 pointsB += pointsRouge;
             }
-        });
+        }
 
         // Déterminer le vainqueur de la rencontre
         let vainqueurRencontre = null;

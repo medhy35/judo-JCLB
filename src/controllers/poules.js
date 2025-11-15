@@ -1,5 +1,5 @@
 // src/controllers/poules.js
-const dataService = require('../services/dataService');
+const dataService = require('../services/databaseAdapter');
 
 class PoulesController {
     /**
@@ -7,7 +7,7 @@ class PoulesController {
      */
     async getAll(req, res) {
         try {
-            const poules = dataService.readFile('poules');
+            const poules = await dataService.getAllPoules();
             res.json(poules);
         } catch (error) {
             console.error('Erreur récupération poules:', error);
@@ -21,7 +21,7 @@ class PoulesController {
     async getById(req, res) {
         try {
             const pouleId = +req.params.id;
-            const poule = dataService.findById('poules', pouleId);
+            const poule = await dataService.getPouleById(pouleId);
 
             if (!poule) {
                 return res.status(404).json({ error: 'Poule introuvable' });
@@ -45,7 +45,7 @@ class PoulesController {
                 return res.status(400).json({ error: 'Nombre de poules invalide (1-10)' });
             }
 
-            const equipes = dataService.readFile('equipes');
+            const equipes = await dataService.getAllEquipes();
             if (equipes.length === 0) {
                 return res.status(400).json({ error: 'Aucune équipe disponible' });
             }
@@ -100,7 +100,7 @@ class PoulesController {
             });
 
             // Sauvegarder les poules
-            dataService.writeFile('poules', poules);
+            await dataService.createPoules(poules);
 
             dataService.addLog(`${nbPoules} poules créées avec ${equipes.length} équipes`, {
                 nbPoules,
@@ -123,7 +123,7 @@ class PoulesController {
             const pouleId = +req.params.id;
             const updates = req.body;
 
-            const poule = dataService.update('poules', pouleId, updates);
+            const poule = await dataService.updatePoule(pouleId, updates);
             if (!poule) {
                 return res.status(404).json({ error: 'Poule introuvable' });
             }
@@ -153,7 +153,8 @@ class PoulesController {
             }
 
             const updates = { classement };
-            const poule = dataService.update('poules', pouleId, updates);
+            await dataService.updateClassementPoule(pouleId, classement);
+            const poule = await dataService.getPouleById(pouleId);
 
             if (!poule) {
                 return res.status(404).json({ error: 'Poule non trouvée' });
@@ -176,7 +177,7 @@ class PoulesController {
      */
     async deleteAll(req, res) {
         try {
-            dataService.writeFile('poules', []);
+            await dataService.deleteAllPoules();
             dataService.addLog('Toutes les poules ont été supprimées');
 
             res.json({ success: true });
@@ -194,7 +195,7 @@ class PoulesController {
             const pouleId = +req.params.id;
             const classementService = require('../services/classementService');
 
-            const poule = classementService.calculerClassementPoule(pouleId);
+            const poule = await classementService.calculerClassementPoule(pouleId);
             if (!poule) {
                 return res.status(404).json({ error: 'Poule non trouvée' });
             }
@@ -216,7 +217,7 @@ class PoulesController {
             const classementService = require('../services/classementService');
 
             console.log('📊 Calcul du classement...');
-            const classement = classementService.calculerClassementGeneral();
+            const classement = await classementService.calculerClassementGeneral();
 
             console.log('✅ Classement calculé:', classement.length, 'équipes');
             console.log('📋 Premier élément:', JSON.stringify(classement[0], null, 2));
@@ -234,8 +235,8 @@ class PoulesController {
      */
     async getConfrontationsEnCours(req, res) {
         try {
-            const tatamis = dataService.readFile('tatamis');
-            const combats = dataService.readFile('combats');
+            const tatamis = await dataService.getAllTatamis();
+            const combats = await dataService.getAllCombats();
 
             const enCours = tatamis.flatMap(tatami => {
                 if (!tatami.combatsIds || tatami.combatsIds.length === 0) {
@@ -284,7 +285,7 @@ class PoulesController {
             const tatamiService = require('../services/tatamiService');
 
             // Trouver la rencontre
-            const poules = dataService.readFile('poules');
+            const poules = await dataService.getAllPoules();
             let rencontre = null;
 
             for (const poule of poules) {
@@ -297,7 +298,7 @@ class PoulesController {
             }
 
             // Générer les combats entre les équipes
-            const combats = combatService.genererCombatsEquipes(
+            const combats = await combatService.genererCombatsEquipes(
                 rencontre.equipeA,
                 rencontre.equipeB
             );
@@ -309,7 +310,7 @@ class PoulesController {
             const combatsIds = combats.map(c => c.id);
 
             // Assigner au tatami
-            const result = tatamiService.assignerCombats(tatamiId, combatsIds);
+            const result = await tatamiService.assignerCombats(tatamiId, combatsIds);
             if (!result.success) {
                 return res.status(400).json(result);
             }
@@ -317,7 +318,7 @@ class PoulesController {
             // Mettre à jour la rencontre
             rencontre.combatsIds = combatsIds;
             rencontre.etat = 'assignee';
-            dataService.writeFile('poules', poules);
+            await dataService.createPoules(poules);
 
             res.locals.tatami = result.tatami;
             res.json({

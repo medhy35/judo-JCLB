@@ -1,5 +1,5 @@
 // src/controllers/tatamis.js
-const dataService = require('../services/dataService');
+const dataService = require('../services/databaseAdapter');
 
 class TatamisController {
     /**
@@ -7,26 +7,38 @@ class TatamisController {
      */
     async getAll(req, res) {
         try {
-            const tatamis = dataService.readFile('tatamis');
-            res.json(tatamis);
+
+            const tatamis = await dataService.getAllTatamis();
+
+            console.log('🔧 [Backend] getAllTatamis retourne:', tatamis);
+            console.log('🔧 [Backend] Type:', typeof tatamis);
+            console.log('🔧 [Backend] Est un tableau?', Array.isArray(tatamis));
+
+            // ✅ S'assurer que c'est un tableau
+            if (!Array.isArray(tatamis)) {
+                console.error('❌ [Backend] tatamis n\'est pas un tableau!');
+                return res.json([]);
+            }
+
+            // ✅ TRANSFORMER les tatamis pour le frontend
+            const tatamisFormates = tatamis.map(tatami => ({
+                ...tatami,
+                // ✅ Transformer snake_case → camelCase pour le frontend
+                scoreConfrontation: {
+                    rouge: tatami.score_rouge || 0,
+                    bleu: tatami.score_bleu || 0
+                },
+                indexCombatActuel: tatami.index_combat_actuel || 0,
+                combatsIds: tatami.combatsIds || []
+            }));
+
+            res.json(tatamisFormates);
         } catch (error) {
-            console.error('Erreur récupération tatamis:', error);
+            console.error('❌ Erreur récupération tatamis:', error);
             res.status(500).json({ error: 'Erreur serveur' });
         }
     }
 
-    async getCombatActuel(req, res) {
-        try {
-            const tatamiId = +req.params.id;
-            const tatamiService = require('../services/tatamiService');
-
-            const combat = tatamiService.getCombatActuel(tatamiId);
-            res.json(combat);
-        } catch (error) {
-            console.error('Erreur combat actuel:', error);
-            res.status(500).json({ error: 'Erreur serveur' });
-        }
-    }
 
     /**
      * GET /api/tatamis/:id/combat-actuel
@@ -34,18 +46,18 @@ class TatamisController {
     async getCombatActuel(req, res) {
         try {
             const tatamiId = +req.params.id;
-            const tatami = dataService.findById('tatamis', tatamiId);
+            const tatami = await dataService.getTatamiById(tatamiId);
 
             if (!tatami) {
                 return res.status(404).json({ error: "Tatami introuvable" });
             }
 
-            const combatId = tatami.combatsIds[tatami.indexCombatActuel || 0];
+            const combatId = tatami.combatsIds[tatami.index_combat_actuel || tatami.indexCombatActuel || 0];
             if (!combatId) {
                 return res.json(null);
             }
 
-            const combat = dataService.findById('combats', combatId);
+            const combat = await dataService.getCombatById(combatId);
             if (!combat) {
                 return res.json(null);
             }
@@ -66,7 +78,7 @@ class TatamisController {
             const tatamiId = +req.params.id;
             const tatamiService = require('../services/tatamiService');
 
-            const historique = tatamiService.getHistoriqueCombats(tatamiId);
+            const historique = await tatamiService.getHistoriqueCombats(tatamiId);
             res.json(historique);
         } catch (error) {
             console.error('Erreur historique combats:', error);
@@ -83,13 +95,14 @@ class TatamisController {
                 nom: req.body.nom || `Tatami ${Date.now()}`,
                 etat: 'libre',
                 combatsIds: [],
-                indexCombatActuel: 0,
-                dateCreation: new Date().toISOString(),
+                index_combat_actuel: 0,
+                date_creation: new Date().toISOString(),
                 historique: [],
-                scoreConfrontation: { rouge: 0, bleu: 0 }
+                score_rouge:0,
+                score_bleu:0
             };
 
-            const tatami = dataService.add('tatamis', newTatami);
+            const tatami = await dataService.createTatami(newTatami);
             dataService.addLog(`Nouveau tatami créé: ${tatami.nom}`, { tatamiId: tatami.id });
 
             // Broadcast sera géré dans les routes
@@ -109,7 +122,7 @@ class TatamisController {
             const tatamiId = +req.params.id;
             const updates = req.body;
 
-            const tatami = dataService.update('tatamis', tatamiId, updates);
+            const tatami = await dataService.updateTatami(tatamiId, updates);
             if (!tatami) {
                 return res.status(404).json({ error: 'Tatami non trouvé' });
             }
@@ -135,7 +148,7 @@ class TatamisController {
             const tatamiId = +req.params.id;
             const { combatsIds } = req.body;
 
-            const tatami = dataService.findById('tatamis', tatamiId);
+            const tatami = await dataService.getTatamiById(tatamiId);
             if (!tatami) {
                 return res.status(404).json({ error: 'Tatami non trouvé' });
             }
@@ -147,7 +160,7 @@ class TatamisController {
             // Vérifier que tous les combats existent
             const combatsValides = [];
             for (const combatId of combatsIds) {
-                const combat = dataService.findById('combats', combatId);
+                const combat = await dataService.getCombatById(combatId);
                 if (!combat) {
                     return res.status(404).json({ error: `Combat ${combatId} introuvable` });
                 }
@@ -157,7 +170,7 @@ class TatamisController {
             // Mise à jour du tatami
             const updates = {
                 combatsIds: [...(tatami.combatsIds || []), ...combatsValides],
-                indexCombatActuel: 0,
+                index_combat_actuel: 0,
                 etat: 'occupé',
                 historique: [
                     ...(tatami.historique || []),
@@ -169,7 +182,7 @@ class TatamisController {
                 ]
             };
 
-            const updatedTatami = dataService.update('tatamis', tatamiId, updates);
+            const updatedTatami = await dataService.updateTatami(tatamiId, updates);
 
             // TODO: Mise à jour des poules (sera dans le service métier)
 
@@ -199,7 +212,7 @@ class TatamisController {
                 return res.status(400).json({ error: 'État invalide' });
             }
 
-            const tatami = dataService.findById('tatamis', tatamiId);
+            const tatami = await dataService.getTatamiById(tatamiId);
             if (!tatami) {
                 return res.status(404).json({ error: 'Tatami non trouvé' });
             }
@@ -216,7 +229,7 @@ class TatamisController {
                 ]
             };
 
-            dataService.update('tatamis', tatamiId, updates);
+            await dataService.updateTatami(tatamiId, updates);
             dataService.addLog(`État du tatami ${tatami.nom} changé: ${etat}`, { tatamiId });
 
             res.json({ success: true });
@@ -232,7 +245,7 @@ class TatamisController {
     async liberer(req, res) {
         try {
             const tatamiId = +req.params.id;
-            const tatami = dataService.findById('tatamis', tatamiId);
+            const tatami = await dataService.getTatamiById(tatamiId);
 
             if (!tatami) {
                 return res.status(404).json({ error: 'Tatami non trouvé' });
@@ -240,9 +253,10 @@ class TatamisController {
 
             const updates = {
                 combatsIds: [],
-                indexCombatActuel: 0,
+                index_combat_actuel: 0,
                 etat: 'libre',
-                scoreConfrontation: { rouge: 0, bleu: 0 },
+                score_rouge: 0,
+                score_bleu: 0,
                 historique: [
                     ...(tatami.historique || []),
                     {
@@ -252,7 +266,7 @@ class TatamisController {
                 ]
             };
 
-            const updatedTatami = dataService.update('tatamis', tatamiId, updates);
+            const updatedTatami = await dataService.updateTatami(tatamiId, updates);
             dataService.addLog(`Tatami ${tatami.nom} libéré`, { tatamiId });
 
             res.locals.tatami = updatedTatami;
@@ -269,7 +283,7 @@ class TatamisController {
     async combatSuivant(req, res) {
         try {
             const tatamiId = +req.params.id;
-            const tatami = dataService.findById('tatamis', tatamiId);
+            const tatami = await dataService.getTatamiById(tatamiId);
 
             if (!tatami) {
                 return res.status(404).json({ error: 'Tatami non trouvé' });
@@ -284,7 +298,7 @@ class TatamisController {
 
             const nouvelIndex = indexActuel + 1;
             const updates = {
-                indexCombatActuel: nouvelIndex,
+                index_combat_actuel: nouvelIndex,
                 historique: [
                     ...(tatami.historique || []),
                     {
@@ -295,8 +309,8 @@ class TatamisController {
                 ]
             };
 
-            dataService.update('tatamis', tatamiId, updates);
-            dataService.addLog(`Tatami ${tatami.nom} - Combat suivant`, {
+            await dataService.updateTatami(tatamiId, updates);
+            await dataService.addLog(`Tatami ${tatami.nom} - Combat suivant`, {
                 tatamiId,
                 index: nouvelIndex
             });
@@ -314,7 +328,7 @@ class TatamisController {
     async combatPrecedent(req, res) {
         try {
             const tatamiId = +req.params.id;
-            const tatami = dataService.findById('tatamis', tatamiId);
+            const tatami = await dataService.getTatamiById(tatamiId);
 
             if (!tatami) {
                 return res.status(404).json({ error: 'Tatami non trouvé' });
@@ -328,7 +342,7 @@ class TatamisController {
 
             const nouvelIndex = indexActuel - 1;
             const updates = {
-                indexCombatActuel: nouvelIndex,
+                index_combat_actuel: nouvelIndex,
                 historique: [
                     ...(tatami.historique || []),
                     {
@@ -339,7 +353,7 @@ class TatamisController {
                 ]
             };
 
-            dataService.update('tatamis', tatamiId, updates);
+            await dataService.updateTatami(tatamiId, updates);
             dataService.addLog(`Tatami ${tatami.nom} - Combat précédent`, {
                 tatamiId,
                 index: nouvelIndex
@@ -359,7 +373,7 @@ class TatamisController {
         try {
             const tatamiId = +req.params.id;
 
-            const tatami = dataService.findById('tatamis', tatamiId);
+            const tatami = await dataService.getTatamiById(tatamiId);
             if (!tatami) {
                 return res.status(404).json({ error: 'Tatami introuvable' });
             }
@@ -370,7 +384,7 @@ class TatamisController {
                 // Pour l'instant, on permet la suppression même avec des combats
             }
 
-            const deleted = dataService.remove('tatamis', tatamiId);
+            const deleted = await dataService.deleteTatami(tatamiId);
             if (!deleted) {
                 return res.status(404).json({ error: 'Tatami introuvable' });
             }
@@ -389,18 +403,29 @@ class TatamisController {
     async getById(req, res) {
         try {
             const tatamiId = +req.params.id;
-            const tatami = dataService.findById('tatamis', tatamiId);
+            const tatami = await dataService.getTatamiById(tatamiId);
 
             if (!tatami) {
                 return res.status(404).json({ error: 'Tatami introuvable' });
             }
+            const tatamiFormate = {
+                ...tatami,
+                scoreConfrontation: {
+                    rouge: tatami.score_rouge || 0,
+                    bleu: tatami.score_bleu || 0
+                },
+                indexCombatActuel: tatami.index_combat_actuel || 0,
+                combatsIds: tatami.combatsIds || []
+            };
 
-            res.json(tatami);
+            res.json(tatamiFormate);
         } catch (error) {
             console.error('Erreur récupération tatami:', error);
             res.status(500).json({ error: 'Erreur serveur' });
         }
     }
+
+
 }
 
 module.exports = new TatamisController();

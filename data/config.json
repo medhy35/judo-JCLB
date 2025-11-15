@@ -33,7 +33,7 @@
     }
   },
   "poules": {
-    "maxEquipesParPoule": 8,
+    "maxEquipesParPoule": 10,
     "minEquipesParPoule": 2,
     "typeRencontre": "round-robin",
     "pointsVictoire": 1,
@@ -41,13 +41,7 @@
     "pointsEgalite": 0
   },
   "tableau": {
-    "phases": [
-      "seizieme",
-      "huitieme",
-      "quart",
-      "demi",
-      "finale"
-    ],
+    "phases": ["seizieme", "huitieme", "quart", "demi", "finale"],
     "enablePetiteFinale": false,
     "melangementAleatoire": true
   },

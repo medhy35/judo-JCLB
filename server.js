@@ -1,19 +1,22 @@
 // server.js - Version refactorisée
+const dotenv = require("dotenv");
 const express = require('express');
 const path = require('path');
 const http = require('http');
 const { Server } = require('socket.io');
 
+dotenv.config();
 // Import des modules
 const apiRoutes = require('./src/routes/api');
 const socketEvents = require('./src/utils/socketEvents');
-const dataService = require('./src/services/dataService');
+const dataService = require('./src/services/databaseAdapter');
 const configService = require('./src/services/configService');
 const rateLimitMiddleware = require('./src/middleware/rateLimit');
 const backupService = require('./src/services/backupService');
 
 class JudoServer {
     constructor() {
+
         this.app = express();
         this.server = http.createServer(this.app);
         this.io = new Server(this.server);
@@ -25,7 +28,19 @@ class JudoServer {
     /**
      * Initialise le serveur
      */
-    init() {
+    async init() {
+        // CRITIQUE : Initialiser le databaseAdapter en premier
+        console.log('🔄 Initialisation du databaseAdapter...');
+        await dataService.init();
+
+        // Vérifier que l'initialisation a réussi
+        if (!dataService.isInitialized) {
+            console.error('❌ DatabaseAdapter non initialisé !');
+            throw new Error('Échec initialisation databaseAdapter');
+        }
+
+        console.log(`✅ DatabaseAdapter initialisé (Mode: ${dataService.usePostgres ? 'PostgreSQL' : 'JSON'})`);
+
         this.setupMiddlewares();
         this.setupRoutes();
         this.setupWebSockets();
@@ -337,7 +352,8 @@ class JudoServer {
     /**
      * Démarre le serveur
      */
-    start() {
+    async start() {
+
         this.server.listen(this.PORT, () => {
             const appName = configService.get('app.name', 'Serveur Judo');
             const version = configService.get('app.version', '1.0.0');
@@ -373,7 +389,7 @@ class JudoServer {
                 process.exit(1);
             } else {
                 console.error('Erreur serveur:', err);
-                dataService.addLog('Erreur serveur', { error: err.message });
+                dataService.addLog('Erreur serveur', {error: err.message});
             }
         });
 

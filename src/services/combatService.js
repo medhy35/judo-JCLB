@@ -1,6 +1,7 @@
 // src/services/combatService.js
-const dataService = require('./dataService');
+const dataService = require('./databaseAdapter');
 const configService = require('./configService');
+const sseManager = require('./sseManager');
 
 class CombatService {
     constructor() {
@@ -54,10 +55,10 @@ class CombatService {
                 equipeId: rougeCombattant?.equipeId || combat.rouge?.equipeId,
                 poids: rougeCombattant?.poids || combat.rouge?.poids || "Non défini",
                 sexe: rougeCombattant?.sexe || combat.rouge?.sexe,
-                wazari: combat.wazariRouge || 0,
-                ippon: combat.ipponRouge || false,
-                yuko: combat.yukoRouge || 0,
-                shido: combat.penalitesRouge || 0
+                wazari: combat.rouge_wazari || 0,
+                ippon: combat.rouge_ippon || false,
+                yuko: combat.rouge_yuko || 0,
+                shido: combat.rouge_shido || 0
             },
             bleu: {
                 id: bleuCombattant?.id || bleuId || null,
@@ -66,10 +67,10 @@ class CombatService {
                 equipeId: bleuCombattant?.equipeId || combat.bleu?.equipeId,
                 poids: bleuCombattant?.poids || combat.bleu?.poids || "Non défini",
                 sexe: bleuCombattant?.sexe || combat.bleu?.sexe,
-                wazari: combat.wazariBleu || 0,
-                ippon: combat.ipponBleu || false,
-                yuko: combat.yukoBleu || 0,
-                shido: combat.penalitesBleu || 0
+                wazari: combat.bleu_wazari || 0,
+                ippon: combat.bleu_ippon || false,
+                yuko: combat.bleu_yuko || 0,
+                shido: combat.bleu_shido || 0
             },
             tatami: tatami ? tatami.nom : "Non assigné",
             tatamiId: tatami?.id || null,
@@ -84,6 +85,67 @@ class CombatService {
     }
 
     /**
+     * Version async de enrichCombat
+     */
+    async enrichCombatAsync(combat) {
+        if (!combat) return null;
+
+        const equipes = await dataService.getAllEquipes();
+        const combattants = await dataService.getAllCombattants();
+        const tatamis = await dataService.getAllTatamis();
+
+        // Récupération des combattants
+        const rougeId = typeof combat.rouge === "object" ? combat.rouge.id : combat.rouge;
+        const bleuId = typeof combat.bleu === "object" ? combat.bleu.id : combat.bleu;
+
+        const rougeCombattant = combattants.find(c => Number(c.id) === Number(rougeId));
+        const bleuCombattant = combattants.find(c => Number(c.id) === Number(bleuId));
+
+        // Récupération des équipes (gérer equipeId et equipe_id)
+        const rougeEquipe = rougeCombattant ?
+            equipes.find(e => e.id === (rougeCombattant.equipeId || rougeCombattant.equipe_id)) : null;
+        const bleuEquipe = bleuCombattant ?
+            equipes.find(e => e.id === (bleuCombattant.equipeId || bleuCombattant.equipe_id)) : null;
+
+        // Trouver le tatami assigné
+        const tatami = tatamis.find(t => Array.isArray(t.combatsIds) && t.combatsIds.includes(combat.id));
+
+        // Déterminer le vainqueur
+        const vainqueur = this.determinerVainqueur(combat);
+
+        return {
+            ...combat,
+            rouge: {
+                id: rougeCombattant?.id || rougeId || null,
+                nom: rougeCombattant?.nom || combat.rouge?.nom || "Inconnu",
+                equipe: rougeEquipe?.nom || combat.rouge?.equipe || "N/A",
+                equipeId: rougeCombattant?.equipeId || rougeCombattant?.equipe_id || combat.rouge?.equipeId,
+                poids: rougeCombattant?.poids || combat.rouge?.poids || "Non défini",
+                sexe: rougeCombattant?.sexe || combat.rouge?.sexe,
+                wazari: combat.rouge_wazari || 0,
+                ippon: combat.rouge_ippon || false,
+                yuko: combat.rouge_yuko || 0,
+                shido: combat.rouge_shido || 0
+            },
+            bleu: {
+                id: bleuCombattant?.id || bleuId || null,
+                nom: bleuCombattant?.nom || combat.bleu?.nom || "Inconnu",
+                equipe: bleuEquipe?.nom || combat.bleu?.equipe || "N/A",
+                equipeId: bleuCombattant?.equipeId || bleuCombattant?.equipe_id || combat.bleu?.equipeId,
+                poids: bleuCombattant?.poids || combat.bleu?.poids || "Non défini",
+                sexe: bleuCombattant?.sexe || combat.bleu?.sexe,
+                wazari: combat.bleu_wazari || 0,
+                ippon: combat.bleu_ippon || false,
+                yuko: combat.bleu_yuko || 0,
+                shido: combat.bleu_shido || 0
+            },
+            tatami: tatami ? tatami.nom : "Non assigné",
+            tatamiId: tatami?.id || null,
+            vainqueur
+        };
+    }
+
+    /**
      * Détermine le vainqueur d'un combat
      * @param {Object} combat
      * @returns {string|null} 'rouge', 'bleu', ou null
@@ -94,28 +156,35 @@ class CombatService {
         const thresholds = configService.getThresholdsConfig();
 
         // Ippon direct
-        if (combat.ipponRouge) return "rouge";
-        if (combat.ipponBleu) return "bleu";
+        if (combat.rouge_ippon || combat.rouge?.ippon) return "rouge";
+        if (combat.bleu_ippon || combat.bleu?.ippon) return "bleu";
+
 
         // Double wazari
-        if ((combat.wazariRouge || 0) >= thresholds.wazariForIppon) return "rouge";
-        if ((combat.wazariBleu || 0) >= thresholds.wazariForIppon) return "bleu";
+        const rougeWazari = combat.rouge_wazari || combat.rouge?.wazari || 0;
+        const bleuWazari = combat.bleu_wazari || combat.bleu?.wazari || 0;
+
+        if (rougeWazari >= thresholds.wazariForIppon) return "rouge";
+        if (bleuWazari >= thresholds.wazariForIppon) return "bleu";
 
         // Défaite par pénalités (shido adversaire)
-        if ((combat.penalitesBleu || 0) >= thresholds.shidoForDefeat) return "rouge";
-        if ((combat.penalitesRouge || 0) >= thresholds.shidoForDefeat) return "bleu";
+        const rougeShido = combat.rouge_shido || combat.rouge?.shido || 0;
+        const bleuShido = combat.bleu_shido || combat.bleu?.shido || 0;
+
+        if (bleuShido >= thresholds.shidoForDefeat) return "rouge";
+        if (rougeShido >= thresholds.shidoForDefeat) return "bleu";
+
 
         // Avantage par wazari
-        const wazariRouge = combat.wazariRouge || 0;
-        const wazariBleu = combat.wazariBleu || 0;
-        if (wazariRouge > wazariBleu) return "rouge";
-        if (wazariBleu > wazariRouge) return "bleu";
+        if (rougeWazari > bleuWazari) return "rouge";
+        if (bleuWazari > rougeWazari) return "bleu";
 
         // Avantage par yuko
-        const yukoRouge = combat.yukoRouge || 0;
-        const yukoBleu = combat.yukoBleu || 0;
-        if (yukoRouge > yukoBleu) return "rouge";
-        if (yukoBleu > yukoRouge) return "bleu";
+        const rougeYuko = combat.rouge_yuko || combat.rouge?.yuko || 0;
+        const bleuYuko = combat.bleu_yuko || combat.bleu?.yuko || 0;
+
+        if (rougeYuko > bleuYuko) return "rouge";
+        if (bleuYuko > rougeYuko) return "bleu";
 
         // Égalité
         return null;
@@ -130,26 +199,26 @@ class CombatService {
         const thresholds = configService.getThresholdsConfig();
 
         // Ippon
-        if (combat.ipponRouge || combat.ipponBleu) {
+        if (combat.rouge_ippon || combat.bleu_ippon) {
             return 'ippon';
         }
 
         // Double wazari
-        if ((combat.wazariRouge || 0) >= thresholds.wazariForIppon ||
-            (combat.wazariBleu || 0) >= thresholds.wazariForIppon) {
+        if ((combat.rouge_wazari || 0) >= thresholds.wazariForIppon ||
+            (combat.bleu_wazari || 0) >= thresholds.wazariForIppon) {
             return 'double_wazari';
         }
 
         // Disqualification par shido
-        if ((combat.penalitesRouge || 0) >= thresholds.shidoForDefeat ||
-            (combat.penalitesBleu || 0) >= thresholds.shidoForDefeat) {
+        if ((combat.rouge_shido || 0) >= thresholds.shidoForDefeat ||
+            (combat.bleu_shido || 0) >= thresholds.shidoForDefeat) {
             return 'disqualification';
         }
 
         // Fin en golden score avec avantage
         if (combat.etat === 'golden_score') {
-            if ((combat.wazariRouge || 0) > 0 || (combat.wazariBleu || 0) > 0 ||
-                (combat.yukoRouge || 0) > 0 || (combat.yukoBleu || 0) > 0) {
+            if ((combat.rouge_wazari || 0) > 0 || (combat.bleu_wazari || 0) > 0 ||
+                (combat.rouge_yuko || 0) > 0 || (combat.bleu_yuko || 0) > 0) {
                 return 'avantage_golden_score';
             }
         }
@@ -174,17 +243,17 @@ class CombatService {
 
         switch (type) {
             case 'ippon':
-                combatCopie[`ippon${couleur}`] = true;
+                combatCopie[`${cote}_ippon`] = 1;
                 break;
             case 'wazari':
-                combatCopie[`wazari${couleur}`] = (combatCopie[`wazari${couleur}`] || 0) + 1;
+                combatCopie[`${cote}_wazari`] = (combatCopie[`${cote}_wazari`] || 0) + 1;
                 break;
             case 'yuko':
-                combatCopie[`yuko${couleur}`] = (combatCopie[`yuko${couleur}`] || 0) + 1;
+                combatCopie[`${cote}_yuko`] = (combatCopie[`${cote}_yuko`] || 0) + 1;
                 break;
             case 'shido':
                 // Le shido est donné à l'adversaire
-                combatCopie[`penalites${couleur}`] = (combatCopie[`penalites${couleur}`] || 0) + 1;
+                combatCopie[`${cote}_shido`] = (combatCopie[`${cote}_shido`] || 0) + 1;
                 break;
             default:
                 throw new Error(`Type de point invalide: ${type}`);
@@ -194,8 +263,8 @@ class CombatService {
         const raisonFin = this.verifierFinCombat(combatCopie);
         if (raisonFin) {
             combatCopie.etat = 'terminé';
-            combatCopie.dateFin = new Date().toISOString();
-            combatCopie.raisonFin = raisonFin;
+            combatCopie.date_fin = new Date().toISOString();
+            combatCopie.raison_fin = raisonFin;
             combatCopie.vainqueur = this.determinerVainqueur(combatCopie);
         }
 
@@ -218,7 +287,7 @@ class CombatService {
 
         if (duree >= osaekomoConfig.ippon) {
             // 20s = Ippon (remplace SEULEMENT les points de CET osaekomi)
-            combatCopie[`ippon${couleur}`] = true;
+            combatCopie[`${cote}_ippon`] = 1;
             pointsMarques.push('ippon');
 
             // NE PAS effacer les autres scores ! L'ippon s'ajoute aux scores existants
@@ -226,42 +295,49 @@ class CombatService {
 
             // Combat terminé par Ippon
             combatCopie.etat = 'terminé';
-            combatCopie.dateFin = new Date().toISOString();
-            combatCopie.raisonFin = 'osaekomi_ippon';
+            combatCopie.date_fin = new Date().toISOString();
+            combatCopie.raison_fin = 'osaekomi_ippon';
             combatCopie.vainqueur = cote;
 
         } else if (duree >= osaekomoConfig.wazari) {
             // 15s = +1 Wazari + conversion d'1 Yuko DE CET OSAEKOMI
-            const wazariActuel = combatCopie[`wazari${couleur}`] || 0;
-            let yukoActuel = combatCopie[`yuko${couleur}`] || 0;
+            const wazariActuel = combatCopie[`${cote}_wazari`] || 0;
+            let yukoActuel = combatCopie[`${cote}_yuko`] || 0;
+
+            let yukosTotal = yukoActuel + 1;  // Ajouter le yuko de cet osaekomi
+            let wazarisTotal = wazariActuel + 1;  // Ajouter le wazari de cet osaekomi
+
+            if (yukosTotal > 0) {
+                yukosTotal -= 1;
+            }
+            combatCopie[`${cote}_wazari`] = wazarisTotal;
+            combatCopie[`${cote}_yuko`] = yukosTotal;
 
             // Cet osaekomi génère 1 yuko (10s-15s) + 1 wazari (15s)
             // Donc on a 1 yuko "virtuel" de cet osaekomi à convertir
-            yukoActuel += 1; // Ajouter le yuko de 10s-15s de cet osaekomi
+            // yukoActuel += 1; // Ajouter le yuko de 10s-15s de cet osaekomi
 
             // Ajouter le wazari
-            combatCopie[`wazari${couleur}`] = wazariActuel + 1;
+            /*combatCopie[`${cote}_wazari`] = wazariActuel + 1;*/
             pointsMarques.push('wazari');
 
             // Conversion : retirer 1 yuko (du total disponible)
-            if (yukoActuel > 0) {
-                yukoActuel -= 1; // Conversion d'1 yuko
-            }
 
-            combatCopie[`yuko${couleur}`] = yukoActuel;
+
+            //combatCopie[`${cote}_yuko`] = yukoActuel;
 
             // Vérifier si double wazari = victoire
-            if (combatCopie[`wazari${couleur}`] >= 2) {
+            if (wazarisTotal >= configService.getThresholdsConfig().wazariForIppon) {
                 combatCopie.etat = 'terminé';
-                combatCopie.dateFin = new Date().toISOString();
-                combatCopie.raisonFin = 'double_wazari';
+                combatCopie.date_fin = new Date().toISOString();
+                combatCopie.raison_fin = 'double_wazari';
                 combatCopie.vainqueur = cote;
             }
 
         } else if (duree >= osaekomoConfig.yuko) {
             // 10s = +1 Yuko simple
-            const yukoActuel = combatCopie[`yuko${couleur}`] || 0;
-            combatCopie[`yuko${couleur}`] = yukoActuel + 1;
+            const yukoActuel = combatCopie[`${cote}_yuko`] || 0;
+            combatCopie[`${cote}_yuko`] = yukoActuel + 1;
             pointsMarques.push('yuko');
         }
 
@@ -274,6 +350,7 @@ class CombatService {
 
     /**
      * Calcule les points d'un combat pour une équipe
+     *  * ⚠️ IMPORTANT : Le combat doit être enrichi AVANT d'appeler cette méthode
      * @param {Object} combat
      * @param {string} equipeId
      * @returns {number}
@@ -284,23 +361,21 @@ class CombatService {
         const pointsConfig = configService.getPointsConfig();
         let points = 0;
 
-        // Déterminer la couleur de l'équipe dans ce combat
-        const combatEnrichi = this.enrichCombat(combat);
-        const estRouge = combatEnrichi.rouge.equipeId === equipeId;
-        const estBleu = combatEnrichi.bleu.equipeId === equipeId;
+        const estRouge = combat.rouge?.equipeId === equipeId;
+        const estBleu = combat.bleu?.equipeId === equipeId;
 
         if (!estRouge && !estBleu) return 0;
 
         if (estRouge) {
-            if (combat.ipponRouge) points += pointsConfig.ippon;
-            points += (combat.wazariRouge || 0) * pointsConfig.wazari;
-            points += (combat.yukoRouge || 0) * (pointsConfig.yuko || 1);
+            if (combat.rouge_ippon) points += pointsConfig.ippon;
+            points += (combat.rouge_wazari || 0) * pointsConfig.wazari;
+            points += (combat.rouge_yuko || 0) * (pointsConfig.yuko || 1);
         }
 
         if (estBleu) {
-            if (combat.ipponBleu) points += pointsConfig.ippon;
-            points += (combat.wazariBleu || 0) * pointsConfig.wazari;
-            points += (combat.yukoBleu || 0) * (pointsConfig.yuko || 1);
+            if (combat.bleu_ippon) points += pointsConfig.ippon;
+            points += (combat.bleu_wazari || 0) * pointsConfig.wazari;
+            points += (combat.bleu_yuko || 0) * (pointsConfig.yuko || 1);
         }
 
         return points;
@@ -308,6 +383,7 @@ class CombatService {
 
     /**
      * Détermine si une équipe a gagné un combat
+     *  * ⚠️ IMPORTANT : Le combat doit être enrichi AVANT d'appeler cette méthode
      * @param {Object} combat
      * @param {string} equipeId
      * @returns {boolean}
@@ -316,9 +392,9 @@ class CombatService {
         const vainqueur = this.determinerVainqueur(combat);
         if (!vainqueur) return false;
 
-        const combatEnrichi = this.enrichCombat(combat);
-        const estRouge = combatEnrichi.rouge.equipeId === equipeId;
-        const estBleu = combatEnrichi.bleu.equipeId === equipeId;
+        // Utiliser directement le combat (doit être enrichi avant)
+        const estRouge = combat.rouge?.equipeId === equipeId;
+        const estBleu = combat.bleu?.equipeId === equipeId;
 
         return (vainqueur === 'rouge' && estRouge) || (vainqueur === 'bleu' && estBleu);
     }
@@ -329,11 +405,15 @@ class CombatService {
      * @param {string} equipeBId
      * @returns {Array} Liste des combats créés
      */
-    genererCombatsEquipes(equipeAId, equipeBId) {
-        const combattants = dataService.readFile('combattants');
+    async genererCombatsEquipes(equipeAId, equipeBId) {
+        const combattants = await dataService.getAllCombattants();
 
-        const combattantsA = combattants.filter(c => c.equipeId === equipeAId);
-        const combattantsB = combattants.filter(c => c.equipeId === equipeBId);
+        const combattantsA = combattants.filter(c =>
+            (c.equipeId || c.equipe_id) === equipeAId
+        );
+        const combattantsB = combattants.filter(c =>
+            (c.equipeId || c.equipe_id) === equipeBId
+        );
 
         const combatsCrees = [];
 
@@ -343,31 +423,31 @@ class CombatService {
         const combatConfig = configService.getCombatConfig();
 
         // Créer un combat pour chaque catégorie commune
-        Object.keys(categoriesA).forEach(categorie => {
+        for (const categorie of Object.keys(categoriesA)) {
             if (categoriesB[categorie]) {
                 // Prendre le premier combattant de chaque équipe dans cette catégorie
                 const rouge = categoriesA[categorie][0];
                 const bleu = categoriesB[categorie][0];
 
-                const combat = dataService.add('combats', {
+                const combat = await dataService.createCombat({
                     rouge: { ...rouge, equipeId: equipeAId },
                     bleu: { ...bleu, equipeId: equipeBId },
                     etat: 'prévu',
-                    ipponRouge: false,
-                    ipponBleu: false,
-                    wazariRouge: 0,
-                    wazariBleu: 0,
-                    yukoRouge: 0,
-                    yukoBleu: 0,
-                    penalitesRouge: 0,
-                    penalitesBleu: 0,
+                    rouge_ippon: false,
+                    bleu_ippon: false,
+                    rouge_wazari: 0,
+                    bleu_wazari: 0,
+                    rouge_yuko: 0,
+                    bleu_yuko: 0,
+                    rouge_shido: 0,
+                    bleu_shido: 0,
                     timer: combatConfig.dureeParDefaut,
                     dateCreation: new Date().toISOString()
                 });
 
                 combatsCrees.push(combat);
             }
-        });
+        }
 
         dataService.addLog(`${combatsCrees.length} combats générés entre équipes`, {
             equipeA: equipeAId,
@@ -401,8 +481,8 @@ class CombatService {
      * @param {number} combattantId
      * @returns {Object}
      */
-    getStatsCombattant(combattantId) {
-        const combats = dataService.readFile('combats');
+    async getStatsCombattant(combattantId) {
+        const combats = await dataService.getAllCombats();
         const combatsCombattant = combats.filter(c =>
             (c.rouge && (c.rouge.id === combattantId || c.rouge === combattantId)) ||
             (c.bleu && (c.bleu.id === combattantId || c.bleu === combattantId))
@@ -414,12 +494,12 @@ class CombatService {
             defaites: 0,
             egalites: 0,
             combatsTermines: 0,
-            pointsMarques: { ippon: 0, wazari: 0, yuko: 0 },
+            pointsMarques: {ippon: 0, wazari: 0, yuko: 0},
             penalitesRecues: 0
         };
 
-        combatsCombattant.forEach(combat => {
-            const combatEnrichi = this.enrichCombat(combat);
+        for (const combat of combatsCombattant) {
+            const combatEnrichi = await this.enrichCombatAsync(combat);
             const estRouge = combatEnrichi.rouge.id == combattantId;
 
             if (combat.etat === 'terminé') {
@@ -438,18 +518,18 @@ class CombatService {
 
                 // Points marqués
                 if (estRouge) {
-                    if (combat.ipponRouge) stats.pointsMarques.ippon++;
-                    stats.pointsMarques.wazari += combat.wazariRouge || 0;
-                    stats.pointsMarques.yuko += combat.yukoRouge || 0;
-                    stats.penalitesRecues += combat.penalitesRouge || 0;
+                    if (combat.rouge_ippon) stats.pointsMarques.ippon++;
+                    stats.pointsMarques.wazari += combat.rouge_wazari || 0;
+                    stats.pointsMarques.yuko += combat.rouge_yuko || 0;
+                    stats.penalitesRecues += combat.rouge_shido || 0;
                 } else {
-                    if (combat.ipponBleu) stats.pointsMarques.ippon++;
-                    stats.pointsMarques.wazari += combat.wazariBleu || 0;
-                    stats.pointsMarques.yuko += combat.yukoBleu || 0;
-                    stats.penalitesRecues += combat.penalitesBleu || 0;
+                    if (combat.bleu_ippon) stats.pointsMarques.ippon++;
+                    stats.pointsMarques.wazari += combat.bleu_wazari || 0;
+                    stats.pointsMarques.yuko += combat.bleu_yuko || 0;
+                    stats.penalitesRecues += combat.bleu_shido || 0;
                 }
             }
-        });
+        }
 
         return stats;
     }
