@@ -198,6 +198,9 @@
 
     <!-- Actions de combat -->
     <div class="main-controls">
+        <button class="btn btn-main btn-prev" id="btnPrev" style="display: none;">
+            <i class="fas fa-backward me-2"></i>Combat Retour
+        </button>
         <button class="btn btn-main btn-next" id="btnNext" style="display: none;">
             <i class="fas fa-forward me-2"></i>Combat Suivant
         </button>
@@ -560,7 +563,7 @@
         let rougeHtml = '';
         if (combat.rouge?.ippon || combat.ipponRouge) {
             rougeHtml += '<div class="score-badge score-ippon">IPPON</div>';
-        }
+        } else {
             const wazariRouge = combat.rouge?.wazari || combat.wazariRouge || 0;
             const yukoRouge = combat.rouge?.yuko || combat.yukoRouge || 0;
 
@@ -570,7 +573,7 @@
             if (yukoRouge > 0) {
                 rougeHtml += `<div class="score-badge score-rouge">${yukoRouge} YUKO</div>`;
             }
-
+        }
 
         const shidoRouge = combat.rouge?.shido || combat.penalitesRouge || 0;
         if (shidoRouge > 0) {
@@ -799,6 +802,7 @@
                 updateQueue();
 
                 document.getElementById('btnNext').style.display = 'none';
+                document.getElementById('btnPrev').style.display = 'none';
                 hideVictory();
 
                 showNotification('Combat suivant', 'success');
@@ -810,6 +814,38 @@
                 } else {
                     showNotification(error.error || 'Pas de combat suivant', 'warning');
                 }
+            }
+        } catch (error) {
+            showNotification('Erreur', 'danger');
+        }
+    }
+
+    async function combatPrecedent() {
+        if (!tatami) return;
+
+        try {
+            const response = await fetch(`/api/tatamis/${tatamiId}/precedent`, {
+                method: 'POST'
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+
+                tatami = result.tatami;
+                combat = result.combatActuel;
+
+                updateTatamiInfo();
+                updateCombatDisplay();
+                updateQueue();
+
+                document.getElementById('btnNext').style.display = 'none';
+                document.getElementById('btnPrev').style.display = 'none';
+                hideVictory();
+
+                showNotification('Combat précédent', 'success');
+            } else {
+                const error = await response.json();
+                showNotification(error.error || 'Pas de combat précédent', 'warning');
             }
         } catch (error) {
             showNotification('Erreur', 'danger');
@@ -1520,6 +1556,7 @@
 
     function showCombatTermine() {
         document.getElementById('btnNext').style.display = 'block';
+        document.getElementById('btnPrev').style.display = 'block';
         stopTimerDisplay();
         cleanupOsaekomoDisplay();
         reloadTatamiScore();
@@ -1540,6 +1577,7 @@
         document.getElementById('victoryOverlay').style.display = 'flex';
 
         document.getElementById('btnNext').style.display = 'block';
+        document.getElementById('btnPrev').style.display = 'block';
     }
 
     function hideVictory() {
@@ -1636,6 +1674,7 @@
         document.getElementById('btnStop').addEventListener('click', stopCombat);
         document.getElementById('btnReset').addEventListener('click', resetCombat);
         document.getElementById('btnNext').addEventListener('click', combatSuivant);
+        document.getElementById('btnPrev').addEventListener('click', combatPrecedent);
 
         // Raccourcis clavier
         document.addEventListener('keydown', handleKeyboard);
