@@ -1,15 +1,5 @@
 [
   {
-    "id": 1760638376607,
-    "message": "Osaekomi update",
-    "data": {
-      "tatamiId": 1760637707612,
-      "counter": 0,
-      "cote": "rouge"
-    },
-    "timestamp": "2025-10-16T18:12:55.902Z"
-  },
-  {
     "id": 1760638376451,
     "message": "Classement de poule calculé: Poule A",
     "data": {
@@ -9134,5 +9124,13 @@
       "environment": "development"
     },
     "timestamp": "2025-11-16T19:16:12.184Z"
+  },
+  {
+    "id": 1763320657508,
+    "message": "Arrêt du serveur",
+    "data": {
+      "signal": "SIGTERM"
+    },
+    "timestamp": "2025-11-16T19:17:37.186Z"
   }
 ]
