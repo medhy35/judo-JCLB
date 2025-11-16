@@ -33,11 +33,11 @@ class SocketEvents {
 
             // Événements Osaekomi
             socket.on('osaekomi:update', (data) => {
-                this.handleOsaekoميUpdate(socket, data);
+                this.handleOsaekomiUpdate(socket, data);
             });
 
             socket.on('osaekomi:stop', (data) => {
-                this.handleOsaekoميStop(socket, data);
+                this.handleOsaekomiStop(socket, data);
             });
 
             // Événements Combat
@@ -87,7 +87,7 @@ class SocketEvents {
      * Gère les mises à jour d'Osaekomi
      * @private
      */
-    handleOsaekoميUpdate(socket, data) {
+    handleOsaekomiUpdate(socket, data) {
         const { tatamiId, osaekomiCounter, osaekomiCote } = data;
 
         if (!tatamiId || typeof osaekomiCounter !== 'number') {
@@ -117,7 +117,7 @@ class SocketEvents {
      * Gère l'arrêt d'Osaekomi
      * @private
      */
-    handleOsaekoميStop(socket, data) {
+    handleOsaekomiStop(socket, data) {
         const { tatamiId } = data;
 
         if (!tatamiId) {
