@@ -150,7 +150,8 @@ router.get('/combats', async (req, res) => {
     try {
         const combats = dataService.readFile('combats');
         const combatService = require('../services/combatService');
-        const combatsEnrichis = combats.map(c => combatService.enrichCombat(c));
+        // Optimisation : enrichir tous les combats en une seule passe
+        const combatsEnrichis = combatService.enrichCombats(combats);
         res.json(combatsEnrichis);
     } catch (error) {
         console.error('Erreur récupération combats:', error);

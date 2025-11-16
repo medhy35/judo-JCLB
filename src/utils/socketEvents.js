@@ -14,7 +14,8 @@ class SocketEvents {
         this.io = io;
 
         this.io.on('connection', (socket) => {
-            dataService.addLog('Client connecté via WebSocket', { socketId: socket.id });
+            // Logging réduit : seulement en console, pas dans le fichier
+            console.log('[WebSocket] Client connecté:', socket.id);
 
             // ⚠️ AJOUTER : Gestion des rooms par tatami
             socket.on('join-tatami', (tatamiId) => {
@@ -47,7 +48,8 @@ class SocketEvents {
 
             // Déconnexion
             socket.on('disconnect', () => {
-                dataService.addLog('Client déconnecté', { socketId: socket.id });
+                // Logging réduit : seulement en console
+                console.log('[WebSocket] Client déconnecté:', socket.id);
             });
         });
     }
@@ -64,10 +66,7 @@ class SocketEvents {
         }
 
         this.io.emit(event, data);
-        dataService.addLog(`Broadcast: ${event}`, {
-            event,
-            clientsConnected: this.io.engine.clientsCount
-        });
+        // Logging supprimé pour performance - broadcast appelé très fréquemment
     }
 
     /**
@@ -80,7 +79,7 @@ class SocketEvents {
         if (!this.io) return;
 
         this.io.to(room).emit(event, data);
-        dataService.addLog(`Broadcast to room ${room}: ${event}`, { room, event });
+        // Logging supprimé pour performance
     }
 
     /**
@@ -110,7 +109,8 @@ class SocketEvents {
             timestamp: new Date().toISOString()
         });
 
-        dataService.addLog('Osaekomi update', { tatamiId, counter: osaekomiCounter, cote: osaekomiCote });
+        // Log important gardé avec type pour filtrage
+        dataService.addLog('Osaekomi update', { type: 'combat', tatamiId, counter: osaekomiCounter, cote: osaekomiCote });
     }
 
     /**
@@ -131,7 +131,7 @@ class SocketEvents {
             timestamp: new Date().toISOString()
         });
 
-        dataService.addLog('Osaekomi stop', { tatamiId });
+        dataService.addLog('Osaekomi stop', { type: 'combat', tatamiId });
     }
 
     /**
@@ -154,6 +154,7 @@ class SocketEvents {
         });
 
         dataService.addLog('Combat update broadcasted', {
+            type: 'combat',
             tatamiId,
             combatId: combat.id,
             etat: combat.etat
@@ -262,7 +263,7 @@ class SocketEvents {
         };
 
         socket.emit('full-state', state);
-        dataService.addLog('État complet envoyé à un client', { socketId: socket.id });
+        // Log supprimé - événement fréquent sur reconnexion
     }
 
     /**
@@ -328,11 +329,7 @@ class SocketEvents {
     joinTatamiRoom(socket, tatamiId) {
         const roomName = `tatami-${tatamiId}`;
         socket.join(roomName);
-
-        dataService.addLog(`Client rejoint la room ${roomName}`, {
-            socketId: socket.id,
-            tatamiId
-        });
+        // Log supprimé - événement fréquent
     }
 
     /**
@@ -343,11 +340,7 @@ class SocketEvents {
     leaveTatamiRoom(socket, tatamiId) {
         const roomName = `tatami-${tatamiId}`;
         socket.leave(roomName);
-
-        dataService.addLog(`Client quitte la room ${roomName}`, {
-            socketId: socket.id,
-            tatamiId
-        });
+        // Log supprimé - événement fréquent
     }
 }
 
