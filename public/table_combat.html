@@ -1042,6 +1042,9 @@
     }
 
     function cleanupOsaekomoDisplay() {
+        // Sauvegarder l'état avant de le reset
+        const wasActive = osaekomiState.active;
+
         // Arrêter le timer d'affichage
         if (osaekomiInterval) {
             clearInterval(osaekomiInterval);
@@ -1061,8 +1064,10 @@
         // Remettre l'affichage des scores à jour avec les vraies données
         updateScoreDisplay();
 
-        // Notifier via WebSocket
-        socket.emit('osaekomi:stop', { tatamiId: tatamiId });
+        // Notifier via WebSocket SEULEMENT si un osaekomi était actif
+        if (wasActive) {
+            socket.emit('osaekomi:stop', { tatamiId: tatamiId });
+        }
     }
 
     async function simulerPointsOsaekomi(cote, duree, initialState) {
