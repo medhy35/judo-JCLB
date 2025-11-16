@@ -275,16 +275,21 @@ class TatamiService {
         if (!tatami) return [];
 
         const combats = dataService.readFile('combats');
-        const historique = [];
 
-        (tatami.combatsIds || []).forEach((combatId, index) => {
-            const combat = combats.find(c => c.id === combatId);
-            if (!combat) return;
+        // Optimisation : récupérer tous les combats du tatami
+        const combatsDuTatami = (tatami.combatsIds || [])
+            .map(combatId => combats.find(c => c.id === combatId))
+            .filter(Boolean);
 
-            const combatEnrichi = combatService.enrichCombat(combat);
+        // Enrichir tous les combats en une seule passe
+        const combatsEnrichis = combatService.enrichCombats(combatsDuTatami);
+
+        // Construire l'historique
+        const historique = combatsEnrichis.map((combatEnrichi, index) => {
+            const combat = combatsDuTatami[index];
             const vainqueur = combatService.determinerVainqueur(combat);
 
-            historique.push({
+            return {
                 index: index + 1,
                 combatId: combat.id,
                 etat: combat.etat,
@@ -303,7 +308,7 @@ class TatamiService {
                 vainqueur,
                 duree: combat.dateFin && combat.dateCreation ?
                     Math.round((new Date(combat.dateFin) - new Date(combat.dateCreation)) / 1000) : null
-            });
+            };
         });
 
         return historique;

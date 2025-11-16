@@ -12,9 +12,10 @@ class CombatService {
     /**
      * Enrichit les données d'un combat avec les informations complètes
      * @param {Object} combat
+     * @param {Object} preloadedData - Données pré-chargées optionnelles {equipes, combattants, tatamis}
      * @returns {Object} Combat enrichi
      */
-    enrichCombat(combat) {
+    enrichCombat(combat, preloadedData = null) {
         if (!combat) return null;
         // ⚠️ Vérifier le cache
         const cacheKey = `combat-${combat.id}`;
@@ -24,9 +25,11 @@ class CombatService {
             return cached.data;
         }
 
-        const equipes = dataService.readFile('equipes');
-        const combattants = dataService.readFile('combattants');
-        const tatamis = dataService.readFile('tatamis');
+        // Utiliser les données pré-chargées si fournies, sinon lire les fichiers
+        // Avec cacheService, ces lectures sont maintenant très rapides
+        const equipes = preloadedData?.equipes || dataService.readFile('equipes');
+        const combattants = preloadedData?.combattants || dataService.readFile('combattants');
+        const tatamis = preloadedData?.tatamis || dataService.readFile('tatamis');
 
         // Récupération des combattants
         const rougeId = typeof combat.rouge === "object" ? combat.rouge.id : combat.rouge;
@@ -81,6 +84,28 @@ class CombatService {
             timestamp: Date.now()
         });
         return enrichedCombat;
+    }
+
+    /**
+     * Enrichit plusieurs combats en une seule fois (optimisé)
+     * Charge les données une seule fois pour tous les combats
+     * @param {Array} combats - Tableau de combats à enrichir
+     * @returns {Array} Combats enrichis
+     */
+    enrichCombats(combats) {
+        if (!Array.isArray(combats) || combats.length === 0) {
+            return [];
+        }
+
+        // Charger les données une seule fois pour tous les combats
+        const preloadedData = {
+            equipes: dataService.readFile('equipes'),
+            combattants: dataService.readFile('combattants'),
+            tatamis: dataService.readFile('tatamis')
+        };
+
+        // Enrichir chaque combat avec les données pré-chargées
+        return combats.map(combat => this.enrichCombat(combat, preloadedData));
     }
 
     /**

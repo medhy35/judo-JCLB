@@ -1,6 +1,7 @@
 // src/services/dataService.js
 const fs = require('fs');
 const path = require('path');
+const cacheService = require('./cacheService');
 
 class DataService {
     constructor() {
@@ -55,13 +56,19 @@ class DataService {
     }
 
     /**
-     * Lit un fichier JSON et retourne son contenu
+     * Lit un fichier JSON et retourne son contenu (avec cache)
      * @param {string} fileKey - Clé du fichier (tatamis, equipes, etc.)
      * @returns {any} Contenu du fichier parsé
      */
     readFile(fileKey) {
         if (!this.files[fileKey]) {
             throw new Error(`Fichier non reconnu: ${fileKey}`);
+        }
+
+        // Vérifier le cache d'abord
+        const cached = cacheService.get(fileKey);
+        if (cached !== null) {
+            return cached;
         }
 
         const filePath = path.join(this.dataDir, this.files[fileKey]);
@@ -73,7 +80,12 @@ class DataService {
             }
 
             const content = fs.readFileSync(filePath, 'utf-8');
-            return JSON.parse(content);
+            const data = JSON.parse(content);
+
+            // Mettre en cache
+            cacheService.set(fileKey, data);
+
+            return data;
         } catch (error) {
             console.error(`Erreur lors de la lecture de ${filePath}:`, error);
             return Array.isArray(this.getDefaultData(fileKey)) ? [] : {};
@@ -81,7 +93,7 @@ class DataService {
     }
 
     /**
-     * Écrit des données dans un fichier JSON
+     * Écrit des données dans un fichier JSON (invalide le cache)
      * @param {string} fileKey - Clé du fichier
      * @param {any} data - Données à écrire
      */
@@ -94,6 +106,9 @@ class DataService {
 
         try {
             fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf-8');
+
+            // Invalider le cache pour cette clé
+            cacheService.invalidate(fileKey);
         } catch (error) {
             console.error(`Erreur lors de l'écriture de ${filePath}:`, error);
             throw error;
@@ -302,7 +317,7 @@ class DataService {
     }
 
     /**
-     * Ajoute un log avec timestamp
+     * Ajoute un log avec timestamp et rotation automatique
      * @param {string} message
      * @param {Object} data
      */
@@ -314,8 +329,28 @@ class DataService {
             timestamp: new Date().toISOString()
         };
 
-        this.add('logs', logEntry);
-        console.log('[LOG]', message, data);
+        // Lire les logs existants
+        const logs = this.readFile('logs');
+
+        // Ajouter le nouveau log
+        logs.push(logEntry);
+
+        // Rotation: garder seulement les maxEntries derniers logs
+        const config = this.readFile('config');
+        const maxEntries = config.logs?.maxEntries || 1000;
+
+        if (logs.length > maxEntries) {
+            // Garder seulement les derniers maxEntries
+            logs.splice(0, logs.length - maxEntries);
+        }
+
+        // Écrire directement (évite double lecture via add())
+        this.writeFile('logs', logs);
+
+        // Log console uniquement pour les erreurs et événements importants
+        if (data.level === 'error' || data.type === 'combat' || data.type === 'tatami') {
+            console.log('[LOG]', message, data);
+        }
     }
 }
 
