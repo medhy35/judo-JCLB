@@ -1,25 +1,5 @@
 [
   {
-    "id": 1760638376451,
-    "message": "Classement de poule calculé: Poule A",
-    "data": {
-      "pouleId": 1,
-      "nbEquipes": 2
-    },
-    "timestamp": "2025-10-16T18:12:56.018Z"
-  },
-  {
-    "id": 1760638376522,
-    "message": "Classements mis à jour après combat",
-    "data": {
-      "combatId": 1760637793805,
-      "poulesMAJ": [
-        1
-      ]
-    },
-    "timestamp": "2025-10-16T18:12:56.131Z"
-  },
-  {
     "id": 1760638376388,
     "message": "Osaekomi arrêté",
     "data": {
@@ -9132,5 +9112,33 @@
       "signal": "SIGTERM"
     },
     "timestamp": "2025-11-16T19:17:37.186Z"
+  },
+  {
+    "id": 1763326210215,
+    "message": "Backup créé",
+    "data": {
+      "filename": "backup_2025-11-16T20-50-10-176Z.json"
+    },
+    "timestamp": "2025-11-16T20:50:10.184Z"
+  },
+  {
+    "id": 1763326210786,
+    "message": "Serveur démarré",
+    "data": {
+      "port": 3000,
+      "version": "1.0.0",
+      "stats": {
+        "tatamis": 2,
+        "combats": 22,
+        "combatsTermines": 21,
+        "combatsEnCours": 0,
+        "equipes": 4,
+        "combattants": 8,
+        "poules": 0
+      },
+      "nodeVersion": "v22.21.1",
+      "environment": "development"
+    },
+    "timestamp": "2025-11-16T20:50:10.204Z"
   }
 ]
