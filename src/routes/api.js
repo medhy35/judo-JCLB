@@ -195,7 +195,7 @@ router.patch('/combats/:id', withBroadcast(async (req, res) => {
             req.tatamiId = tatami.id;
         }
         const tableau = dataService.readFile('tableau');
-        const phases = configService.getCombatConfig().tableau.phases;
+        const phases = configService.get('tableau.phases', ['huitieme', 'quart', 'demi', 'finale']);
 
         for (const phase of phases) {
             if (tableau[phase]) {
