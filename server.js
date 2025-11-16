@@ -42,8 +42,12 @@ class JudoServer {
         this.app.use(express.json({ limit: maxSize }));
         this.app.use(express.urlencoded({ extended: true }));
 
-        // Fichiers statiques
-        this.app.use(express.static(path.join(__dirname, 'public')));
+        // Fichiers statiques avec headers de cache optimisés
+        this.app.use(express.static(path.join(__dirname, 'public'), {
+            maxAge: '1h', // Cache des assets statiques pour 1 heure
+            etag: true,   // Activer ETags pour validation
+            lastModified: true
+        }));
 
         // CORS pour développement
 
@@ -70,6 +74,20 @@ class JudoServer {
                 next();
             });
         }
+
+        // Headers de cache pour API
+        this.app.use('/api', (req, res, next) => {
+            // Pour les GET, permettre un cache court
+            if (req.method === 'GET') {
+                res.set('Cache-Control', 'public, max-age=10'); // 10 secondes
+                res.set('ETag', `"${Date.now()}"`);
+            } else {
+                // Pour les POST/PATCH/DELETE, pas de cache
+                res.set('Cache-Control', 'no-store, no-cache, must-revalidate');
+            }
+            next();
+        });
+
         this.app.use(rateLimitMiddleware.middleware());
     }
 

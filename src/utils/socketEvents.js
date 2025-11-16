@@ -164,29 +164,43 @@ class SocketEvents {
     // === MÉTHODES DE DIFFUSION SPÉCIALISÉES ===
 
     /**
-     * Diffuse une mise à jour des tatamis
+     * Diffuse une mise à jour des tatamis (optimisé avec rooms)
      * @param {Object} tatami Tatami mis à jour
      * @param {Object} combatActuel Combat actuel (optionnel)
      */
     broadcastTatamiUpdate(tatami, combatActuel = null) {
-        this.broadcast('tatamis:update', {
+        const data = {
             tatami,
             combatActuel,
             timestamp: new Date().toISOString()
-        });
+        };
+
+        // Broadcast ciblé vers la room du tatami + broadcast global
+        if (tatami && tatami.id) {
+            this.broadcastToRoom(`tatami-${tatami.id}`, 'tatamis:update', data);
+        }
+        // Broadcast global pour les vues d'ensemble (dashboard)
+        this.broadcast('tatamis:update', data);
     }
 
     /**
-     * Diffuse une mise à jour de combat
+     * Diffuse une mise à jour de combat (optimisé avec rooms)
      * @param {number} tatamiId ID du tatami
      * @param {Object} combat Combat mis à jour
      */
     broadcastCombatUpdate(tatamiId, combat) {
-        this.broadcast('combats:update', {
+        const data = {
             tatamiId,
             combat,
             timestamp: new Date().toISOString()
-        });
+        };
+
+        // Broadcast ciblé vers la room du tatami concerné
+        if (tatamiId) {
+            this.broadcastToRoom(`tatami-${tatamiId}`, 'combats:update', data);
+        }
+        // Broadcast global pour les vues d'ensemble
+        this.broadcast('combats:update', data);
     }
 
     /**

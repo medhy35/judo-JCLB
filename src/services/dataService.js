@@ -1,5 +1,6 @@
 // src/services/dataService.js
 const fs = require('fs');
+const fsPromises = require('fs').promises;
 const path = require('path');
 const cacheService = require('./cacheService');
 
@@ -116,6 +117,68 @@ class DataService {
     }
 
     /**
+     * Lit un fichier JSON de manière asynchrone (avec cache)
+     * @param {string} fileKey - Clé du fichier (tatamis, equipes, etc.)
+     * @returns {Promise<any>} Contenu du fichier parsé
+     */
+    async readFileAsync(fileKey) {
+        if (!this.files[fileKey]) {
+            throw new Error(`Fichier non reconnu: ${fileKey}`);
+        }
+
+        // Vérifier le cache d'abord
+        const cached = cacheService.get(fileKey);
+        if (cached !== null) {
+            return cached;
+        }
+
+        const filePath = path.join(this.dataDir, this.files[fileKey]);
+
+        try {
+            const exists = await fsPromises.access(filePath).then(() => true).catch(() => false);
+
+            if (!exists) {
+                console.warn(`Fichier ${filePath} n'existe pas, retour d'un tableau vide`);
+                return Array.isArray(this.getDefaultData(fileKey)) ? [] : {};
+            }
+
+            const content = await fsPromises.readFile(filePath, 'utf-8');
+            const data = JSON.parse(content);
+
+            // Mettre en cache
+            cacheService.set(fileKey, data);
+
+            return data;
+        } catch (error) {
+            console.error(`Erreur lors de la lecture de ${filePath}:`, error);
+            return Array.isArray(this.getDefaultData(fileKey)) ? [] : {};
+        }
+    }
+
+    /**
+     * Écrit des données dans un fichier JSON de manière asynchrone (invalide le cache)
+     * @param {string} fileKey - Clé du fichier
+     * @param {any} data - Données à écrire
+     */
+    async writeFileAsync(fileKey, data) {
+        if (!this.files[fileKey]) {
+            throw new Error(`Fichier non reconnu: ${fileKey}`);
+        }
+
+        const filePath = path.join(this.dataDir, this.files[fileKey]);
+
+        try {
+            await fsPromises.writeFile(filePath, JSON.stringify(data, null, 2), 'utf-8');
+
+            // Invalider le cache pour cette clé
+            cacheService.invalidate(fileKey);
+        } catch (error) {
+            console.error(`Erreur lors de l'écriture de ${filePath}:`, error);
+            throw error;
+        }
+    }
+
+    /**
      * Retourne les données par défaut pour un type de fichier
      * @param {string} fileKey
      * @returns {any}
@@ -151,6 +214,23 @@ class DataService {
      */
     findById(fileKey, id) {
         const data = this.readFile(fileKey);
+        if (!Array.isArray(data)) return null;
+
+        return data.find(item =>
+            item.id === id ||
+            item.id === +id ||
+            item.id === String(id)
+        ) || null;
+    }
+
+    /**
+     * Trouve un élément par ID dans une collection (async)
+     * @param {string} fileKey
+     * @param {number|string} id
+     * @returns {Promise<Object|null>}
+     */
+    async findByIdAsync(fileKey, id) {
+        const data = await this.readFileAsync(fileKey);
         if (!Array.isArray(data)) return null;
 
         return data.find(item =>
@@ -197,6 +277,29 @@ class DataService {
     }
 
     /**
+     * Ajoute un nouvel élément (async)
+     * @param {string} fileKey
+     * @param {Object} item
+     * @returns {Promise<Object>} L'élément ajouté
+     */
+    async addAsync(fileKey, item) {
+        const data = await this.readFileAsync(fileKey);
+        if (!Array.isArray(data)) {
+            throw new Error(`Impossible d'ajouter à ${fileKey}: ce n'est pas un tableau`);
+        }
+
+        // Générer un ID si pas présent
+        if (!item.id) {
+            item.id = this.generateId();
+        }
+
+        data.push(item);
+        await this.writeFileAsync(fileKey, data);
+
+        return item;
+    }
+
+    /**
      * Met à jour un élément existant
      * @param {string} fileKey
      * @param {number|string} id
@@ -219,6 +322,32 @@ class DataService {
         Object.assign(data[index], updates);
 
         this.writeFile(fileKey, data);
+        return data[index];
+    }
+
+    /**
+     * Met à jour un élément existant (async)
+     * @param {string} fileKey
+     * @param {number|string} id
+     * @param {Object} updates
+     * @returns {Promise<Object|null>} L'élément mis à jour ou null si non trouvé
+     */
+    async updateAsync(fileKey, id, updates) {
+        const data = await this.readFileAsync(fileKey);
+        if (!Array.isArray(data)) return null;
+
+        const index = data.findIndex(item =>
+            item.id === id ||
+            item.id === +id ||
+            item.id === String(id)
+        );
+
+        if (index === -1) return null;
+
+        // Fusionner les mises à jour
+        Object.assign(data[index], updates);
+
+        await this.writeFileAsync(fileKey, data);
         return data[index];
     }
 
