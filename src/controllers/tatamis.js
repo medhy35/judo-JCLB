@@ -15,19 +15,6 @@ class TatamisController {
         }
     }
 
-    async getCombatActuel(req, res) {
-        try {
-            const tatamiId = +req.params.id;
-            const tatamiService = require('../services/tatamiService');
-
-            const combat = tatamiService.getCombatActuel(tatamiId);
-            res.json(combat);
-        } catch (error) {
-            console.error('Erreur combat actuel:', error);
-            res.status(500).json({ error: 'Erreur serveur' });
-        }
-    }
-
     /**
      * GET /api/tatamis/:id/combat-actuel
      */
