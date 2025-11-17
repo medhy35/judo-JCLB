@@ -225,6 +225,22 @@ class TatamisController {
                 return res.status(404).json({ error: 'Tatami non trouvé' });
             }
 
+            // IMPORTANT: Remettre les combats non terminés à l'état "prévu"
+            if (tatami.combatsIds && tatami.combatsIds.length > 0) {
+                const combats = dataService.readFile('combats');
+
+                tatami.combatsIds.forEach(combatId => {
+                    const combat = combats.find(c => c.id === combatId);
+                    // Remettre à "prévu" seulement si pas terminé
+                    if (combat && combat.etat !== 'terminé') {
+                        dataService.update('combats', combatId, {
+                            etat: 'prévu',
+                            tatamiId: null
+                        });
+                    }
+                });
+            }
+
             const updates = {
                 combatsIds: [],
                 indexCombatActuel: 0,
@@ -234,13 +250,17 @@ class TatamisController {
                     ...(tatami.historique || []),
                     {
                         timestamp: new Date().toISOString(),
-                        action: 'liberer_tatami'
+                        action: 'liberer_tatami',
+                        combatsLiberes: tatami.combatsIds?.length || 0
                     }
                 ]
             };
 
             const updatedTatami = dataService.update('tatamis', tatamiId, updates);
-            dataService.addLog(`Tatami ${tatami.nom} libéré`, { tatamiId });
+            dataService.addLog(`Tatami ${tatami.nom} libéré, ${tatami.combatsIds?.length || 0} combats remis à "prévu"`, {
+                tatamiId,
+                combatsLiberes: tatami.combatsIds?.length || 0
+            });
 
             res.locals.tatami = updatedTatami;
             res.json({ success: true, tatami: updatedTatami });

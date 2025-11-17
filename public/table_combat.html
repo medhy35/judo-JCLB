@@ -23,6 +23,9 @@
         </a>
 
         <div class="d-flex align-items-center">
+                <button class="btn btn-sm btn-outline-primary me-3" id="btnToggleSpectateur" title="Activer le mode spectateur">
+                    <i class="fas fa-eye me-1"></i>Mode Spectateur
+                </button>
                 <span class="badge bg-success me-3" id="statusIndicator">
                     <i class="fas fa-circle me-1"></i>Connecté
                 </span>
@@ -1681,6 +1684,12 @@
         document.getElementById('btnNext').addEventListener('click', combatSuivant);
         document.getElementById('btnPrev').addEventListener('click', combatPrecedent);
 
+        // Toggle mode spectateur
+        document.getElementById('btnToggleSpectateur').addEventListener('click', toggleModeSpectateur);
+
+        // Charger l'état du mode spectateur depuis localStorage
+        loadModeSpectateur();
+
         // Raccourcis clavier
         document.addEventListener('keydown', handleKeyboard);
     }
@@ -1772,6 +1781,44 @@
                 e.preventDefault();
                 showTimerEditModal();
                 break;
+        }
+    }
+
+    // =======================================
+    // MODE SPECTATEUR
+    // =======================================
+
+    function toggleModeSpectateur() {
+        const body = document.body;
+        const btn = document.getElementById('btnToggleSpectateur');
+        const isSpectator = body.classList.toggle('spectator-mode');
+
+        // Mettre à jour le bouton
+        if (isSpectator) {
+            btn.classList.add('active');
+            btn.innerHTML = '<i class="fas fa-eye-slash me-1"></i>Mode Contrôle';
+            btn.title = 'Désactiver le mode spectateur';
+        } else {
+            btn.classList.remove('active');
+            btn.innerHTML = '<i class="fas fa-eye me-1"></i>Mode Spectateur';
+            btn.title = 'Activer le mode spectateur';
+        }
+
+        // Sauvegarder l'état dans localStorage
+        localStorage.setItem('modeSpectateur', isSpectator ? 'true' : 'false');
+
+        console.log(`Mode spectateur: ${isSpectator ? 'ACTIVÉ' : 'DÉSACTIVÉ'}`);
+    }
+
+    function loadModeSpectateur() {
+        const savedMode = localStorage.getItem('modeSpectateur');
+        if (savedMode === 'true') {
+            // Activer le mode spectateur
+            document.body.classList.add('spectator-mode');
+            const btn = document.getElementById('btnToggleSpectateur');
+            btn.classList.add('active');
+            btn.innerHTML = '<i class="fas fa-eye-slash me-1"></i>Mode Contrôle';
+            btn.title = 'Désactiver le mode spectateur';
         }
     }
 

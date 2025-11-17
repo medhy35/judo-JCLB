@@ -811,3 +811,110 @@ body {
         width: 100%;
     }
 }
+
+/* ==========================================
+   MODE SPECTATEUR
+   ========================================== */
+
+/* Cacher tous les contrôles en mode spectateur */
+body.spectator-mode .controls-section,
+body.spectator-mode .main-controls,
+body.spectator-mode .timer-controls,
+body.spectator-mode .osaekomi-controls,
+body.spectator-mode .correction-buttons {
+    display: none !important;
+}
+
+/* Agrandir les noms des combattants en mode spectateur */
+body.spectator-mode .combattant-nom {
+    font-size: 3rem;
+    font-weight: 900;
+    margin-bottom: 1rem;
+}
+
+/* Agrandir l'équipe en mode spectateur */
+body.spectator-mode .combattant-equipe {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Agrandir le timer en mode spectateur */
+body.spectator-mode .timer-display {
+    font-size: 7rem;
+    font-weight: 900;
+}
+
+/* Agrandir l'état du combat en mode spectateur */
+body.spectator-mode .etat-combat {
+    font-size: 2rem;
+    padding: 1rem 2rem;
+    margin-bottom: 2rem;
+}
+
+/* Agrandir l'affichage osaekomi en mode spectateur */
+body.spectator-mode .osaekomi-display {
+    padding: 2rem;
+    margin: 2rem 0;
+}
+
+body.spectator-mode .osaekomi-display strong {
+    font-size: 2.5rem;
+}
+
+body.spectator-mode .osaekomi-timer {
+    font-size: 5rem;
+    font-weight: 900;
+}
+
+body.spectator-mode .osaekomi-display small {
+    font-size: 1.5rem;
+}
+
+/* Agrandir les badges de score en mode spectateur */
+body.spectator-mode .score-badge {
+    padding: 1rem 1.5rem;
+    font-size: 2rem;
+    min-width: 100px;
+}
+
+body.spectator-mode .score-ippon {
+    font-size: 2.5rem;
+}
+
+/* Réduire le padding des divs combattants pour plus d'espace */
+body.spectator-mode .combattant-rouge,
+body.spectator-mode .combattant-bleu {
+    padding: 2rem 1rem;
+}
+
+/* Optimiser la grille pour le mode spectateur */
+body.spectator-mode .combattants-display {
+    padding: 3rem 2rem;
+    gap: 2rem;
+}
+
+/* Bouton toggle spectateur actif */
+#btnToggleSpectateur.active {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+/* Responsive pour mode spectateur */
+@media (max-width: 768px) {
+    body.spectator-mode .combattant-nom {
+        font-size: 2rem;
+    }
+
+    body.spectator-mode .timer-display {
+        font-size: 4rem;
+    }
+
+    body.spectator-mode .osaekomi-timer {
+        font-size: 3rem;
+    }
+
+    body.spectator-mode .score-badge {
+        font-size: 1.5rem;
+    }
+}
