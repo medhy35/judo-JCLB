@@ -56,7 +56,7 @@
 
         <div class="combattants-display">
             <!-- Combattant Rouge -->
-            <div class="combattant-rouge">
+            <div class="combattant-bleu">
                 <div class="combattant-nom" id="rougeNom">-</div>
                 <div class="combattant-equipe" id="rougeEquipe">-</div>
                 <div class="scores-display" id="rougeScores">
@@ -96,7 +96,7 @@
             </div>
 
             <!-- Combattant Bleu -->
-            <div class="combattant-bleu">
+            <div class="combattant-rouge">
                 <div class="combattant-nom" id="bleuNom">-</div>
                 <div class="combattant-equipe" id="bleuEquipe">-</div>
                 <div class="scores-display" id="bleuScores">
@@ -1724,50 +1724,56 @@
                     startCombat();
                 }
                 break;
-            case 'r': // Reset
+            case 'm': // Reset
                 e.preventDefault();
                 resetCombat();
                 break;
-            case 'n': // Next
+            case 'l': // Next
                 e.preventDefault();
                 if (combat && combat.etat === 'terminé') {
                     combatSuivant();
                 }
+            case 'k': // Next
+                e.preventDefault();
+                if (combat && combat.etat === 'terminé') {
+                    combatPrecedent();
+                }
+                
                 break;
             // Scores rouge (touches numériques)
             case 'a':
                 marquerPoint('rouge', 'ippon');
                 break;
-            case 's':
+            case 'z':
                 marquerPoint('rouge', 'wazari');
                 break;
-            case 'w':
+            case 'e':
                 marquerPoint('rouge', 'yuko');
                 break;
-            case 'e':
+            case 'r':
                 marquerPoint('rouge', 'shido');
                 break;
             // Scores bleu
-            case 'p':
+            case 'w':
                 marquerPoint('bleu', 'ippon');
                 break;
-            case 'l':
+            case 'x':
                 marquerPoint('bleu', 'wazari');
                 break;
-            case 'k':
+            case 'c':
                 marquerPoint('bleu', 'yuko');
                 break;
-            case 'i':
+            case 'v':
                 marquerPoint('bleu', 'shido');
                 break;
             // Osaekomi
-            case 'x':
+            case 't':
                 startOsaekomi('rouge');
                 break;
-            case 'n':
+            case 'b':
                 startOsaekomi('bleu');
                 break;
-            case 'v':
+            case 'h':
                 stopOsaekomi();
                 break;
             case 'escape': // Échap pour fermer les modals
@@ -1777,7 +1783,7 @@
                     if (modalInstance) modalInstance.hide();
                 });
                 break;
-            case 't': // T = Timer
+            case 's': // T = Timer
                 e.preventDefault();
                 showTimerEditModal();
                 break;

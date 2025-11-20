@@ -3,10 +3,10 @@
     "nom": "TATAMI 1",
     "etat": "occupé",
     "combatsIds": [
-      1760672690003,
-      1760672689439
+      1763353352266,
+      1763353352574
     ],
-    "indexCombatActuel": 1,
+    "indexCombatActuel": 0,
     "dateCreation": "2025-10-16T18:01:47.595Z",
     "historique": [
       {
@@ -137,22 +137,356 @@
         "action": "combat_suivant",
         "ancienIndex": 0,
         "nouveauIndex": 1
+      },
+      {
+        "timestamp": "2025-11-17T04:12:38.323Z",
+        "action": "liberer_tatami"
+      },
+      {
+        "timestamp": "2025-11-17T04:13:46.603Z",
+        "action": "assigner_combats",
+        "combatsIds": [
+          1763352826812,
+          1763352826623
+        ],
+        "nombreCombats": 2
+      },
+      {
+        "timestamp": "2025-11-17T04:15:15.529Z",
+        "action": "combat_suivant",
+        "ancienIndex": 0,
+        "nouveauIndex": 1
+      },
+      {
+        "timestamp": "2025-11-17T04:42:29.466Z",
+        "action": "liberer_tatami",
+        "combatsLiberes": 2
+      },
+      {
+        "timestamp": "2025-11-17T04:42:35.717Z",
+        "action": "liberer_tatami",
+        "combatsLiberes": 0
+      },
+      {
+        "timestamp": "2025-11-17T04:42:58.962Z",
+        "action": "assigner_combats",
+        "combats": [
+          1763353352266,
+          1763353352574
+        ]
+      },
+      {
+        "timestamp": "2025-11-20T17:50:04.715Z",
+        "action": "combat_suivant",
+        "ancienIndex": 0,
+        "nouveauIndex": 1
+      },
+      {
+        "timestamp": "2025-11-20T17:50:04.724Z",
+        "action": "combat_precedent",
+        "ancienIndex": 1,
+        "nouveauIndex": 0
+      },
+      {
+        "timestamp": "2025-11-20T17:50:09.380Z",
+        "action": "combat_suivant",
+        "ancienIndex": 0,
+        "nouveauIndex": 1
+      },
+      {
+        "timestamp": "2025-11-20T17:50:09.390Z",
+        "action": "combat_precedent",
+        "ancienIndex": 1,
+        "nouveauIndex": 0
+      },
+      {
+        "timestamp": "2025-11-20T17:50:11.656Z",
+        "action": "combat_suivant",
+        "ancienIndex": 0,
+        "nouveauIndex": 1
+      },
+      {
+        "timestamp": "2025-11-20T17:50:11.670Z",
+        "action": "combat_precedent",
+        "ancienIndex": 1,
+        "nouveauIndex": 0
+      },
+      {
+        "timestamp": "2025-11-20T17:50:11.931Z",
+        "action": "combat_suivant",
+        "ancienIndex": 0,
+        "nouveauIndex": 1
+      },
+      {
+        "timestamp": "2025-11-20T17:50:11.944Z",
+        "action": "combat_precedent",
+        "ancienIndex": 1,
+        "nouveauIndex": 0
+      },
+      {
+        "timestamp": "2025-11-20T17:50:12.417Z",
+        "action": "combat_suivant",
+        "ancienIndex": 0,
+        "nouveauIndex": 1
+      },
+      {
+        "timestamp": "2025-11-20T17:50:12.430Z",
+        "action": "combat_precedent",
+        "ancienIndex": 1,
+        "nouveauIndex": 0
+      },
+      {
+        "timestamp": "2025-11-20T17:50:12.494Z",
+        "action": "combat_suivant",
+        "ancienIndex": 0,
+        "nouveauIndex": 1
+      },
+      {
+        "timestamp": "2025-11-20T17:50:12.503Z",
+        "action": "combat_precedent",
+        "ancienIndex": 1,
+        "nouveauIndex": 0
+      },
+      {
+        "timestamp": "2025-11-20T17:50:16.443Z",
+        "action": "combat_suivant",
+        "ancienIndex": 0,
+        "nouveauIndex": 1
+      },
+      {
+        "timestamp": "2025-11-20T17:50:16.928Z",
+        "action": "combat_precedent",
+        "ancienIndex": 1,
+        "nouveauIndex": 0
+      },
+      {
+        "timestamp": "2025-11-20T17:51:50.884Z",
+        "action": "combat_suivant",
+        "ancienIndex": 0,
+        "nouveauIndex": 1
+      },
+      {
+        "timestamp": "2025-11-20T17:53:26.761Z",
+        "action": "combat_precedent",
+        "ancienIndex": 1,
+        "nouveauIndex": 0
+      },
+      {
+        "timestamp": "2025-11-20T17:53:28.132Z",
+        "action": "combat_suivant",
+        "ancienIndex": 0,
+        "nouveauIndex": 1
+      },
+      {
+        "timestamp": "2025-11-20T17:53:28.148Z",
+        "action": "combat_precedent",
+        "ancienIndex": 1,
+        "nouveauIndex": 0
+      },
+      {
+        "timestamp": "2025-11-20T17:53:29.767Z",
+        "action": "combat_suivant",
+        "ancienIndex": 0,
+        "nouveauIndex": 1
+      },
+      {
+        "timestamp": "2025-11-20T17:53:29.784Z",
+        "action": "combat_precedent",
+        "ancienIndex": 1,
+        "nouveauIndex": 0
+      },
+      {
+        "timestamp": "2025-11-20T17:53:29.811Z",
+        "action": "combat_suivant",
+        "ancienIndex": 0,
+        "nouveauIndex": 1
+      },
+      {
+        "timestamp": "2025-11-20T17:53:29.836Z",
+        "action": "combat_precedent",
+        "ancienIndex": 1,
+        "nouveauIndex": 0
+      },
+      {
+        "timestamp": "2025-11-20T17:53:29.933Z",
+        "action": "combat_suivant",
+        "ancienIndex": 0,
+        "nouveauIndex": 1
+      },
+      {
+        "timestamp": "2025-11-20T17:53:29.944Z",
+        "action": "combat_precedent",
+        "ancienIndex": 1,
+        "nouveauIndex": 0
+      },
+      {
+        "timestamp": "2025-11-20T17:53:30.493Z",
+        "action": "combat_suivant",
+        "ancienIndex": 0,
+        "nouveauIndex": 1
+      },
+      {
+        "timestamp": "2025-11-20T17:53:30.498Z",
+        "action": "combat_precedent",
+        "ancienIndex": 1,
+        "nouveauIndex": 0
+      },
+      {
+        "timestamp": "2025-11-20T17:53:31.117Z",
+        "action": "combat_suivant",
+        "ancienIndex": 0,
+        "nouveauIndex": 1
+      },
+      {
+        "timestamp": "2025-11-20T17:53:31.129Z",
+        "action": "combat_precedent",
+        "ancienIndex": 1,
+        "nouveauIndex": 0
+      },
+      {
+        "timestamp": "2025-11-20T17:53:31.139Z",
+        "action": "combat_suivant",
+        "ancienIndex": 0,
+        "nouveauIndex": 1
+      },
+      {
+        "timestamp": "2025-11-20T17:53:31.156Z",
+        "action": "combat_precedent",
+        "ancienIndex": 1,
+        "nouveauIndex": 0
+      },
+      {
+        "timestamp": "2025-11-20T17:53:32.352Z",
+        "action": "combat_suivant",
+        "ancienIndex": 0,
+        "nouveauIndex": 1
+      },
+      {
+        "timestamp": "2025-11-20T17:53:32.362Z",
+        "action": "combat_precedent",
+        "ancienIndex": 1,
+        "nouveauIndex": 0
+      },
+      {
+        "timestamp": "2025-11-20T17:53:40.478Z",
+        "action": "combat_suivant",
+        "ancienIndex": 0,
+        "nouveauIndex": 1
+      },
+      {
+        "timestamp": "2025-11-20T17:53:41.183Z",
+        "action": "combat_precedent",
+        "ancienIndex": 1,
+        "nouveauIndex": 0
+      },
+      {
+        "timestamp": "2025-11-20T17:53:41.766Z",
+        "action": "combat_suivant",
+        "ancienIndex": 0,
+        "nouveauIndex": 1
+      },
+      {
+        "timestamp": "2025-11-20T17:53:41.851Z",
+        "action": "combat_precedent",
+        "ancienIndex": 1,
+        "nouveauIndex": 0
+      },
+      {
+        "timestamp": "2025-11-20T17:53:41.863Z",
+        "action": "combat_suivant",
+        "ancienIndex": 0,
+        "nouveauIndex": 1
+      },
+      {
+        "timestamp": "2025-11-20T17:53:41.875Z",
+        "action": "combat_precedent",
+        "ancienIndex": 1,
+        "nouveauIndex": 0
+      },
+      {
+        "timestamp": "2025-11-20T17:53:41.886Z",
+        "action": "combat_suivant",
+        "ancienIndex": 0,
+        "nouveauIndex": 1
+      },
+      {
+        "timestamp": "2025-11-20T17:53:41.908Z",
+        "action": "combat_precedent",
+        "ancienIndex": 1,
+        "nouveauIndex": 0
+      },
+      {
+        "timestamp": "2025-11-20T17:53:41.914Z",
+        "action": "combat_suivant",
+        "ancienIndex": 0,
+        "nouveauIndex": 1
+      },
+      {
+        "timestamp": "2025-11-20T17:53:41.934Z",
+        "action": "combat_precedent",
+        "ancienIndex": 1,
+        "nouveauIndex": 0
+      },
+      {
+        "timestamp": "2025-11-20T17:53:41.956Z",
+        "action": "combat_suivant",
+        "ancienIndex": 0,
+        "nouveauIndex": 1
+      },
+      {
+        "timestamp": "2025-11-20T17:53:41.975Z",
+        "action": "combat_precedent",
+        "ancienIndex": 1,
+        "nouveauIndex": 0
+      },
+      {
+        "timestamp": "2025-11-20T17:53:41.987Z",
+        "action": "combat_suivant",
+        "ancienIndex": 0,
+        "nouveauIndex": 1
+      },
+      {
+        "timestamp": "2025-11-20T17:53:42.100Z",
+        "action": "combat_precedent",
+        "ancienIndex": 1,
+        "nouveauIndex": 0
+      },
+      {
+        "timestamp": "2025-11-20T17:53:42.214Z",
+        "action": "combat_suivant",
+        "ancienIndex": 0,
+        "nouveauIndex": 1
+      },
+      {
+        "timestamp": "2025-11-20T17:53:42.245Z",
+        "action": "combat_precedent",
+        "ancienIndex": 1,
+        "nouveauIndex": 0
+      },
+      {
+        "timestamp": "2025-11-20T17:53:42.656Z",
+        "action": "combat_suivant",
+        "ancienIndex": 0,
+        "nouveauIndex": 1
+      },
+      {
+        "timestamp": "2025-11-20T17:53:42.672Z",
+        "action": "combat_precedent",
+        "ancienIndex": 1,
+        "nouveauIndex": 0
       }
     ],
     "scoreConfrontation": {
-      "rouge": 1,
-      "bleu": 100
+      "rouge": 11,
+      "bleu": 11
     },
     "id": 1760637707612
   },
   {
     "nom": "Tatami 1",
-    "etat": "occupé",
-    "combatsIds": [
-      1760673880931,
-      1760673881635
-    ],
-    "indexCombatActuel": 1,
+    "etat": "libre",
+    "combatsIds": [],
+    "indexCombatActuel": 0,
     "dateCreation": "2025-10-16T18:21:18.144Z",
     "historique": [
       {
@@ -207,11 +541,36 @@
         "action": "combat_suivant",
         "ancienIndex": 0,
         "nouveauIndex": 1
+      },
+      {
+        "timestamp": "2025-11-17T04:12:44.449Z",
+        "action": "liberer_tatami"
+      },
+      {
+        "timestamp": "2025-11-17T04:12:49.434Z",
+        "action": "liberer_tatami"
+      },
+      {
+        "timestamp": "2025-11-17T04:22:32.216Z",
+        "action": "assigner_combats",
+        "combatsIds": [
+          1763353352266,
+          1763353352574
+        ],
+        "nombreCombats": 2
+      },
+      {
+        "timestamp": "2025-11-17T04:22:38.100Z",
+        "action": "liberer_tatami"
+      },
+      {
+        "timestamp": "2025-11-17T04:22:43.450Z",
+        "action": "liberer_tatami"
       }
     ],
     "scoreConfrontation": {
-      "rouge": 120,
-      "bleu": 111
+      "rouge": 0,
+      "bleu": 0
     },
     "id": 1760638878655
   }

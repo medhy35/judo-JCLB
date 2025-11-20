@@ -1,2977 +1,5 @@
 [
   {
-    "id": 1760638376388,
-    "message": "Osaekomi arrêté",
-    "data": {
-      "combatId": 1760637793805,
-      "duree": 15,
-      "pointsMarques": [
-        "wazari"
-      ],
-      "finCombat": true
-    },
-    "timestamp": "2025-10-16T18:12:56.234Z"
-  },
-  {
-    "id": 1760638376591,
-    "message": "Classement de poule calculé: Poule A",
-    "data": {
-      "pouleId": 1,
-      "nbEquipes": 2
-    },
-    "timestamp": "2025-10-16T18:12:56.343Z"
-  },
-  {
-    "id": 1760638376502,
-    "message": "Classements mis à jour après combat",
-    "data": {
-      "combatId": 1760637793805,
-      "poulesMAJ": [
-        1
-      ]
-    },
-    "timestamp": "2025-10-16T18:12:56.452Z"
-  },
-  {
-    "id": 1760638377352,
-    "message": "Score confrontation calculé pour TATAMI 1",
-    "data": {
-      "tatamiId": 1760637707612,
-      "scoreRouge": 24,
-      "scoreBleu": 0
-    },
-    "timestamp": "2025-10-16T18:12:56.559Z"
-  },
-  {
-    "id": 1760638377282,
-    "message": "Osaekomi stop",
-    "data": {
-      "tatamiId": 1760637707612
-    },
-    "timestamp": "2025-10-16T18:12:56.683Z"
-  },
-  {
-    "id": 1760638384328,
-    "message": "Broadcast: combats:update",
-    "data": {
-      "event": "combats:update",
-      "clientsConnected": 8
-    },
-    "timestamp": "2025-10-16T18:13:03.541Z"
-  },
-  {
-    "id": 1760638383839,
-    "message": "Broadcast: stats:update",
-    "data": {
-      "event": "stats:update",
-      "clientsConnected": 8
-    },
-    "timestamp": "2025-10-16T18:13:03.774Z"
-  },
-  {
-    "id": 1760638391505,
-    "message": "Broadcast: combats:update",
-    "data": {
-      "event": "combats:update",
-      "clientsConnected": 8
-    },
-    "timestamp": "2025-10-16T18:13:10.572Z"
-  },
-  {
-    "id": 1760638395476,
-    "message": "Classement de poule calculé: Poule A",
-    "data": {
-      "pouleId": 1,
-      "nbEquipes": 2
-    },
-    "timestamp": "2025-10-16T18:13:14.615Z"
-  },
-  {
-    "id": 1760638395054,
-    "message": "Classements mis à jour après combat",
-    "data": {
-      "combatId": 1760637793805,
-      "poulesMAJ": [
-        1
-      ]
-    },
-    "timestamp": "2025-10-16T18:13:14.719Z"
-  },
-  {
-    "id": 1760638395554,
-    "message": "Score confrontation calculé pour TATAMI 1",
-    "data": {
-      "tatamiId": 1760637707612,
-      "scoreRouge": 24,
-      "scoreBleu": 0
-    },
-    "timestamp": "2025-10-16T18:13:14.820Z"
-  },
-  {
-    "id": 1760638395476,
-    "message": "Osaekomi stop",
-    "data": {
-      "tatamiId": 1760637707612
-    },
-    "timestamp": "2025-10-16T18:13:14.925Z"
-  },
-  {
-    "id": 1760638397250,
-    "message": "Broadcast: combats:update",
-    "data": {
-      "event": "combats:update",
-      "clientsConnected": 8
-    },
-    "timestamp": "2025-10-16T18:13:16.701Z"
-  },
-  {
-    "id": 1760638400417,
-    "message": "Broadcast: combats:update",
-    "data": {
-      "event": "combats:update",
-      "clientsConnected": 8
-    },
-    "timestamp": "2025-10-16T18:13:19.716Z"
-  },
-  {
-    "id": 1760638410388,
-    "message": "Broadcast: combats:update",
-    "data": {
-      "event": "combats:update",
-      "clientsConnected": 8
-    },
-    "timestamp": "2025-10-16T18:13:29.722Z"
-  },
-  {
-    "id": 1760638414355,
-    "message": "Broadcast: stats:update",
-    "data": {
-      "event": "stats:update",
-      "clientsConnected": 8
-    },
-    "timestamp": "2025-10-16T18:13:33.776Z"
-  },
-  {
-    "id": 1760638419775,
-    "message": "Broadcast: combats:update",
-    "data": {
-      "event": "combats:update",
-      "clientsConnected": 8
-    },
-    "timestamp": "2025-10-16T18:13:39.717Z"
-  },
-  {
-    "id": 1760638430377,
-    "message": "Broadcast: combats:update",
-    "data": {
-      "event": "combats:update",
-      "clientsConnected": 8
-    },
-    "timestamp": "2025-10-16T18:13:49.720Z"
-  },
-  {
-    "id": 1760638431052,
-    "message": "Broadcast: combats:update",
-    "data": {
-      "event": "combats:update",
-      "clientsConnected": 8
-    },
-    "timestamp": "2025-10-16T18:13:50.967Z"
-  },
-  {
-    "id": 1760638444573,
-    "message": "Broadcast: stats:update",
-    "data": {
-      "event": "stats:update",
-      "clientsConnected": 8
-    },
-    "timestamp": "2025-10-16T18:14:03.778Z"
-  },
-  {
-    "id": 1760638454652,
-    "message": "Classement de poule calculé: Poule A",
-    "data": {
-      "pouleId": 1,
-      "nbEquipes": 2
-    },
-    "timestamp": "2025-10-16T18:14:13.719Z"
-  },
-  {
-    "id": 1760638454011,
-    "message": "Classements mis à jour après combat",
-    "data": {
-      "combatId": 1760637793805,
-      "poulesMAJ": [
-        1
-      ]
-    },
-    "timestamp": "2025-10-16T18:14:13.864Z"
-  },
-  {
-    "id": 1760638453981,
-    "message": "Combat terminé automatiquement",
-    "data": {
-      "combatId": 1760637793805,
-      "raison": "double_wazari",
-      "vainqueur": null
-    },
-    "timestamp": "2025-10-16T18:14:13.981Z"
-  },
-  {
-    "id": 1760638455077,
-    "message": "Classement de poule calculé: Poule A",
-    "data": {
-      "pouleId": 1,
-      "nbEquipes": 2
-    },
-    "timestamp": "2025-10-16T18:14:14.100Z"
-  },
-  {
-    "id": 1760638455122,
-    "message": "Classements mis à jour après combat",
-    "data": {
-      "combatId": 1760637793805,
-      "poulesMAJ": [
-        1
-      ]
-    },
-    "timestamp": "2025-10-16T18:14:14.238Z"
-  },
-  {
-    "id": 1760638455249,
-    "message": "Score confrontation calculé pour TATAMI 1",
-    "data": {
-      "tatamiId": 1760637707612,
-      "scoreRouge": 24,
-      "scoreBleu": 0
-    },
-    "timestamp": "2025-10-16T18:14:14.357Z"
-  },
-  {
-    "id": 1760638454474,
-    "message": "Osaekomi stop",
-    "data": {
-      "tatamiId": 1760637707612
-    },
-    "timestamp": "2025-10-16T18:14:14.468Z"
-  },
-  {
-    "id": 1760638458837,
-    "message": "Point marqué: shido rouge",
-    "data": {
-      "combatId": 1760637964684,
-      "type": "shido",
-      "cote": "rouge",
-      "combatTermine": false
-    },
-    "timestamp": "2025-10-16T18:14:18.054Z"
-  },
-  {
-    "id": 1760638459091,
-    "message": "Broadcast: combats:update",
-    "data": {
-      "event": "combats:update",
-      "clientsConnected": 8
-    },
-    "timestamp": "2025-10-16T18:14:18.169Z"
-  },
-  {
-    "id": 1760638462318,
-    "message": "Broadcast: combats:update",
-    "data": {
-      "event": "combats:update",
-      "clientsConnected": 8
-    },
-    "timestamp": "2025-10-16T18:14:21.970Z"
-  },
-  {
-    "id": 1760638464929,
-    "message": "Classement de poule calculé: Poule A",
-    "data": {
-      "pouleId": 1,
-      "nbEquipes": 2
-    },
-    "timestamp": "2025-10-16T18:14:24.344Z"
-  },
-  {
-    "id": 1760638464905,
-    "message": "Classements mis à jour après combat",
-    "data": {
-      "combatId": 1760637793805,
-      "poulesMAJ": [
-        1
-      ]
-    },
-    "timestamp": "2025-10-16T18:14:24.452Z"
-  },
-  {
-    "id": 1760638465477,
-    "message": "Score confrontation calculé pour TATAMI 1",
-    "data": {
-      "tatamiId": 1760637707612,
-      "scoreRouge": 24,
-      "scoreBleu": 0
-    },
-    "timestamp": "2025-10-16T18:14:24.554Z"
-  },
-  {
-    "id": 1760638467526,
-    "message": "Classement de poule calculé: Poule A",
-    "data": {
-      "pouleId": 1,
-      "nbEquipes": 2
-    },
-    "timestamp": "2025-10-16T18:14:26.936Z"
-  },
-  {
-    "id": 1760638467665,
-    "message": "Classements mis à jour après combat",
-    "data": {
-      "combatId": 1760637793805,
-      "poulesMAJ": [
-        1
-      ]
-    },
-    "timestamp": "2025-10-16T18:14:27.057Z"
-  },
-  {
-    "id": 1760638467756,
-    "message": "Score confrontation calculé pour TATAMI 1",
-    "data": {
-      "tatamiId": 1760637707612,
-      "scoreRouge": 24,
-      "scoreBleu": 0
-    },
-    "timestamp": "2025-10-16T18:14:27.261Z"
-  },
-  {
-    "id": 1760638467706,
-    "message": "Osaekomi stop",
-    "data": {
-      "tatamiId": 1760637707612
-    },
-    "timestamp": "2025-10-16T18:14:27.392Z"
-  },
-  {
-    "id": 1760638471471,
-    "message": "Broadcast: combats:update",
-    "data": {
-      "event": "combats:update",
-      "clientsConnected": 8
-    },
-    "timestamp": "2025-10-16T18:14:30.991Z"
-  },
-  {
-    "id": 1760638474425,
-    "message": "Broadcast: stats:update",
-    "data": {
-      "event": "stats:update",
-      "clientsConnected": 8
-    },
-    "timestamp": "2025-10-16T18:14:33.776Z"
-  },
-  {
-    "id": 1760638481620,
-    "message": "Broadcast: combats:update",
-    "data": {
-      "event": "combats:update",
-      "clientsConnected": 8
-    },
-    "timestamp": "2025-10-16T18:14:40.983Z"
-  },
-  {
-    "id": 1760638487587,
-    "message": "Broadcast: combats:update",
-    "data": {
-      "event": "combats:update",
-      "clientsConnected": 8
-    },
-    "timestamp": "2025-10-16T18:14:47.371Z"
-  },
-  {
-    "id": 1760638496568,
-    "message": "Broadcast: combats:update",
-    "data": {
-      "event": "combats:update",
-      "clientsConnected": 8
-    },
-    "timestamp": "2025-10-16T18:14:56.464Z"
-  },
-  {
-    "id": 1760638501365,
-    "message": "Broadcast: combats:update",
-    "data": {
-      "event": "combats:update",
-      "clientsConnected": 8
-    },
-    "timestamp": "2025-10-16T18:15:00.480Z"
-  },
-  {
-    "id": 1760638504546,
-    "message": "Broadcast: stats:update",
-    "data": {
-      "event": "stats:update",
-      "clientsConnected": 8
-    },
-    "timestamp": "2025-10-16T18:15:03.775Z"
-  },
-  {
-    "id": 1760638509698,
-    "message": "Broadcast: combats:update",
-    "data": {
-      "event": "combats:update",
-      "clientsConnected": 8
-    },
-    "timestamp": "2025-10-16T18:15:09.598Z"
-  },
-  {
-    "id": 1760638511347,
-    "message": "Broadcast: combats:update",
-    "data": {
-      "event": "combats:update",
-      "clientsConnected": 8
-    },
-    "timestamp": "2025-10-16T18:15:10.613Z"
-  },
-  {
-    "id": 1760638512188,
-    "message": "Classement de poule calculé: Poule B",
-    "data": {
-      "pouleId": 2,
-      "nbEquipes": 2
-    },
-    "timestamp": "2025-10-16T18:15:11.620Z"
-  },
-  {
-    "id": 1760638512280,
-    "message": "Classements mis à jour après combat",
-    "data": {
-      "combatId": 1760637964684,
-      "poulesMAJ": [
-        2
-      ]
-    },
-    "timestamp": "2025-10-16T18:15:11.784Z"
-  },
-  {
-    "id": 1760638512529,
-    "message": "Score confrontation calculé pour TATAMI 2",
-    "data": {
-      "tatamiId": 1760637727722,
-      "scoreRouge": 7,
-      "scoreBleu": 9
-    },
-    "timestamp": "2025-10-16T18:15:11.928Z"
-  },
-  {
-    "id": 1760638512304,
-    "message": "Osaekomi stop",
-    "data": {
-      "tatamiId": 1760637727722
-    },
-    "timestamp": "2025-10-16T18:15:12.057Z"
-  },
-  {
-    "id": 1760638512270,
-    "message": "Osaekomi stop",
-    "data": {
-      "tatamiId": 1760637727722
-    },
-    "timestamp": "2025-10-16T18:15:12.166Z"
-  },
-  {
-    "id": 1760638534388,
-    "message": "Broadcast: stats:update",
-    "data": {
-      "event": "stats:update",
-      "clientsConnected": 8
-    },
-    "timestamp": "2025-10-16T18:15:33.778Z"
-  },
-  {
-    "id": 1760638564276,
-    "message": "Broadcast: stats:update",
-    "data": {
-      "event": "stats:update",
-      "clientsConnected": 8
-    },
-    "timestamp": "2025-10-16T18:16:03.778Z"
-  },
-  {
-    "id": 1760638566701,
-    "message": "Client déconnecté",
-    "data": {
-      "socketId": "Z-nampk2Wgrh2KotAAAf"
-    },
-    "timestamp": "2025-10-16T18:16:06.345Z"
-  },
-  {
-    "id": 1760638566767,
-    "message": "Client connecté via WebSocket",
-    "data": {
-      "socketId": "qV_1qDltDfc4yfpYAAA1"
-    },
-    "timestamp": "2025-10-16T18:16:06.491Z"
-  },
-  {
-    "id": 1760638574015,
-    "message": "Tatami TATAMI 1 libéré",
-    "data": {
-      "tatamiId": 1760637707612
-    },
-    "timestamp": "2025-10-16T18:16:13.842Z"
-  },
-  {
-    "id": 1760638574520,
-    "message": "Broadcast: tatamis:update",
-    "data": {
-      "event": "tatamis:update",
-      "clientsConnected": 8
-    },
-    "timestamp": "2025-10-16T18:16:13.958Z"
-  },
-  {
-    "id": 1760638587699,
-    "message": "Client déconnecté",
-    "data": {
-      "socketId": "qV_1qDltDfc4yfpYAAA1"
-    },
-    "timestamp": "2025-10-16T18:16:26.820Z"
-  },
-  {
-    "id": 1760638587794,
-    "message": "Classement général calculé",
-    "data": {
-      "nbEquipesClassees": 2
-    },
-    "timestamp": "2025-10-16T18:16:26.961Z"
-  },
-  {
-    "id": 1760638587208,
-    "message": "Client connecté via WebSocket",
-    "data": {
-      "socketId": "b9YSNBfbaYT6-yq9AAA3"
-    },
-    "timestamp": "2025-10-16T18:16:27.097Z"
-  },
-  {
-    "id": 1760638594252,
-    "message": "Broadcast: stats:update",
-    "data": {
-      "event": "stats:update",
-      "clientsConnected": 8
-    },
-    "timestamp": "2025-10-16T18:16:33.777Z"
-  },
-  {
-    "id": 1760638594805,
-    "message": "Client déconnecté",
-    "data": {
-      "socketId": "b9YSNBfbaYT6-yq9AAA3"
-    },
-    "timestamp": "2025-10-16T18:16:34.272Z"
-  },
-  {
-    "id": 1760638594507,
-    "message": "Client connecté via WebSocket",
-    "data": {
-      "socketId": "todwTRLGgaVz1us2AAA5"
-    },
-    "timestamp": "2025-10-16T18:16:34.396Z"
-  },
-  {
-    "id": 1760638604129,
-    "message": "Broadcast: combats:update",
-    "data": {
-      "event": "combats:update",
-      "clientsConnected": 8
-    },
-    "timestamp": "2025-10-16T18:16:43.852Z"
-  },
-  {
-    "id": 1760638606244,
-    "message": "Broadcast: combats:update",
-    "data": {
-      "event": "combats:update",
-      "clientsConnected": 8
-    },
-    "timestamp": "2025-10-16T18:16:45.725Z"
-  },
-  {
-    "id": 1760638608079,
-    "message": "Broadcast: combats:update",
-    "data": {
-      "event": "combats:update",
-      "clientsConnected": 8
-    },
-    "timestamp": "2025-10-16T18:16:47.229Z"
-  },
-  {
-    "id": 1760638616165,
-    "message": "TATAMI 2 - Combat suivant",
-    "data": {
-      "tatamiId": 1760637727722,
-      "index": 1,
-      "combatId": 1760637965077
-    },
-    "timestamp": "2025-10-16T18:16:55.298Z"
-  },
-  {
-    "id": 1760638615718,
-    "message": "Broadcast: tatamis:update",
-    "data": {
-      "event": "tatamis:update",
-      "clientsConnected": 8
-    },
-    "timestamp": "2025-10-16T18:16:55.436Z"
-  },
-  {
-    "id": 1760638621220,
-    "message": "Broadcast: combats:update",
-    "data": {
-      "event": "combats:update",
-      "clientsConnected": 8
-    },
-    "timestamp": "2025-10-16T18:17:00.301Z"
-  },
-  {
-    "id": 1760638621832,
-    "message": "Classement de poule calculé: Poule B",
-    "data": {
-      "pouleId": 2,
-      "nbEquipes": 2
-    },
-    "timestamp": "2025-10-16T18:17:01.566Z"
-  },
-  {
-    "id": 1760638622432,
-    "message": "Classements mis à jour après combat",
-    "data": {
-      "combatId": 1760637965077,
-      "poulesMAJ": [
-        2
-      ]
-    },
-    "timestamp": "2025-10-16T18:17:01.674Z"
-  },
-  {
-    "id": 1760638622741,
-    "message": "Point marqué: ippon rouge",
-    "data": {
-      "combatId": 1760637965077,
-      "type": "ippon",
-      "cote": "rouge",
-      "combatTermine": true
-    },
-    "timestamp": "2025-10-16T18:17:01.778Z"
-  },
-  {
-    "id": 1760638622333,
-    "message": "Classement de poule calculé: Poule B",
-    "data": {
-      "pouleId": 2,
-      "nbEquipes": 2
-    },
-    "timestamp": "2025-10-16T18:17:01.885Z"
-  },
-  {
-    "id": 1760638622752,
-    "message": "Classements mis à jour après combat",
-    "data": {
-      "combatId": 1760637965077,
-      "poulesMAJ": [
-        2
-      ]
-    },
-    "timestamp": "2025-10-16T18:17:02.025Z"
-  },
-  {
-    "id": 1760638622866,
-    "message": "Score confrontation calculé pour TATAMI 2",
-    "data": {
-      "tatamiId": 1760637727722,
-      "scoreRouge": 10,
-      "scoreBleu": 0
-    },
-    "timestamp": "2025-10-16T18:17:02.156Z"
-  },
-  {
-    "id": 1760638622686,
-    "message": "Osaekomi stop",
-    "data": {
-      "tatamiId": 1760637727722
-    },
-    "timestamp": "2025-10-16T18:17:02.268Z"
-  },
-  {
-    "id": 1760638624139,
-    "message": "Broadcast: stats:update",
-    "data": {
-      "event": "stats:update",
-      "clientsConnected": 8
-    },
-    "timestamp": "2025-10-16T18:17:03.777Z"
-  },
-  {
-    "id": 1760638628310,
-    "message": "Client déconnecté",
-    "data": {
-      "socketId": "todwTRLGgaVz1us2AAA5"
-    },
-    "timestamp": "2025-10-16T18:17:07.524Z"
-  },
-  {
-    "id": 1760638628256,
-    "message": "Classement général calculé",
-    "data": {
-      "nbEquipesClassees": 2
-    },
-    "timestamp": "2025-10-16T18:17:07.651Z"
-  },
-  {
-    "id": 1760638628117,
-    "message": "Client connecté via WebSocket",
-    "data": {
-      "socketId": "y4o1UnwhOUxJGZmSAAA7"
-    },
-    "timestamp": "2025-10-16T18:17:07.759Z"
-  },
-  {
-    "id": 1760638637647,
-    "message": "Client déconnecté",
-    "data": {
-      "socketId": "y4o1UnwhOUxJGZmSAAA7"
-    },
-    "timestamp": "2025-10-16T18:17:16.762Z"
-  },
-  {
-    "id": 1760638637546,
-    "message": "Classement général calculé",
-    "data": {
-      "nbEquipesClassees": 2
-    },
-    "timestamp": "2025-10-16T18:17:16.886Z"
-  },
-  {
-    "id": 1760638637980,
-    "message": "Client connecté via WebSocket",
-    "data": {
-      "socketId": "9QK-OK4aEwRHLOIDAAA9"
-    },
-    "timestamp": "2025-10-16T18:17:17.024Z"
-  },
-  {
-    "id": 1760638651048,
-    "message": "Client déconnecté",
-    "data": {
-      "socketId": "9QK-OK4aEwRHLOIDAAA9"
-    },
-    "timestamp": "2025-10-16T18:17:30.096Z"
-  },
-  {
-    "id": 1760638651186,
-    "message": "Classement général calculé",
-    "data": {
-      "nbEquipesClassees": 2
-    },
-    "timestamp": "2025-10-16T18:17:30.257Z"
-  },
-  {
-    "id": 1760638650598,
-    "message": "Client connecté via WebSocket",
-    "data": {
-      "socketId": "HJLXQoDgOqxlmR-RAAA_"
-    },
-    "timestamp": "2025-10-16T18:17:30.421Z"
-  },
-  {
-    "id": 1760638654178,
-    "message": "Broadcast: stats:update",
-    "data": {
-      "event": "stats:update",
-      "clientsConnected": 8
-    },
-    "timestamp": "2025-10-16T18:17:33.777Z"
-  },
-  {
-    "id": 1760638662414,
-    "message": "Client déconnecté",
-    "data": {
-      "socketId": "t9xAK8cQ5frv19eVAAAl"
-    },
-    "timestamp": "2025-10-16T18:17:41.611Z"
-  },
-  {
-    "id": 1760638662463,
-    "message": "Client connecté via WebSocket",
-    "data": {
-      "socketId": "okyNDhGljgLIzYpaAABB"
-    },
-    "timestamp": "2025-10-16T18:17:41.967Z"
-  },
-  {
-    "id": 1760638672880,
-    "message": "Client déconnecté",
-    "data": {
-      "socketId": "9YKXw4gkc8QuGYcQAAAD"
-    },
-    "timestamp": "2025-10-16T18:17:52.842Z"
-  },
-  {
-    "id": 1760638684379,
-    "message": "Broadcast: stats:update",
-    "data": {
-      "event": "stats:update",
-      "clientsConnected": 7
-    },
-    "timestamp": "2025-10-16T18:18:03.779Z"
-  },
-  {
-    "id": 1760638686867,
-    "message": "Client déconnecté",
-    "data": {
-      "socketId": "9z03da3ctZZ_IA0MAAAn"
-    },
-    "timestamp": "2025-10-16T18:18:06.357Z"
-  },
-  {
-    "id": 1760638687365,
-    "message": "Client connecté via WebSocket",
-    "data": {
-      "socketId": "XZuINh-_bR3OJqcyAABD"
-    },
-    "timestamp": "2025-10-16T18:18:06.660Z"
-  },
-  {
-    "id": 1760638694054,
-    "message": "Tatami TATAMI 2 libéré",
-    "data": {
-      "tatamiId": 1760637727722
-    },
-    "timestamp": "2025-10-16T18:18:13.735Z"
-  },
-  {
-    "id": 1760638694009,
-    "message": "Broadcast: tatamis:update",
-    "data": {
-      "event": "tatamis:update",
-      "clientsConnected": 7
-    },
-    "timestamp": "2025-10-16T18:18:13.862Z"
-  },
-  {
-    "id": 1760638694107,
-    "message": "Client déconnecté",
-    "data": {
-      "socketId": "1WejY7N8_-yRtZPVAAAz"
-    },
-    "timestamp": "2025-10-16T18:18:14.016Z"
-  },
-  {
-    "id": 1760638697904,
-    "message": "Client déconnecté",
-    "data": {
-      "socketId": "-KeiFKNV5CDyTjdhAAAr"
-    },
-    "timestamp": "2025-10-16T18:18:17.010Z"
-  },
-  {
-    "id": 1760638699174,
-    "message": "Client déconnecté",
-    "data": {
-      "socketId": "ml3UWlJhWAi4X8X-AAAF"
-    },
-    "timestamp": "2025-10-16T18:18:18.642Z"
-  },
-  {
-    "id": 1760638701808,
-    "message": "Client déconnecté",
-    "data": {
-      "socketId": "okyNDhGljgLIzYpaAABB"
-    },
-    "timestamp": "2025-10-16T18:18:21.793Z"
-  },
-  {
-    "id": 1760638702501,
-    "message": "Client connecté via WebSocket",
-    "data": {
-      "socketId": "4aFuOau2ChfaarZfAABF"
-    },
-    "timestamp": "2025-10-16T18:18:22.111Z"
-  },
-  {
-    "id": 1760638710383,
-    "message": "Client déconnecté",
-    "data": {
-      "socketId": "4aFuOau2ChfaarZfAABF"
-    },
-    "timestamp": "2025-10-16T18:18:30.021Z"
-  },
-  {
-    "id": 1760638710573,
-    "message": "Client connecté via WebSocket",
-    "data": {
-      "socketId": "OmtP8K9bgCAsuIWFAABH"
-    },
-    "timestamp": "2025-10-16T18:18:30.375Z"
-  },
-  {
-    "id": 1760638711162,
-    "message": "Classement général calculé",
-    "data": {
-      "nbEquipesClassees": 2
-    },
-    "timestamp": "2025-10-16T18:18:30.559Z"
-  },
-  {
-    "id": 1760638713714,
-    "message": "Client connecté via WebSocket",
-    "data": {
-      "socketId": "xUSIiDOAmUsJ8tr1AABJ"
-    },
-    "timestamp": "2025-10-16T18:18:33.144Z"
-  },
-  {
-    "id": 1760638714441,
-    "message": "Broadcast: stats:update",
-    "data": {
-      "event": "stats:update",
-      "clientsConnected": 5
-    },
-    "timestamp": "2025-10-16T18:18:33.778Z"
-  },
-  {
-    "id": 1760638725863,
-    "message": "Client déconnecté",
-    "data": {
-      "socketId": "OmtP8K9bgCAsuIWFAABH"
-    },
-    "timestamp": "2025-10-16T18:18:45.006Z"
-  },
-  {
-    "id": 1760638725369,
-    "message": "Client connecté via WebSocket",
-    "data": {
-      "socketId": "_Xm9xoLs5YG1Ny0KAABL"
-    },
-    "timestamp": "2025-10-16T18:18:45.222Z"
-  },
-  {
-    "id": 1760638743957,
-    "message": "Broadcast: stats:update",
-    "data": {
-      "event": "stats:update",
-      "clientsConnected": 5
-    },
-    "timestamp": "2025-10-16T18:19:03.777Z"
-  },
-  {
-    "id": 1760638747770,
-    "message": "Client déconnecté",
-    "data": {
-      "socketId": "XZuINh-_bR3OJqcyAABD"
-    },
-    "timestamp": "2025-10-16T18:19:06.986Z"
-  },
-  {
-    "id": 1760638748052,
-    "message": "Client connecté via WebSocket",
-    "data": {
-      "socketId": "LUgkMA0IjkxG4S_HAABN"
-    },
-    "timestamp": "2025-10-16T18:19:07.224Z"
-  },
-  {
-    "id": 1760638774446,
-    "message": "Broadcast: stats:update",
-    "data": {
-      "event": "stats:update",
-      "clientsConnected": 5
-    },
-    "timestamp": "2025-10-16T18:19:33.779Z"
-  },
-  {
-    "id": 1760638798472,
-    "message": "Client déconnecté",
-    "data": {
-      "socketId": "_Xm9xoLs5YG1Ny0KAABL"
-    },
-    "timestamp": "2025-10-16T18:19:57.621Z"
-  },
-  {
-    "id": 1760638797960,
-    "message": "Client connecté via WebSocket",
-    "data": {
-      "socketId": "5yZc9Lu5J483OlUVAABP"
-    },
-    "timestamp": "2025-10-16T18:19:57.945Z"
-  },
-  {
-    "id": 1760638804694,
-    "message": "Broadcast: stats:update",
-    "data": {
-      "event": "stats:update",
-      "clientsConnected": 5
-    },
-    "timestamp": "2025-10-16T18:20:03.777Z"
-  },
-  {
-    "id": 1760638809802,
-    "message": "Client déconnecté",
-    "data": {
-      "socketId": "xUSIiDOAmUsJ8tr1AABJ"
-    },
-    "timestamp": "2025-10-16T18:20:09.036Z"
-  },
-  {
-    "id": 1760638810395,
-    "message": "Client connecté via WebSocket",
-    "data": {
-      "socketId": "DimZ6pCSMxpUvmuvAABR"
-    },
-    "timestamp": "2025-10-16T18:20:09.440Z"
-  },
-  {
-    "id": 1760638809676,
-    "message": "Classement général calculé",
-    "data": {
-      "nbEquipesClassees": 2
-    },
-    "timestamp": "2025-10-16T18:20:09.608Z"
-  },
-  {
-    "id": 1760638812145,
-    "message": "Client déconnecté",
-    "data": {
-      "socketId": "DimZ6pCSMxpUvmuvAABR"
-    },
-    "timestamp": "2025-10-16T18:20:11.778Z"
-  },
-  {
-    "id": 1760638812861,
-    "message": "Client connecté via WebSocket",
-    "data": {
-      "socketId": "-CaY_dmUT10bxnRdAABT"
-    },
-    "timestamp": "2025-10-16T18:20:12.021Z"
-  },
-  {
-    "id": 1760638822350,
-    "message": "2 poules créées avec 4 équipes",
-    "data": {
-      "nbPoules": 2,
-      "nbEquipes": 4,
-      "poulesIds": [
-        1,
-        2
-      ]
-    },
-    "timestamp": "2025-10-16T18:20:22.027Z"
-  },
-  {
-    "id": 1760638834339,
-    "message": "Broadcast: stats:update",
-    "data": {
-      "event": "stats:update",
-      "clientsConnected": 5
-    },
-    "timestamp": "2025-10-16T18:20:33.777Z"
-  },
-  {
-    "id": 1760638863984,
-    "message": "Broadcast: stats:update",
-    "data": {
-      "event": "stats:update",
-      "clientsConnected": 5
-    },
-    "timestamp": "2025-10-16T18:21:03.778Z"
-  },
-  {
-    "id": 1760638865948,
-    "message": "Client déconnecté",
-    "data": {
-      "socketId": "5yZc9Lu5J483OlUVAABP"
-    },
-    "timestamp": "2025-10-16T18:21:05.105Z"
-  },
-  {
-    "id": 1760638865562,
-    "message": "Client connecté via WebSocket",
-    "data": {
-      "socketId": "QFM2GEoYjplSItydAABV"
-    },
-    "timestamp": "2025-10-16T18:21:05.455Z"
-  },
-  {
-    "id": 1760638871209,
-    "message": "Client déconnecté",
-    "data": {
-      "socketId": "LUgkMA0IjkxG4S_HAABN"
-    },
-    "timestamp": "2025-10-16T18:21:10.569Z"
-  },
-  {
-    "id": 1760638871471,
-    "message": "Client connecté via WebSocket",
-    "data": {
-      "socketId": "7RqGPK-KOuZvHC8RAABX"
-    },
-    "timestamp": "2025-10-16T18:21:10.858Z"
-  },
-  {
-    "id": 1760638878925,
-    "message": "Nouveau tatami créé: Tatami 1",
-    "data": {
-      "tatamiId": 1760638878655
-    },
-    "timestamp": "2025-10-16T18:21:18.145Z"
-  },
-  {
-    "id": 1760638878476,
-    "message": "Broadcast: tatamis:update",
-    "data": {
-      "event": "tatamis:update",
-      "clientsConnected": 5
-    },
-    "timestamp": "2025-10-16T18:21:18.258Z"
-  },
-  {
-    "id": 1760638889727,
-    "message": "2 combats générés entre équipes",
-    "data": {
-      "equipeA": "Sucy",
-      "equipeB": "Aubervilliers",
-      "combatsIds": [
-        1760638889251,
-        1760638889142
-      ]
-    },
-    "timestamp": "2025-10-16T18:21:28.781Z"
-  },
-  {
-    "id": 1760638889569,
-    "message": "Poules mises à jour après assignation",
-    "data": {
-      "combatsIds": [
-        1760638889251,
-        1760638889142
-      ]
-    },
-    "timestamp": "2025-10-16T18:21:28.919Z"
-  },
-  {
-    "id": 1760638889691,
-    "message": "2 combats assignés au Tatami 1",
-    "data": {
-      "tatamiId": 1760638878655,
-      "combatsIds": [
-        1760638889251,
-        1760638889142
-      ]
-    },
-    "timestamp": "2025-10-16T18:21:29.023Z"
-  },
-  {
-    "id": 1760638889518,
-    "message": "Broadcast: poules:update",
-    "data": {
-      "event": "poules:update",
-      "clientsConnected": 5
-    },
-    "timestamp": "2025-10-16T18:21:29.140Z"
-  },
-  {
-    "id": 1760638893953,
-    "message": "Broadcast: stats:update",
-    "data": {
-      "event": "stats:update",
-      "clientsConnected": 5
-    },
-    "timestamp": "2025-10-16T18:21:33.777Z"
-  },
-  {
-    "id": 1760638896407,
-    "message": "Client déconnecté",
-    "data": {
-      "socketId": "7RqGPK-KOuZvHC8RAABX"
-    },
-    "timestamp": "2025-10-16T18:21:36.218Z"
-  },
-  {
-    "id": 1760638896851,
-    "message": "Client connecté via WebSocket",
-    "data": {
-      "socketId": "NlR4zPUk6Vqez3B6AABZ"
-    },
-    "timestamp": "2025-10-16T18:21:36.475Z"
-  },
-  {
-    "id": 1760638898635,
-    "message": "Broadcast: combats:update",
-    "data": {
-      "event": "combats:update",
-      "clientsConnected": 5
-    },
-    "timestamp": "2025-10-16T18:21:38.100Z"
-  },
-  {
-    "id": 1760638898713,
-    "message": "Classement général calculé",
-    "data": {
-      "nbEquipesClassees": 0
-    },
-    "timestamp": "2025-10-16T18:21:38.290Z"
-  },
-  {
-    "id": 1760638900659,
-    "message": "Classement de poule calculé: Poule B",
-    "data": {
-      "pouleId": 2,
-      "nbEquipes": 2
-    },
-    "timestamp": "2025-10-16T18:21:40.086Z"
-  },
-  {
-    "id": 1760638900986,
-    "message": "Classements mis à jour après combat",
-    "data": {
-      "combatId": 1760638889251,
-      "poulesMAJ": [
-        2
-      ]
-    },
-    "timestamp": "2025-10-16T18:21:40.189Z"
-  },
-  {
-    "id": 1760638900440,
-    "message": "Point marqué: ippon rouge",
-    "data": {
-      "combatId": 1760638889251,
-      "type": "ippon",
-      "cote": "rouge",
-      "combatTermine": true
-    },
-    "timestamp": "2025-10-16T18:21:40.293Z"
-  },
-  {
-    "id": 1760638901045,
-    "message": "Classement de poule calculé: Poule B",
-    "data": {
-      "pouleId": 2,
-      "nbEquipes": 2
-    },
-    "timestamp": "2025-10-16T18:21:40.401Z"
-  },
-  {
-    "id": 1760638901333,
-    "message": "Classements mis à jour après combat",
-    "data": {
-      "combatId": 1760638889251,
-      "poulesMAJ": [
-        2
-      ]
-    },
-    "timestamp": "2025-10-16T18:21:40.541Z"
-  },
-  {
-    "id": 1760638901665,
-    "message": "Score confrontation calculé pour Tatami 1",
-    "data": {
-      "tatamiId": 1760638878655,
-      "scoreRouge": 10,
-      "scoreBleu": 0
-    },
-    "timestamp": "2025-10-16T18:21:40.668Z"
-  },
-  {
-    "id": 1760638901160,
-    "message": "Osaekomi stop",
-    "data": {
-      "tatamiId": 1760638878655
-    },
-    "timestamp": "2025-10-16T18:21:40.779Z"
-  },
-  {
-    "id": 1760638903831,
-    "message": "Tatami 1 - Combat suivant",
-    "data": {
-      "tatamiId": 1760638878655,
-      "index": 1,
-      "combatId": 1760638889142
-    },
-    "timestamp": "2025-10-16T18:21:43.733Z"
-  },
-  {
-    "id": 1760638904300,
-    "message": "Broadcast: tatamis:update",
-    "data": {
-      "event": "tatamis:update",
-      "clientsConnected": 5
-    },
-    "timestamp": "2025-10-16T18:21:43.843Z"
-  },
-  {
-    "id": 1760638905763,
-    "message": "Classement de poule calculé: Poule B",
-    "data": {
-      "pouleId": 2,
-      "nbEquipes": 2
-    },
-    "timestamp": "2025-10-16T18:21:44.863Z"
-  },
-  {
-    "id": 1760638905407,
-    "message": "Classements mis à jour après combat",
-    "data": {
-      "combatId": 1760638889142,
-      "poulesMAJ": [
-        2
-      ]
-    },
-    "timestamp": "2025-10-16T18:21:44.982Z"
-  },
-  {
-    "id": 1760638905233,
-    "message": "Point marqué: ippon rouge",
-    "data": {
-      "combatId": 1760638889142,
-      "type": "ippon",
-      "cote": "rouge",
-      "combatTermine": true
-    },
-    "timestamp": "2025-10-16T18:21:45.105Z"
-  },
-  {
-    "id": 1760638905384,
-    "message": "Classement de poule calculé: Poule B",
-    "data": {
-      "pouleId": 2,
-      "nbEquipes": 2
-    },
-    "timestamp": "2025-10-16T18:21:45.240Z"
-  },
-  {
-    "id": 1760638905647,
-    "message": "Classements mis à jour après combat",
-    "data": {
-      "combatId": 1760638889142,
-      "poulesMAJ": [
-        2
-      ]
-    },
-    "timestamp": "2025-10-16T18:21:45.389Z"
-  },
-  {
-    "id": 1760638905933,
-    "message": "Score confrontation calculé pour Tatami 1",
-    "data": {
-      "tatamiId": 1760638878655,
-      "scoreRouge": 20,
-      "scoreBleu": 0
-    },
-    "timestamp": "2025-10-16T18:21:45.516Z"
-  },
-  {
-    "id": 1760638906251,
-    "message": "Osaekomi stop",
-    "data": {
-      "tatamiId": 1760638878655
-    },
-    "timestamp": "2025-10-16T18:21:45.632Z"
-  },
-  {
-    "id": 1760638924766,
-    "message": "Broadcast: stats:update",
-    "data": {
-      "event": "stats:update",
-      "clientsConnected": 5
-    },
-    "timestamp": "2025-10-16T18:22:03.778Z"
-  },
-  {
-    "id": 1760638928700,
-    "message": "Classement de poule calculé: Poule B",
-    "data": {
-      "pouleId": 2,
-      "nbEquipes": 2
-    },
-    "timestamp": "2025-10-16T18:22:07.744Z"
-  },
-  {
-    "id": 1760638928801,
-    "message": "Classements mis à jour après combat",
-    "data": {
-      "combatId": 1760638889142,
-      "poulesMAJ": [
-        2
-      ]
-    },
-    "timestamp": "2025-10-16T18:22:07.859Z"
-  },
-  {
-    "id": 1760638928069,
-    "message": "Combat terminé automatiquement",
-    "data": {
-      "combatId": 1760638889142,
-      "raison": "ippon",
-      "vainqueur": null
-    },
-    "timestamp": "2025-10-16T18:22:07.988Z"
-  },
-  {
-    "id": 1760638928646,
-    "message": "Classement de poule calculé: Poule B",
-    "data": {
-      "pouleId": 2,
-      "nbEquipes": 2
-    },
-    "timestamp": "2025-10-16T18:22:08.102Z"
-  },
-  {
-    "id": 1760638928440,
-    "message": "Classements mis à jour après combat",
-    "data": {
-      "combatId": 1760638889142,
-      "poulesMAJ": [
-        2
-      ]
-    },
-    "timestamp": "2025-10-16T18:22:08.249Z"
-  },
-  {
-    "id": 1760638929303,
-    "message": "Score confrontation calculé pour Tatami 1",
-    "data": {
-      "tatamiId": 1760638878655,
-      "scoreRouge": 20,
-      "scoreBleu": 0
-    },
-    "timestamp": "2025-10-16T18:22:08.384Z"
-  },
-  {
-    "id": 1760638929385,
-    "message": "Osaekomi stop",
-    "data": {
-      "tatamiId": 1760638878655
-    },
-    "timestamp": "2025-10-16T18:22:08.514Z"
-  },
-  {
-    "id": 1760638938214,
-    "message": "Classement de poule calculé: Poule B",
-    "data": {
-      "pouleId": 2,
-      "nbEquipes": 2
-    },
-    "timestamp": "2025-10-16T18:22:18.117Z"
-  },
-  {
-    "id": 1760638938543,
-    "message": "Classements mis à jour après combat",
-    "data": {
-      "combatId": 1760638889142,
-      "poulesMAJ": [
-        2
-      ]
-    },
-    "timestamp": "2025-10-16T18:22:18.241Z"
-  },
-  {
-    "id": 1760638938694,
-    "message": "Score confrontation calculé pour Tatami 1",
-    "data": {
-      "tatamiId": 1760638878655,
-      "scoreRouge": 20,
-      "scoreBleu": 0
-    },
-    "timestamp": "2025-10-16T18:22:18.369Z"
-  },
-  {
-    "id": 1760638938668,
-    "message": "Classement de poule calculé: Poule B",
-    "data": {
-      "pouleId": 2,
-      "nbEquipes": 2
-    },
-    "timestamp": "2025-10-16T18:22:18.487Z"
-  },
-  {
-    "id": 1760638938711,
-    "message": "Classements mis à jour après combat",
-    "data": {
-      "combatId": 1760638889142,
-      "poulesMAJ": [
-        2
-      ]
-    },
-    "timestamp": "2025-10-16T18:22:18.600Z"
-  },
-  {
-    "id": 1760638939080,
-    "message": "Combat terminé automatiquement",
-    "data": {
-      "combatId": 1760638889142,
-      "raison": "ippon",
-      "vainqueur": null
-    },
-    "timestamp": "2025-10-16T18:22:18.722Z"
-  },
-  {
-    "id": 1760638939491,
-    "message": "Classement de poule calculé: Poule B",
-    "data": {
-      "pouleId": 2,
-      "nbEquipes": 2
-    },
-    "timestamp": "2025-10-16T18:22:18.860Z"
-  },
-  {
-    "id": 1760638939508,
-    "message": "Classements mis à jour après combat",
-    "data": {
-      "combatId": 1760638889142,
-      "poulesMAJ": [
-        2
-      ]
-    },
-    "timestamp": "2025-10-16T18:22:19.005Z"
-  },
-  {
-    "id": 1760638939444,
-    "message": "Score confrontation calculé pour Tatami 1",
-    "data": {
-      "tatamiId": 1760638878655,
-      "scoreRouge": 20,
-      "scoreBleu": 0
-    },
-    "timestamp": "2025-10-16T18:22:19.129Z"
-  },
-  {
-    "id": 1760638942834,
-    "message": "Client déconnecté",
-    "data": {
-      "socketId": "-CaY_dmUT10bxnRdAABT"
-    },
-    "timestamp": "2025-10-16T18:22:22.132Z"
-  },
-  {
-    "id": 1760638942784,
-    "message": "Client connecté via WebSocket",
-    "data": {
-      "socketId": "6x2-Np49-1Jmc53MAABb"
-    },
-    "timestamp": "2025-10-16T18:22:22.454Z"
-  },
-  {
-    "id": 1760638951924,
-    "message": "Client déconnecté",
-    "data": {
-      "socketId": "HJLXQoDgOqxlmR-RAAA_"
-    },
-    "timestamp": "2025-10-16T18:22:31.917Z"
-  },
-  {
-    "id": 1760638952505,
-    "message": "Client connecté via WebSocket",
-    "data": {
-      "socketId": "BtOJip2hQ9UFmKG1AABd"
-    },
-    "timestamp": "2025-10-16T18:22:32.077Z"
-  },
-  {
-    "id": 1760638952911,
-    "message": "Classement général calculé",
-    "data": {
-      "nbEquipesClassees": 2
-    },
-    "timestamp": "2025-10-16T18:22:32.188Z"
-  },
-  {
-    "id": 1760638954473,
-    "message": "Broadcast: stats:update",
-    "data": {
-      "event": "stats:update",
-      "clientsConnected": 5
-    },
-    "timestamp": "2025-10-16T18:22:33.778Z"
-  },
-  {
-    "id": 1760638954352,
-    "message": "Client déconnecté",
-    "data": {
-      "socketId": "BtOJip2hQ9UFmKG1AABd"
-    },
-    "timestamp": "2025-10-16T18:22:33.887Z"
-  },
-  {
-    "id": 1760638954923,
-    "message": "Client connecté via WebSocket",
-    "data": {
-      "socketId": "nwa7RtOrDaj832JGAABf"
-    },
-    "timestamp": "2025-10-16T18:22:34.003Z"
-  },
-  {
-    "id": 1760638967261,
-    "message": "2 combats générés entre équipes",
-    "data": {
-      "equipeA": "JCLB",
-      "equipeB": "Marolles",
-      "combatsIds": [
-        1760638967741,
-        1760638967089
-      ]
-    },
-    "timestamp": "2025-10-16T18:22:47.079Z"
-  },
-  {
-    "id": 1760638967894,
-    "message": "Poules mises à jour après assignation",
-    "data": {
-      "combatsIds": [
-        1760638967741,
-        1760638967089
-      ]
-    },
-    "timestamp": "2025-10-16T18:22:47.208Z"
-  },
-  {
-    "id": 1760638967528,
-    "message": "2 combats assignés au TATAMI 1",
-    "data": {
-      "tatamiId": 1760637707612,
-      "combatsIds": [
-        1760638967741,
-        1760638967089
-      ]
-    },
-    "timestamp": "2025-10-16T18:22:47.316Z"
-  },
-  {
-    "id": 1760638968409,
-    "message": "Broadcast: poules:update",
-    "data": {
-      "event": "poules:update",
-      "clientsConnected": 5
-    },
-    "timestamp": "2025-10-16T18:22:47.421Z"
-  },
-  {
-    "id": 1760638984518,
-    "message": "Broadcast: stats:update",
-    "data": {
-      "event": "stats:update",
-      "clientsConnected": 5
-    },
-    "timestamp": "2025-10-16T18:23:03.777Z"
-  },
-  {
-    "id": 1760638986653,
-    "message": "Client déconnecté",
-    "data": {
-      "socketId": "nwa7RtOrDaj832JGAABf"
-    },
-    "timestamp": "2025-10-16T18:23:06.170Z"
-  },
-  {
-    "id": 1760638987195,
-    "message": "Classement général calculé",
-    "data": {
-      "nbEquipesClassees": 2
-    },
-    "timestamp": "2025-10-16T18:23:06.310Z"
-  },
-  {
-    "id": 1760638986430,
-    "message": "Client connecté via WebSocket",
-    "data": {
-      "socketId": "RUbNsOAfn6rVU8zNAABh"
-    },
-    "timestamp": "2025-10-16T18:23:06.411Z"
-  },
-  {
-    "id": 1760638987831,
-    "message": "Client déconnecté",
-    "data": {
-      "socketId": "RUbNsOAfn6rVU8zNAABh"
-    },
-    "timestamp": "2025-10-16T18:23:07.583Z"
-  },
-  {
-    "id": 1760638988084,
-    "message": "Client connecté via WebSocket",
-    "data": {
-      "socketId": "9FYqKjXNVgubneFXAABj"
-    },
-    "timestamp": "2025-10-16T18:23:07.706Z"
-  },
-  {
-    "id": 1760638993115,
-    "message": "Client déconnecté",
-    "data": {
-      "socketId": "9FYqKjXNVgubneFXAABj"
-    },
-    "timestamp": "2025-10-16T18:23:12.404Z"
-  },
-  {
-    "id": 1760638993547,
-    "message": "Client connecté via WebSocket",
-    "data": {
-      "socketId": "tzTJqq_Rgtf9c5vMAABl"
-    },
-    "timestamp": "2025-10-16T18:23:12.555Z"
-  },
-  {
-    "id": 1760638996490,
-    "message": "Broadcast: combats:update",
-    "data": {
-      "event": "combats:update",
-      "clientsConnected": 5
-    },
-    "timestamp": "2025-10-16T18:23:16.376Z"
-  },
-  {
-    "id": 1760639007277,
-    "message": "Broadcast: combats:update",
-    "data": {
-      "event": "combats:update",
-      "clientsConnected": 5
-    },
-    "timestamp": "2025-10-16T18:23:26.534Z"
-  },
-  {
-    "id": 1760639014492,
-    "message": "Broadcast: stats:update",
-    "data": {
-      "event": "stats:update",
-      "clientsConnected": 5
-    },
-    "timestamp": "2025-10-16T18:23:33.778Z"
-  },
-  {
-    "id": 1760639016528,
-    "message": "Broadcast: combats:update",
-    "data": {
-      "event": "combats:update",
-      "clientsConnected": 5
-    },
-    "timestamp": "2025-10-16T18:23:36.430Z"
-  },
-  {
-    "id": 1760639021591,
-    "message": "Osaekomi démarré: rouge",
-    "data": {
-      "combatId": 1760638967741,
-      "cote": "rouge"
-    },
-    "timestamp": "2025-10-16T18:23:41.528Z"
-  },
-  {
-    "id": 1760639022375,
-    "message": "Broadcast: combats:update",
-    "data": {
-      "event": "combats:update",
-      "clientsConnected": 5
-    },
-    "timestamp": "2025-10-16T18:23:41.635Z"
-  },
-  {
-    "id": 1760639022876,
-    "message": "Osaekomi update",
-    "data": {
-      "tatamiId": 1760637707612,
-      "counter": 1,
-      "cote": "rouge"
-    },
-    "timestamp": "2025-10-16T18:23:42.649Z"
-  },
-  {
-    "id": 1760639024146,
-    "message": "Osaekomi update",
-    "data": {
-      "tatamiId": 1760637707612,
-      "counter": 2,
-      "cote": "rouge"
-    },
-    "timestamp": "2025-10-16T18:23:43.646Z"
-  },
-  {
-    "id": 1760639025696,
-    "message": "Osaekomi update",
-    "data": {
-      "tatamiId": 1760637707612,
-      "counter": 3,
-      "cote": "rouge"
-    },
-    "timestamp": "2025-10-16T18:23:44.728Z"
-  },
-  {
-    "id": 1760639026420,
-    "message": "Osaekomi update",
-    "data": {
-      "tatamiId": 1760637707612,
-      "counter": 4,
-      "cote": "rouge"
-    },
-    "timestamp": "2025-10-16T18:23:45.647Z"
-  },
-  {
-    "id": 1760639026864,
-    "message": "Broadcast: combats:update",
-    "data": {
-      "event": "combats:update",
-      "clientsConnected": 5
-    },
-    "timestamp": "2025-10-16T18:23:46.428Z"
-  },
-  {
-    "id": 1760639027303,
-    "message": "Osaekomi update",
-    "data": {
-      "tatamiId": 1760637707612,
-      "counter": 5,
-      "cote": "rouge"
-    },
-    "timestamp": "2025-10-16T18:23:46.650Z"
-  },
-  {
-    "id": 1760639028548,
-    "message": "Osaekomi update",
-    "data": {
-      "tatamiId": 1760637707612,
-      "counter": 6,
-      "cote": "rouge"
-    },
-    "timestamp": "2025-10-16T18:23:47.650Z"
-  },
-  {
-    "id": 1760639029134,
-    "message": "Osaekomi update",
-    "data": {
-      "tatamiId": 1760637707612,
-      "counter": 7,
-      "cote": "rouge"
-    },
-    "timestamp": "2025-10-16T18:23:48.648Z"
-  },
-  {
-    "id": 1760639029775,
-    "message": "Osaekomi update",
-    "data": {
-      "tatamiId": 1760637707612,
-      "counter": 8,
-      "cote": "rouge"
-    },
-    "timestamp": "2025-10-16T18:23:49.651Z"
-  },
-  {
-    "id": 1760639031167,
-    "message": "Osaekomi update",
-    "data": {
-      "tatamiId": 1760637707612,
-      "counter": 9,
-      "cote": "rouge"
-    },
-    "timestamp": "2025-10-16T18:23:50.648Z"
-  },
-  {
-    "id": 1760639031796,
-    "message": "Osaekomi update",
-    "data": {
-      "tatamiId": 1760637707612,
-      "counter": 10,
-      "cote": "rouge"
-    },
-    "timestamp": "2025-10-16T18:23:51.652Z"
-  },
-  {
-    "id": 1760639032704,
-    "message": "Osaekomi update",
-    "data": {
-      "tatamiId": 1760637707612,
-      "counter": 11,
-      "cote": "rouge"
-    },
-    "timestamp": "2025-10-16T18:23:52.650Z"
-  },
-  {
-    "id": 1760639033764,
-    "message": "Osaekomi update",
-    "data": {
-      "tatamiId": 1760637707612,
-      "counter": 12,
-      "cote": "rouge"
-    },
-    "timestamp": "2025-10-16T18:23:53.742Z"
-  },
-  {
-    "id": 1760639035569,
-    "message": "Osaekomi update",
-    "data": {
-      "tatamiId": 1760637707612,
-      "counter": 13,
-      "cote": "rouge"
-    },
-    "timestamp": "2025-10-16T18:23:54.762Z"
-  },
-  {
-    "id": 1760639036485,
-    "message": "Osaekomi update",
-    "data": {
-      "tatamiId": 1760637707612,
-      "counter": 14,
-      "cote": "rouge"
-    },
-    "timestamp": "2025-10-16T18:23:55.672Z"
-  },
-  {
-    "id": 1760639037160,
-    "message": "Broadcast: combats:update",
-    "data": {
-      "event": "combats:update",
-      "clientsConnected": 5
-    },
-    "timestamp": "2025-10-16T18:23:56.443Z"
-  },
-  {
-    "id": 1760639036945,
-    "message": "Osaekomi update",
-    "data": {
-      "tatamiId": 1760637707612,
-      "counter": 15,
-      "cote": "rouge"
-    },
-    "timestamp": "2025-10-16T18:23:56.654Z"
-  },
-  {
-    "id": 1760639038234,
-    "message": "Osaekomi update",
-    "data": {
-      "tatamiId": 1760637707612,
-      "counter": 16,
-      "cote": "rouge"
-    },
-    "timestamp": "2025-10-16T18:23:57.655Z"
-  },
-  {
-    "id": 1760639039377,
-    "message": "Osaekomi update",
-    "data": {
-      "tatamiId": 1760637707612,
-      "counter": 17,
-      "cote": "rouge"
-    },
-    "timestamp": "2025-10-16T18:23:58.657Z"
-  },
-  {
-    "id": 1760639040633,
-    "message": "Osaekomi update",
-    "data": {
-      "tatamiId": 1760637707612,
-      "counter": 18,
-      "cote": "rouge"
-    },
-    "timestamp": "2025-10-16T18:23:59.658Z"
-  },
-  {
-    "id": 1760639041059,
-    "message": "Osaekomi update",
-    "data": {
-      "tatamiId": 1760637707612,
-      "counter": 19,
-      "cote": "rouge"
-    },
-    "timestamp": "2025-10-16T18:24:00.670Z"
-  },
-  {
-    "id": 1760639042584,
-    "message": "Osaekomi update",
-    "data": {
-      "tatamiId": 1760637707612,
-      "counter": 20,
-      "cote": "rouge"
-    },
-    "timestamp": "2025-10-16T18:24:01.661Z"
-  },
-  {
-    "id": 1760639042686,
-    "message": "Osaekomi stop",
-    "data": {
-      "tatamiId": 1760637707612
-    },
-    "timestamp": "2025-10-16T18:24:01.766Z"
-  },
-  {
-    "id": 1760639042347,
-    "message": "Classement de poule calculé: Poule A",
-    "data": {
-      "pouleId": 1,
-      "nbEquipes": 2
-    },
-    "timestamp": "2025-10-16T18:24:01.873Z"
-  },
-  {
-    "id": 1760639042482,
-    "message": "Classements mis à jour après combat",
-    "data": {
-      "combatId": 1760638967741,
-      "poulesMAJ": [
-        1
-      ]
-    },
-    "timestamp": "2025-10-16T18:24:01.979Z"
-  },
-  {
-    "id": 1760639042231,
-    "message": "Osaekomi arrêté",
-    "data": {
-      "combatId": 1760638967741,
-      "duree": 20,
-      "pointsMarques": [
-        "ippon"
-      ],
-      "finCombat": true
-    },
-    "timestamp": "2025-10-16T18:24:02.084Z"
-  },
-  {
-    "id": 1760639042982,
-    "message": "Classement de poule calculé: Poule A",
-    "data": {
-      "pouleId": 1,
-      "nbEquipes": 2
-    },
-    "timestamp": "2025-10-16T18:24:02.191Z"
-  },
-  {
-    "id": 1760639043213,
-    "message": "Classements mis à jour après combat",
-    "data": {
-      "combatId": 1760638967741,
-      "poulesMAJ": [
-        1
-      ]
-    },
-    "timestamp": "2025-10-16T18:24:02.301Z"
-  },
-  {
-    "id": 1760639042614,
-    "message": "Score confrontation calculé pour TATAMI 1",
-    "data": {
-      "tatamiId": 1760637707612,
-      "scoreRouge": 10,
-      "scoreBleu": 0
-    },
-    "timestamp": "2025-10-16T18:24:02.405Z"
-  },
-  {
-    "id": 1760639042595,
-    "message": "Osaekomi stop",
-    "data": {
-      "tatamiId": 1760637707612
-    },
-    "timestamp": "2025-10-16T18:24:02.510Z"
-  },
-  {
-    "id": 1760639044585,
-    "message": "Broadcast: stats:update",
-    "data": {
-      "event": "stats:update",
-      "clientsConnected": 5
-    },
-    "timestamp": "2025-10-16T18:24:03.776Z"
-  },
-  {
-    "id": 1760639061429,
-    "message": "Classement de poule calculé: Poule A",
-    "data": {
-      "pouleId": 1,
-      "nbEquipes": 2
-    },
-    "timestamp": "2025-10-16T18:24:21.094Z"
-  },
-  {
-    "id": 1760639062182,
-    "message": "Classements mis à jour après combat",
-    "data": {
-      "combatId": 1760638967741,
-      "poulesMAJ": [
-        1
-      ]
-    },
-    "timestamp": "2025-10-16T18:24:21.212Z"
-  },
-  {
-    "id": 1760639061447,
-    "message": "Score confrontation calculé pour TATAMI 1",
-    "data": {
-      "tatamiId": 1760637707612,
-      "scoreRouge": 10,
-      "scoreBleu": 0
-    },
-    "timestamp": "2025-10-16T18:24:21.321Z"
-  },
-  {
-    "id": 1760639061576,
-    "message": "Osaekomi stop",
-    "data": {
-      "tatamiId": 1760637707612
-    },
-    "timestamp": "2025-10-16T18:24:21.459Z"
-  },
-  {
-    "id": 1760639069822,
-    "message": "TATAMI 1 - Combat suivant",
-    "data": {
-      "tatamiId": 1760637707612,
-      "index": 1,
-      "combatId": 1760638967089
-    },
-    "timestamp": "2025-10-16T18:24:28.838Z"
-  },
-  {
-    "id": 1760639069220,
-    "message": "Broadcast: tatamis:update",
-    "data": {
-      "event": "tatamis:update",
-      "clientsConnected": 5
-    },
-    "timestamp": "2025-10-16T18:24:28.951Z"
-  },
-  {
-    "id": 1760639073866,
-    "message": "Broadcast: stats:update",
-    "data": {
-      "event": "stats:update",
-      "clientsConnected": 5
-    },
-    "timestamp": "2025-10-16T18:24:33.776Z"
-  },
-  {
-    "id": 1760639076239,
-    "message": "Broadcast: combats:update",
-    "data": {
-      "event": "combats:update",
-      "clientsConnected": 5
-    },
-    "timestamp": "2025-10-16T18:24:35.589Z"
-  },
-  {
-    "id": 1760639078107,
-    "message": "Point marqué: shido rouge",
-    "data": {
-      "combatId": 1760638967089,
-      "type": "shido",
-      "cote": "rouge",
-      "combatTermine": false
-    },
-    "timestamp": "2025-10-16T18:24:37.650Z"
-  },
-  {
-    "id": 1760639078523,
-    "message": "Broadcast: combats:update",
-    "data": {
-      "event": "combats:update",
-      "clientsConnected": 5
-    },
-    "timestamp": "2025-10-16T18:24:37.759Z"
-  },
-  {
-    "id": 1760639080482,
-    "message": "Point marqué: wazari rouge",
-    "data": {
-      "combatId": 1760638967089,
-      "type": "wazari",
-      "cote": "rouge",
-      "combatTermine": false
-    },
-    "timestamp": "2025-10-16T18:24:40.122Z"
-  },
-  {
-    "id": 1760639080544,
-    "message": "Broadcast: combats:update",
-    "data": {
-      "event": "combats:update",
-      "clientsConnected": 5
-    },
-    "timestamp": "2025-10-16T18:24:40.228Z"
-  },
-  {
-    "id": 1760639082501,
-    "message": "Point marqué: yuko bleu",
-    "data": {
-      "combatId": 1760638967089,
-      "type": "yuko",
-      "cote": "bleu",
-      "combatTermine": false
-    },
-    "timestamp": "2025-10-16T18:24:42.416Z"
-  },
-  {
-    "id": 1760639083072,
-    "message": "Broadcast: combats:update",
-    "data": {
-      "event": "combats:update",
-      "clientsConnected": 5
-    },
-    "timestamp": "2025-10-16T18:24:42.536Z"
-  },
-  {
-    "id": 1760639083881,
-    "message": "Point marqué: yuko bleu",
-    "data": {
-      "combatId": 1760638967089,
-      "type": "yuko",
-      "cote": "bleu",
-      "combatTermine": false
-    },
-    "timestamp": "2025-10-16T18:24:43.369Z"
-  },
-  {
-    "id": 1760639083920,
-    "message": "Broadcast: combats:update",
-    "data": {
-      "event": "combats:update",
-      "clientsConnected": 5
-    },
-    "timestamp": "2025-10-16T18:24:43.485Z"
-  },
-  {
-    "id": 1760639083896,
-    "message": "Point marqué: yuko bleu",
-    "data": {
-      "combatId": 1760638967089,
-      "type": "yuko",
-      "cote": "bleu",
-      "combatTermine": false
-    },
-    "timestamp": "2025-10-16T18:24:43.887Z"
-  },
-  {
-    "id": 1760639084692,
-    "message": "Broadcast: combats:update",
-    "data": {
-      "event": "combats:update",
-      "clientsConnected": 5
-    },
-    "timestamp": "2025-10-16T18:24:44.016Z"
-  },
-  {
-    "id": 1760639084320,
-    "message": "Point marqué: yuko bleu",
-    "data": {
-      "combatId": 1760638967089,
-      "type": "yuko",
-      "cote": "bleu",
-      "combatTermine": false
-    },
-    "timestamp": "2025-10-16T18:24:44.161Z"
-  },
-  {
-    "id": 1760639084921,
-    "message": "Broadcast: combats:update",
-    "data": {
-      "event": "combats:update",
-      "clientsConnected": 5
-    },
-    "timestamp": "2025-10-16T18:24:44.296Z"
-  },
-  {
-    "id": 1760639085151,
-    "message": "Point marqué: yuko bleu",
-    "data": {
-      "combatId": 1760638967089,
-      "type": "yuko",
-      "cote": "bleu",
-      "combatTermine": false
-    },
-    "timestamp": "2025-10-16T18:24:44.436Z"
-  },
-  {
-    "id": 1760639084675,
-    "message": "Broadcast: combats:update",
-    "data": {
-      "event": "combats:update",
-      "clientsConnected": 5
-    },
-    "timestamp": "2025-10-16T18:24:44.558Z"
-  },
-  {
-    "id": 1760639085152,
-    "message": "Point marqué: yuko bleu",
-    "data": {
-      "combatId": 1760638967089,
-      "type": "yuko",
-      "cote": "bleu",
-      "combatTermine": false
-    },
-    "timestamp": "2025-10-16T18:24:44.679Z"
-  },
-  {
-    "id": 1760639085424,
-    "message": "Broadcast: combats:update",
-    "data": {
-      "event": "combats:update",
-      "clientsConnected": 5
-    },
-    "timestamp": "2025-10-16T18:24:44.795Z"
-  },
-  {
-    "id": 1760639085810,
-    "message": "Point marqué: yuko bleu",
-    "data": {
-      "combatId": 1760638967089,
-      "type": "yuko",
-      "cote": "bleu",
-      "combatTermine": false
-    },
-    "timestamp": "2025-10-16T18:24:44.924Z"
-  },
-  {
-    "id": 1760639085178,
-    "message": "Broadcast: combats:update",
-    "data": {
-      "event": "combats:update",
-      "clientsConnected": 5
-    },
-    "timestamp": "2025-10-16T18:24:45.033Z"
-  },
-  {
-    "id": 1760639085487,
-    "message": "Point marqué: yuko bleu",
-    "data": {
-      "combatId": 1760638967089,
-      "type": "yuko",
-      "cote": "bleu",
-      "combatTermine": false
-    },
-    "timestamp": "2025-10-16T18:24:45.144Z"
-  },
-  {
-    "id": 1760639086216,
-    "message": "Broadcast: combats:update",
-    "data": {
-      "event": "combats:update",
-      "clientsConnected": 5
-    },
-    "timestamp": "2025-10-16T18:24:45.340Z"
-  },
-  {
-    "id": 1760639085672,
-    "message": "Point marqué: yuko bleu",
-    "data": {
-      "combatId": 1760638967089,
-      "type": "yuko",
-      "cote": "bleu",
-      "combatTermine": false
-    },
-    "timestamp": "2025-10-16T18:24:45.469Z"
-  },
-  {
-    "id": 1760639086555,
-    "message": "Broadcast: combats:update",
-    "data": {
-      "event": "combats:update",
-      "clientsConnected": 5
-    },
-    "timestamp": "2025-10-16T18:24:45.604Z"
-  },
-  {
-    "id": 1760639085809,
-    "message": "Point marqué: yuko bleu",
-    "data": {
-      "combatId": 1760638967089,
-      "type": "yuko",
-      "cote": "bleu",
-      "combatTermine": false
-    },
-    "timestamp": "2025-10-16T18:24:45.714Z"
-  },
-  {
-    "id": 1760639086084,
-    "message": "Broadcast: combats:update",
-    "data": {
-      "event": "combats:update",
-      "clientsConnected": 5
-    },
-    "timestamp": "2025-10-16T18:24:45.828Z"
-  },
-  {
-    "id": 1760639086327,
-    "message": "Broadcast: combats:update",
-    "data": {
-      "event": "combats:update",
-      "clientsConnected": 5
-    },
-    "timestamp": "2025-10-16T18:24:45.960Z"
-  },
-  {
-    "id": 1760639086587,
-    "message": "Point marqué: yuko bleu",
-    "data": {
-      "combatId": 1760638967089,
-      "type": "yuko",
-      "cote": "bleu",
-      "combatTermine": false
-    },
-    "timestamp": "2025-10-16T18:24:46.076Z"
-  },
-  {
-    "id": 1760639086252,
-    "message": "Broadcast: combats:update",
-    "data": {
-      "event": "combats:update",
-      "clientsConnected": 5
-    },
-    "timestamp": "2025-10-16T18:24:46.187Z"
-  },
-  {
-    "id": 1760639086325,
-    "message": "Point marqué: yuko bleu",
-    "data": {
-      "combatId": 1760638967089,
-      "type": "yuko",
-      "cote": "bleu",
-      "combatTermine": false
-    },
-    "timestamp": "2025-10-16T18:24:46.314Z"
-  },
-  {
-    "id": 1760639086711,
-    "message": "Broadcast: combats:update",
-    "data": {
-      "event": "combats:update",
-      "clientsConnected": 5
-    },
-    "timestamp": "2025-10-16T18:24:46.436Z"
-  },
-  {
-    "id": 1760639089911,
-    "message": "Point marqué: wazari bleu",
-    "data": {
-      "combatId": 1760638967089,
-      "type": "wazari",
-      "cote": "bleu",
-      "combatTermine": false
-    },
-    "timestamp": "2025-10-16T18:24:49.145Z"
-  },
-  {
-    "id": 1760639090286,
-    "message": "Broadcast: combats:update",
-    "data": {
-      "event": "combats:update",
-      "clientsConnected": 5
-    },
-    "timestamp": "2025-10-16T18:24:49.362Z"
-  },
-  {
-    "id": 1760639091822,
-    "message": "Classement de poule calculé: Poule A",
-    "data": {
-      "pouleId": 1,
-      "nbEquipes": 2
-    },
-    "timestamp": "2025-10-16T18:24:51.131Z"
-  },
-  {
-    "id": 1760639092137,
-    "message": "Classements mis à jour après combat",
-    "data": {
-      "combatId": 1760638967089,
-      "poulesMAJ": [
-        1
-      ]
-    },
-    "timestamp": "2025-10-16T18:24:51.284Z"
-  },
-  {
-    "id": 1760639091739,
-    "message": "Point marqué: wazari bleu",
-    "data": {
-      "combatId": 1760638967089,
-      "type": "wazari",
-      "cote": "bleu",
-      "combatTermine": true
-    },
-    "timestamp": "2025-10-16T18:24:51.430Z"
-  },
-  {
-    "id": 1760639091930,
-    "message": "Classement de poule calculé: Poule A",
-    "data": {
-      "pouleId": 1,
-      "nbEquipes": 2
-    },
-    "timestamp": "2025-10-16T18:24:51.537Z"
-  },
-  {
-    "id": 1760639092347,
-    "message": "Classements mis à jour après combat",
-    "data": {
-      "combatId": 1760638967089,
-      "poulesMAJ": [
-        1
-      ]
-    },
-    "timestamp": "2025-10-16T18:24:51.647Z"
-  },
-  {
-    "id": 1760639091862,
-    "message": "Score confrontation calculé pour TATAMI 1",
-    "data": {
-      "tatamiId": 1760637707612,
-      "scoreRouge": 17,
-      "scoreBleu": 26
-    },
-    "timestamp": "2025-10-16T18:24:51.755Z"
-  },
-  {
-    "id": 1760639092028,
-    "message": "Osaekomi stop",
-    "data": {
-      "tatamiId": 1760637707612
-    },
-    "timestamp": "2025-10-16T18:24:51.886Z"
-  },
-  {
-    "id": 1760639104381,
-    "message": "Broadcast: stats:update",
-    "data": {
-      "event": "stats:update",
-      "clientsConnected": 5
-    },
-    "timestamp": "2025-10-16T18:25:03.776Z"
-  },
-  {
-    "id": 1760639110507,
-    "message": "Client déconnecté",
-    "data": {
-      "socketId": "6x2-Np49-1Jmc53MAABb"
-    },
-    "timestamp": "2025-10-16T18:25:09.996Z"
-  },
-  {
-    "id": 1760639110730,
-    "message": "Client connecté via WebSocket",
-    "data": {
-      "socketId": "TEYA1ucNL0qIKxMvAABn"
-    },
-    "timestamp": "2025-10-16T18:25:10.413Z"
-  },
-  {
-    "id": 1760639134502,
-    "message": "Broadcast: stats:update",
-    "data": {
-      "event": "stats:update",
-      "clientsConnected": 5
-    },
-    "timestamp": "2025-10-16T18:25:33.846Z"
-  },
-  {
-    "id": 1760639135158,
-    "message": "Client déconnecté",
-    "data": {
-      "socketId": "tzTJqq_Rgtf9c5vMAABl"
-    },
-    "timestamp": "2025-10-16T18:25:34.972Z"
-  },
-  {
-    "id": 1760639136074,
-    "message": "Client connecté via WebSocket",
-    "data": {
-      "socketId": "yJuVFI3cyENhYPMsAABp"
-    },
-    "timestamp": "2025-10-16T18:25:35.108Z"
-  },
-  {
-    "id": 1760639149166,
-    "message": "Tatami TATAMI 1 libéré",
-    "data": {
-      "tatamiId": 1760637707612
-    },
-    "timestamp": "2025-10-16T18:25:49.145Z"
-  },
-  {
-    "id": 1760639150181,
-    "message": "Broadcast: tatamis:update",
-    "data": {
-      "event": "tatamis:update",
-      "clientsConnected": 5
-    },
-    "timestamp": "2025-10-16T18:25:49.256Z"
-  },
-  {
-    "id": 1760639153265,
-    "message": "Client déconnecté",
-    "data": {
-      "socketId": "yJuVFI3cyENhYPMsAABp"
-    },
-    "timestamp": "2025-10-16T18:25:52.360Z"
-  },
-  {
-    "id": 1760639153362,
-    "message": "Client connecté via WebSocket",
-    "data": {
-      "socketId": "3x_SnJZStm-4oobpAABr"
-    },
-    "timestamp": "2025-10-16T18:25:52.508Z"
-  },
-  {
-    "id": 1760639152753,
-    "message": "Classement général calculé",
-    "data": {
-      "nbEquipesClassees": 4
-    },
-    "timestamp": "2025-10-16T18:25:52.609Z"
-  },
-  {
-    "id": 1760639155133,
-    "message": "Client déconnecté",
-    "data": {
-      "socketId": "3x_SnJZStm-4oobpAABr"
-    },
-    "timestamp": "2025-10-16T18:25:55.066Z"
-  },
-  {
-    "id": 1760639155853,
-    "message": "Classement général calculé",
-    "data": {
-      "nbEquipesClassees": 4
-    },
-    "timestamp": "2025-10-16T18:25:55.177Z"
-  },
-  {
-    "id": 1760639155979,
-    "message": "Client connecté via WebSocket",
-    "data": {
-      "socketId": "qHVwZ6X0aBig0kVTAABt"
-    },
-    "timestamp": "2025-10-16T18:25:55.282Z"
-  },
-  {
-    "id": 1760639162203,
-    "message": "Tableau éliminatoire créé",
-    "data": {
-      "startPhase": "demi",
-      "nbEquipes": 4
-    },
-    "timestamp": "2025-10-16T18:26:01.883Z"
-  },
-  {
-    "id": 1760639162313,
-    "message": "Classement général calculé",
-    "data": {
-      "nbEquipesClassees": 4
-    },
-    "timestamp": "2025-10-16T18:26:02.015Z"
-  },
-  {
-    "id": 1760639164029,
-    "message": "Broadcast: stats:update",
-    "data": {
-      "event": "stats:update",
-      "clientsConnected": 5
-    },
-    "timestamp": "2025-10-16T18:26:03.847Z"
-  },
-  {
-    "id": 1760639175071,
-    "message": "2 combats générés entre équipes",
-    "data": {
-      "equipeA": "Aubervilliers",
-      "equipeB": "Sucy",
-      "combatsIds": [
-        1760639174458,
-        1760639174381
-      ]
-    },
-    "timestamp": "2025-10-16T18:26:14.313Z"
-  },
-  {
-    "id": 1760639175327,
-    "message": "Poules mises à jour après assignation",
-    "data": {
-      "combatsIds": [
-        1760639174458,
-        1760639174381
-      ]
-    },
-    "timestamp": "2025-10-16T18:26:14.450Z"
-  },
-  {
-    "id": 1760639174847,
-    "message": "2 combats assignés au TATAMI 1",
-    "data": {
-      "tatamiId": 1760637707612,
-      "combatsIds": [
-        1760639174458,
-        1760639174381
-      ]
-    },
-    "timestamp": "2025-10-16T18:26:14.553Z"
-  },
-  {
-    "id": 1760639174940,
-    "message": "Match tableau assigné: demi 1",
-    "data": {
-      "phase": "demi",
-      "matchId": "1",
-      "tatamiId": 1760637707612,
-      "combatsCreated": 2
-    },
-    "timestamp": "2025-10-16T18:26:14.662Z"
-  },
-  {
-    "id": 1760639175195,
-    "message": "Classement général calculé",
-    "data": {
-      "nbEquipesClassees": 4
-    },
-    "timestamp": "2025-10-16T18:26:14.831Z"
-  },
-  {
-    "id": 1760639186815,
-    "message": "Client connecté via WebSocket",
-    "data": {
-      "socketId": "DmKJyxtnM-ES1pXEAABv"
-    },
-    "timestamp": "2025-10-16T18:26:26.289Z"
-  },
-  {
-    "id": 1760639189925,
-    "message": "Broadcast: combats:update",
-    "data": {
-      "event": "combats:update",
-      "clientsConnected": 6
-    },
-    "timestamp": "2025-10-16T18:26:29.761Z"
-  },
-  {
-    "id": 1760639193991,
-    "message": "Classement de poule calculé: Poule B",
-    "data": {
-      "pouleId": 2,
-      "nbEquipes": 2
-    },
-    "timestamp": "2025-10-16T18:26:33.753Z"
-  },
-  {
-    "id": 1760639193946,
-    "message": "Classements mis à jour après combat",
-    "data": {
-      "combatId": 1760639174458,
-      "poulesMAJ": [
-        2
-      ]
-    },
-    "timestamp": "2025-10-16T18:26:33.857Z"
-  },
-  {
-    "id": 1760639194247,
-    "message": "Point marqué: ippon rouge",
-    "data": {
-      "combatId": 1760639174458,
-      "type": "ippon",
-      "cote": "rouge",
-      "combatTermine": true
-    },
-    "timestamp": "2025-10-16T18:26:33.967Z"
-  },
-  {
-    "id": 1760639194538,
-    "message": "Classement de poule calculé: Poule B",
-    "data": {
-      "pouleId": 2,
-      "nbEquipes": 2
-    },
-    "timestamp": "2025-10-16T18:26:34.073Z"
-  },
-  {
-    "id": 1760639194646,
-    "message": "Classements mis à jour après combat",
-    "data": {
-      "combatId": 1760639174458,
-      "poulesMAJ": [
-        2
-      ]
-    },
-    "timestamp": "2025-10-16T18:26:34.180Z"
-  },
-  {
-    "id": 1760639195009,
-    "message": "Score confrontation calculé pour TATAMI 1",
-    "data": {
-      "tatamiId": 1760637707612,
-      "scoreRouge": 10,
-      "scoreBleu": 0
-    },
-    "timestamp": "2025-10-16T18:26:34.285Z"
-  },
-  {
-    "id": 1760639194392,
-    "message": "Broadcast: stats:update",
-    "data": {
-      "event": "stats:update",
-      "clientsConnected": 6
-    },
-    "timestamp": "2025-10-16T18:26:34.392Z"
-  },
-  {
-    "id": 1760639194824,
-    "message": "Osaekomi stop",
-    "data": {
-      "tatamiId": 1760637707612
-    },
-    "timestamp": "2025-10-16T18:26:34.507Z"
-  },
-  {
-    "id": 1760639195452,
-    "message": "Classement général calculé",
-    "data": {
-      "nbEquipesClassees": 2
-    },
-    "timestamp": "2025-10-16T18:26:35.233Z"
-  },
-  {
-    "id": 1760639198396,
-    "message": "TATAMI 1 - Combat suivant",
-    "data": {
-      "tatamiId": 1760637707612,
-      "index": 1,
-      "combatId": 1760639174381
-    },
-    "timestamp": "2025-10-16T18:26:38.127Z"
-  },
-  {
-    "id": 1760639199230,
-    "message": "Broadcast: tatamis:update",
-    "data": {
-      "event": "tatamis:update",
-      "clientsConnected": 6
-    },
-    "timestamp": "2025-10-16T18:26:38.233Z"
-  },
-  {
-    "id": 1760639200279,
-    "message": "Broadcast: combats:update",
-    "data": {
-      "event": "combats:update",
-      "clientsConnected": 6
-    },
-    "timestamp": "2025-10-16T18:26:40.187Z"
-  },
-  {
-    "id": 1760639201081,
-    "message": "Broadcast: combats:update",
-    "data": {
-      "event": "combats:update",
-      "clientsConnected": 6
-    },
-    "timestamp": "2025-10-16T18:26:40.492Z"
-  },
-  {
-    "id": 1760639203734,
-    "message": "Point marqué: wazari rouge",
-    "data": {
-      "combatId": 1760639174381,
-      "type": "wazari",
-      "cote": "rouge",
-      "combatTermine": false
-    },
-    "timestamp": "2025-10-16T18:26:43.292Z"
-  },
-  {
-    "id": 1760639203982,
-    "message": "Broadcast: combats:update",
-    "data": {
-      "event": "combats:update",
-      "clientsConnected": 6
-    },
-    "timestamp": "2025-10-16T18:26:43.401Z"
-  },
-  {
-    "id": 1760639203582,
-    "message": "Classement de poule calculé: Poule B",
-    "data": {
-      "pouleId": 2,
-      "nbEquipes": 2
-    },
-    "timestamp": "2025-10-16T18:26:43.515Z"
-  },
-  {
-    "id": 1760639204062,
-    "message": "Classements mis à jour après combat",
-    "data": {
-      "combatId": 1760639174381,
-      "poulesMAJ": [
-        2
-      ]
-    },
-    "timestamp": "2025-10-16T18:26:43.621Z"
-  },
-  {
-    "id": 1760639204623,
-    "message": "Point marqué: wazari rouge",
-    "data": {
-      "combatId": 1760639174381,
-      "type": "wazari",
-      "cote": "rouge",
-      "combatTermine": true
-    },
-    "timestamp": "2025-10-16T18:26:43.728Z"
-  },
-  {
-    "id": 1760639204296,
-    "message": "Classement de poule calculé: Poule B",
-    "data": {
-      "pouleId": 2,
-      "nbEquipes": 2
-    },
-    "timestamp": "2025-10-16T18:26:43.843Z"
-  },
-  {
-    "id": 1760639204679,
-    "message": "Classements mis à jour après combat",
-    "data": {
-      "combatId": 1760639174381,
-      "poulesMAJ": [
-        2
-      ]
-    },
-    "timestamp": "2025-10-16T18:26:43.953Z"
-  },
-  {
-    "id": 1760639204524,
-    "message": "Score confrontation calculé pour TATAMI 1",
-    "data": {
-      "tatamiId": 1760637707612,
-      "scoreRouge": 24,
-      "scoreBleu": 0
-    },
-    "timestamp": "2025-10-16T18:26:44.062Z"
-  },
-  {
-    "id": 1760639204577,
-    "message": "Osaekomi stop",
-    "data": {
-      "tatamiId": 1760637707612
-    },
-    "timestamp": "2025-10-16T18:26:44.177Z"
-  },
-  {
-    "id": 1760639207545,
-    "message": "Score match tableau calculé automatiquement",
-    "data": {
-      "phase": "demi",
-      "matchId": "1",
-      "scoreA": 2,
-      "scoreB": 0,
-      "vainqueur": "A"
-    },
-    "timestamp": "2025-10-16T18:26:47.388Z"
-  },
-  {
     "id": 1760639208438,
     "message": "Classement général calculé",
     "data": {
@@ -9140,5 +6168,3266 @@
       "environment": "development"
     },
     "timestamp": "2025-11-16T20:50:10.204Z"
+  },
+  {
+    "id": 1763326845514,
+    "message": "Arrêt du serveur",
+    "data": {
+      "signal": "SIGINT"
+    },
+    "timestamp": "2025-11-16T21:00:44.665Z"
+  },
+  {
+    "id": 1763326845029,
+    "message": "Arrêt du serveur",
+    "data": {
+      "signal": "SIGINT"
+    },
+    "timestamp": "2025-11-16T21:00:44.682Z"
+  },
+  {
+    "id": 1763326864903,
+    "message": "Backup créé",
+    "data": {
+      "filename": "backup_2025-11-16T21-01-04-085Z.json"
+    },
+    "timestamp": "2025-11-16T21:01:04.097Z"
+  },
+  {
+    "id": 1763326864863,
+    "message": "Serveur démarré",
+    "data": {
+      "port": 3000,
+      "version": "1.0.0",
+      "stats": {
+        "tatamis": 2,
+        "combats": 22,
+        "combatsTermines": 21,
+        "combatsEnCours": 0,
+        "equipes": 4,
+        "combattants": 8,
+        "poules": 0
+      },
+      "nodeVersion": "v22.14.0",
+      "environment": "development"
+    },
+    "timestamp": "2025-11-16T21:01:04.115Z"
+  },
+  {
+    "id": 1763327109598,
+    "message": "Arrêt du serveur",
+    "data": {
+      "signal": "SIGINT"
+    },
+    "timestamp": "2025-11-16T21:05:08.833Z"
+  },
+  {
+    "id": 1763352611309,
+    "message": "Backup créé",
+    "data": {
+      "filename": "backup_2025-11-17T04-10-10-613Z.json"
+    },
+    "timestamp": "2025-11-17T04:10:10.625Z"
+  },
+  {
+    "id": 1763352610750,
+    "message": "Serveur démarré",
+    "data": {
+      "port": 3000,
+      "version": "1.0.0",
+      "stats": {
+        "tatamis": 2,
+        "combats": 22,
+        "combatsTermines": 21,
+        "combatsEnCours": 0,
+        "equipes": 4,
+        "combattants": 8,
+        "poules": 0
+      },
+      "nodeVersion": "v22.14.0",
+      "environment": "development"
+    },
+    "timestamp": "2025-11-17T04:10:10.642Z"
+  },
+  {
+    "id": 1763352741098,
+    "message": "Classement général calculé",
+    "data": {
+      "nbEquipesClassees": 0
+    },
+    "timestamp": "2025-11-17T04:12:21.057Z"
+  },
+  {
+    "id": 1763352759033,
+    "message": "Tatami TATAMI 1 libéré",
+    "data": {
+      "tatamiId": 1760637707612
+    },
+    "timestamp": "2025-11-17T04:12:38.324Z"
+  },
+  {
+    "id": 1763352764904,
+    "message": "Tatami Tatami 1 libéré",
+    "data": {
+      "tatamiId": 1760638878655
+    },
+    "timestamp": "2025-11-17T04:12:44.450Z"
+  },
+  {
+    "id": 1763352769965,
+    "message": "Tatami Tatami 1 libéré",
+    "data": {
+      "tatamiId": 1760638878655
+    },
+    "timestamp": "2025-11-17T04:12:49.436Z"
+  },
+  {
+    "id": 1763352803777,
+    "message": "Classement général calculé",
+    "data": {
+      "nbEquipesClassees": 0
+    },
+    "timestamp": "2025-11-17T04:13:23.332Z"
+  },
+  {
+    "id": 1763352816467,
+    "message": "2 poules créées avec 4 équipes",
+    "data": {
+      "nbPoules": 2,
+      "nbEquipes": 4,
+      "poulesIds": [
+        1,
+        2
+      ]
+    },
+    "timestamp": "2025-11-17T04:13:35.755Z"
+  },
+  {
+    "id": 1763352827246,
+    "message": "2 combats générés entre équipes",
+    "data": {
+      "equipeA": "JCLB",
+      "equipeB": "Marolles",
+      "combatsIds": [
+        1763352826812,
+        1763352826623
+      ]
+    },
+    "timestamp": "2025-11-17T04:13:46.596Z"
+  },
+  {
+    "id": 1763352827268,
+    "message": "Poules mises à jour après assignation",
+    "data": {
+      "combatsIds": [
+        1763352826812,
+        1763352826623
+      ]
+    },
+    "timestamp": "2025-11-17T04:13:46.604Z"
+  },
+  {
+    "id": 1763352827188,
+    "message": "2 combats assignés au TATAMI 1",
+    "data": {
+      "tatamiId": 1760637707612,
+      "combatsIds": [
+        1763352826812,
+        1763352826623
+      ]
+    },
+    "timestamp": "2025-11-17T04:13:46.609Z"
+  },
+  {
+    "id": 1763352838146,
+    "message": "Classement général calculé",
+    "data": {
+      "nbEquipesClassees": 0
+    },
+    "timestamp": "2025-11-17T04:13:57.568Z"
+  },
+  {
+    "id": 1763352874464,
+    "message": "Point marqué: shido rouge",
+    "data": {
+      "combatId": 1763352826812,
+      "type": "shido",
+      "cote": "rouge",
+      "combatTermine": false
+    },
+    "timestamp": "2025-11-17T04:14:33.811Z"
+  },
+  {
+    "id": 1763352877919,
+    "message": "Point marqué: shido bleu",
+    "data": {
+      "combatId": 1763352826812,
+      "type": "shido",
+      "cote": "bleu",
+      "combatTermine": false
+    },
+    "timestamp": "2025-11-17T04:14:37.643Z"
+  },
+  {
+    "id": 1763352883871,
+    "message": "Osaekomi démarré: rouge",
+    "data": {
+      "combatId": 1763352826812,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-17T04:14:43.245Z"
+  },
+  {
+    "id": 1763352885707,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 2,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-17T04:14:45.293Z"
+  },
+  {
+    "id": 1763352887476,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 4,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-17T04:14:47.270Z"
+  },
+  {
+    "id": 1763352890143,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 6,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-17T04:14:49.254Z"
+  },
+  {
+    "id": 1763352891686,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 8,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-17T04:14:51.255Z"
+  },
+  {
+    "id": 1763352893614,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 10,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-17T04:14:53.257Z"
+  },
+  {
+    "id": 1763352895684,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 12,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-17T04:14:55.256Z"
+  },
+  {
+    "id": 1763352898115,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 14,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-17T04:14:57.254Z"
+  },
+  {
+    "id": 1763352899358,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 16,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-17T04:14:59.334Z"
+  },
+  {
+    "id": 1763352901854,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 18,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-17T04:15:01.254Z"
+  },
+  {
+    "id": 1763352902526,
+    "message": "Osaekomi stop",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612
+    },
+    "timestamp": "2025-11-17T04:15:01.773Z"
+  },
+  {
+    "id": 1763352902507,
+    "message": "Osaekomi arrêté",
+    "data": {
+      "combatId": 1763352826812,
+      "duree": 18,
+      "pointsMarques": [
+        "wazari"
+      ],
+      "finCombat": false
+    },
+    "timestamp": "2025-11-17T04:15:01.784Z"
+  },
+  {
+    "id": 1763352905567,
+    "message": "Classement de poule calculé: Poule A",
+    "data": {
+      "pouleId": 1,
+      "nbEquipes": 2
+    },
+    "timestamp": "2025-11-17T04:15:05.115Z"
+  },
+  {
+    "id": 1763352905762,
+    "message": "Classements mis à jour après combat",
+    "data": {
+      "combatId": 1763352826812,
+      "poulesMAJ": [
+        1
+      ]
+    },
+    "timestamp": "2025-11-17T04:15:05.120Z"
+  },
+  {
+    "id": 1763352905350,
+    "message": "Point marqué: ippon rouge",
+    "data": {
+      "combatId": 1763352826812,
+      "type": "ippon",
+      "cote": "rouge",
+      "combatTermine": true
+    },
+    "timestamp": "2025-11-17T04:15:05.123Z"
+  },
+  {
+    "id": 1763352905509,
+    "message": "Classement de poule calculé: Poule A",
+    "data": {
+      "pouleId": 1,
+      "nbEquipes": 2
+    },
+    "timestamp": "2025-11-17T04:15:05.129Z"
+  },
+  {
+    "id": 1763352905278,
+    "message": "Classements mis à jour après combat",
+    "data": {
+      "combatId": 1763352826812,
+      "poulesMAJ": [
+        1
+      ]
+    },
+    "timestamp": "2025-11-17T04:15:05.135Z"
+  },
+  {
+    "id": 1763352906116,
+    "message": "Score confrontation calculé pour TATAMI 1",
+    "data": {
+      "tatamiId": 1760637707612,
+      "scoreRouge": 110,
+      "scoreBleu": 0
+    },
+    "timestamp": "2025-11-17T04:15:05.139Z"
+  },
+  {
+    "id": 1763352911066,
+    "message": "Classement de poule calculé: Poule A",
+    "data": {
+      "pouleId": 1,
+      "nbEquipes": 2
+    },
+    "timestamp": "2025-11-17T04:15:10.461Z"
+  },
+  {
+    "id": 1763352910567,
+    "message": "Classements mis à jour après combat",
+    "data": {
+      "combatId": 1763352826812,
+      "poulesMAJ": [
+        1
+      ]
+    },
+    "timestamp": "2025-11-17T04:15:10.468Z"
+  },
+  {
+    "id": 1763352910621,
+    "message": "Score confrontation calculé pour TATAMI 1",
+    "data": {
+      "tatamiId": 1760637707612,
+      "scoreRouge": 110,
+      "scoreBleu": 0
+    },
+    "timestamp": "2025-11-17T04:15:10.477Z"
+  },
+  {
+    "id": 1763352915705,
+    "message": "TATAMI 1 - Combat suivant",
+    "data": {
+      "tatamiId": 1760637707612,
+      "index": 1,
+      "combatId": 1763352826623
+    },
+    "timestamp": "2025-11-17T04:15:15.531Z"
+  },
+  {
+    "id": 1763352930609,
+    "message": "Point marqué: yuko rouge",
+    "data": {
+      "combatId": 1763352826623,
+      "type": "yuko",
+      "cote": "rouge",
+      "combatTermine": false
+    },
+    "timestamp": "2025-11-17T04:15:30.312Z"
+  },
+  {
+    "id": 1763352939516,
+    "message": "Osaekomi démarré: rouge",
+    "data": {
+      "combatId": 1763352826623,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-17T04:15:39.240Z"
+  },
+  {
+    "id": 1763352941892,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 2,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-17T04:15:41.397Z"
+  },
+  {
+    "id": 1763352943507,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 4,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-17T04:15:43.328Z"
+  },
+  {
+    "id": 1763352945336,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 6,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-17T04:15:45.297Z"
+  },
+  {
+    "id": 1763352948100,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 8,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-17T04:15:47.297Z"
+  },
+  {
+    "id": 1763352949516,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 10,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-17T04:15:49.298Z"
+  },
+  {
+    "id": 1763352952282,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 12,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-17T04:15:51.300Z"
+  },
+  {
+    "id": 1763352953618,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 14,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-17T04:15:53.319Z"
+  },
+  {
+    "id": 1763352955869,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 16,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-17T04:15:55.298Z"
+  },
+  {
+    "id": 1763352957452,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 18,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-17T04:15:57.297Z"
+  },
+  {
+    "id": 1763352959878,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 20,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-17T04:15:59.298Z"
+  },
+  {
+    "id": 1763352959907,
+    "message": "Osaekomi stop",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612
+    },
+    "timestamp": "2025-11-17T04:15:59.307Z"
+  },
+  {
+    "id": 1763352959394,
+    "message": "Classement de poule calculé: Poule A",
+    "data": {
+      "pouleId": 1,
+      "nbEquipes": 2
+    },
+    "timestamp": "2025-11-17T04:15:59.319Z"
+  },
+  {
+    "id": 1763352960011,
+    "message": "Classements mis à jour après combat",
+    "data": {
+      "combatId": 1763352826623,
+      "poulesMAJ": [
+        1
+      ]
+    },
+    "timestamp": "2025-11-17T04:15:59.327Z"
+  },
+  {
+    "id": 1763352959799,
+    "message": "Osaekomi arrêté",
+    "data": {
+      "combatId": 1763352826623,
+      "duree": 20,
+      "pointsMarques": [
+        "ippon"
+      ],
+      "finCombat": true
+    },
+    "timestamp": "2025-11-17T04:15:59.332Z"
+  },
+  {
+    "id": 1763352960054,
+    "message": "Classement de poule calculé: Poule A",
+    "data": {
+      "pouleId": 1,
+      "nbEquipes": 2
+    },
+    "timestamp": "2025-11-17T04:15:59.337Z"
+  },
+  {
+    "id": 1763352959972,
+    "message": "Classements mis à jour après combat",
+    "data": {
+      "combatId": 1763352826623,
+      "poulesMAJ": [
+        1
+      ]
+    },
+    "timestamp": "2025-11-17T04:15:59.342Z"
+  },
+  {
+    "id": 1763352959848,
+    "message": "Score confrontation calculé pour TATAMI 1",
+    "data": {
+      "tatamiId": 1760637707612,
+      "scoreRouge": 211,
+      "scoreBleu": 0
+    },
+    "timestamp": "2025-11-17T04:15:59.348Z"
+  },
+  {
+    "id": 1763352964367,
+    "message": "Classement de poule calculé: Poule A",
+    "data": {
+      "pouleId": 1,
+      "nbEquipes": 2
+    },
+    "timestamp": "2025-11-17T04:16:04.347Z"
+  },
+  {
+    "id": 1763352964969,
+    "message": "Classements mis à jour après combat",
+    "data": {
+      "combatId": 1763352826623,
+      "poulesMAJ": [
+        1
+      ]
+    },
+    "timestamp": "2025-11-17T04:16:04.351Z"
+  },
+  {
+    "id": 1763352964454,
+    "message": "Combat terminé automatiquement",
+    "data": {
+      "combatId": 1763352826623,
+      "raison": "ippon",
+      "vainqueur": null
+    },
+    "timestamp": "2025-11-17T04:16:04.356Z"
+  },
+  {
+    "id": 1763352964815,
+    "message": "Classement de poule calculé: Poule A",
+    "data": {
+      "pouleId": 1,
+      "nbEquipes": 2
+    },
+    "timestamp": "2025-11-17T04:16:04.361Z"
+  },
+  {
+    "id": 1763352964529,
+    "message": "Classements mis à jour après combat",
+    "data": {
+      "combatId": 1763352826623,
+      "poulesMAJ": [
+        1
+      ]
+    },
+    "timestamp": "2025-11-17T04:16:04.367Z"
+  },
+  {
+    "id": 1763352965269,
+    "message": "Score confrontation calculé pour TATAMI 1",
+    "data": {
+      "tatamiId": 1760637707612,
+      "scoreRouge": 211,
+      "scoreBleu": 0
+    },
+    "timestamp": "2025-11-17T04:16:04.373Z"
+  },
+  {
+    "id": 1763352968382,
+    "message": "Classement de poule calculé: Poule A",
+    "data": {
+      "pouleId": 1,
+      "nbEquipes": 2
+    },
+    "timestamp": "2025-11-17T04:16:08.369Z"
+  },
+  {
+    "id": 1763352969246,
+    "message": "Classements mis à jour après combat",
+    "data": {
+      "combatId": 1763352826623,
+      "poulesMAJ": [
+        1
+      ]
+    },
+    "timestamp": "2025-11-17T04:16:08.373Z"
+  },
+  {
+    "id": 1763352969296,
+    "message": "Score confrontation calculé pour TATAMI 1",
+    "data": {
+      "tatamiId": 1760637707612,
+      "scoreRouge": 211,
+      "scoreBleu": 0
+    },
+    "timestamp": "2025-11-17T04:16:08.378Z"
+  },
+  {
+    "id": 1763352976216,
+    "message": "Classement de poule calculé: Poule A",
+    "data": {
+      "pouleId": 1,
+      "nbEquipes": 2
+    },
+    "timestamp": "2025-11-17T04:16:15.634Z"
+  },
+  {
+    "id": 1763352976592,
+    "message": "Classements mis à jour après combat",
+    "data": {
+      "combatId": 1763352826623,
+      "poulesMAJ": [
+        1
+      ]
+    },
+    "timestamp": "2025-11-17T04:16:15.641Z"
+  },
+  {
+    "id": 1763352975760,
+    "message": "Score confrontation calculé pour TATAMI 1",
+    "data": {
+      "tatamiId": 1760637707612,
+      "scoreRouge": 211,
+      "scoreBleu": 0
+    },
+    "timestamp": "2025-11-17T04:16:15.647Z"
+  },
+  {
+    "id": 1763353062256,
+    "message": "Classement général calculé",
+    "data": {
+      "nbEquipesClassees": 2
+    },
+    "timestamp": "2025-11-17T04:17:41.461Z"
+  },
+  {
+    "id": 1763353352481,
+    "message": "2 combats générés entre équipes",
+    "data": {
+      "equipeA": "Sucy",
+      "equipeB": "Aubervilliers",
+      "combatsIds": [
+        1763353352266,
+        1763353352574
+      ]
+    },
+    "timestamp": "2025-11-17T04:22:32.207Z"
+  },
+  {
+    "id": 1763353352363,
+    "message": "Poules mises à jour après assignation",
+    "data": {
+      "combatsIds": [
+        1763353352266,
+        1763353352574
+      ]
+    },
+    "timestamp": "2025-11-17T04:22:32.217Z"
+  },
+  {
+    "id": 1763353352290,
+    "message": "2 combats assignés au Tatami 1",
+    "data": {
+      "tatamiId": 1760638878655,
+      "combatsIds": [
+        1763353352266,
+        1763353352574
+      ]
+    },
+    "timestamp": "2025-11-17T04:22:32.222Z"
+  },
+  {
+    "id": 1763353358466,
+    "message": "Tatami Tatami 1 libéré",
+    "data": {
+      "tatamiId": 1760638878655
+    },
+    "timestamp": "2025-11-17T04:22:38.101Z"
+  },
+  {
+    "id": 1763353363593,
+    "message": "Tatami Tatami 1 libéré",
+    "data": {
+      "tatamiId": 1760638878655
+    },
+    "timestamp": "2025-11-17T04:22:43.452Z"
+  },
+  {
+    "id": 1763354494226,
+    "message": "Arrêt du serveur",
+    "data": {
+      "signal": "SIGINT"
+    },
+    "timestamp": "2025-11-17T04:41:33.315Z"
+  },
+  {
+    "id": 1763354494326,
+    "message": "Arrêt du serveur",
+    "data": {
+      "signal": "SIGINT"
+    },
+    "timestamp": "2025-11-17T04:41:33.329Z"
+  },
+  {
+    "id": 1763354507604,
+    "message": "Backup créé",
+    "data": {
+      "filename": "backup_2025-11-17T04-41-47-077Z.json"
+    },
+    "timestamp": "2025-11-17T04:41:47.088Z"
+  },
+  {
+    "id": 1763354508071,
+    "message": "Serveur démarré",
+    "data": {
+      "port": 3000,
+      "version": "1.0.0",
+      "stats": {
+        "tatamis": 2,
+        "combats": 26,
+        "combatsTermines": 23,
+        "combatsEnCours": 0,
+        "equipes": 4,
+        "combattants": 8,
+        "poules": 2
+      },
+      "nodeVersion": "v22.14.0",
+      "environment": "development"
+    },
+    "timestamp": "2025-11-17T04:41:47.105Z"
+  },
+  {
+    "id": 1763354549795,
+    "message": "Tatami TATAMI 1 libéré, 0 combats remis à \"prévu\"",
+    "data": {
+      "tatamiId": 1760637707612,
+      "combatsLiberes": 0
+    },
+    "timestamp": "2025-11-17T04:42:29.467Z"
+  },
+  {
+    "id": 1763354555930,
+    "message": "Tatami TATAMI 1 libéré, 0 combats remis à \"prévu\"",
+    "data": {
+      "tatamiId": 1760637707612,
+      "combatsLiberes": 0
+    },
+    "timestamp": "2025-11-17T04:42:35.719Z"
+  },
+  {
+    "id": 1763354579901,
+    "message": "Combats assignés au tatami TATAMI 1",
+    "data": {
+      "tatamiId": 1760637707612,
+      "combatsIds": [
+        1763353352266,
+        1763353352574
+      ]
+    },
+    "timestamp": "2025-11-17T04:42:58.963Z"
+  },
+  {
+    "id": 1763577010165,
+    "message": "Backup créé",
+    "data": {
+      "filename": "backup_2025-11-19T18-30-10-134Z.json"
+    },
+    "timestamp": "2025-11-19T18:30:10.152Z"
+  },
+  {
+    "id": 1763577011094,
+    "message": "Serveur démarré",
+    "data": {
+      "port": 3000,
+      "version": "1.0.0",
+      "stats": {
+        "tatamis": 2,
+        "combats": 26,
+        "combatsTermines": 23,
+        "combatsEnCours": 0,
+        "equipes": 4,
+        "combattants": 8,
+        "poules": 2
+      },
+      "nodeVersion": "v22.14.0",
+      "environment": "development"
+    },
+    "timestamp": "2025-11-19T18:30:10.184Z"
+  },
+  {
+    "id": 1763577028478,
+    "message": "Classement général calculé",
+    "data": {
+      "nbEquipesClassees": 2
+    },
+    "timestamp": "2025-11-19T18:30:27.808Z"
+  },
+  {
+    "id": 1763581936684,
+    "message": "Backup créé",
+    "data": {
+      "filename": "backup_2025-11-19T19-52-15-806Z.json"
+    },
+    "timestamp": "2025-11-19T19:52:15.826Z"
+  },
+  {
+    "id": 1763585536682,
+    "message": "Backup créé",
+    "data": {
+      "filename": "backup_2025-11-19T20-52-15-763Z.json"
+    },
+    "timestamp": "2025-11-19T20:52:15.858Z"
+  },
+  {
+    "id": 1763590027896,
+    "message": "Backup créé",
+    "data": {
+      "filename": "backup_2025-11-19T22-07-07-057Z.json"
+    },
+    "timestamp": "2025-11-19T22:07:07.076Z"
+  },
+  {
+    "id": 1763593627172,
+    "message": "Backup créé",
+    "data": {
+      "filename": "backup_2025-11-19T23-07-07-081Z.json"
+    },
+    "timestamp": "2025-11-19T23:07:07.126Z"
+  },
+  {
+    "id": 1763602541249,
+    "message": "Backup créé",
+    "data": {
+      "filename": "backup_2025-11-20T01-35-40-498Z.json"
+    },
+    "timestamp": "2025-11-20T01:35:40.514Z"
+  },
+  {
+    "id": 1763614864937,
+    "message": "Backup créé",
+    "data": {
+      "filename": "backup_2025-11-20T05-01-04-382Z.json"
+    },
+    "timestamp": "2025-11-20T05:01:04.393Z"
+  },
+  {
+    "id": 1763619599582,
+    "message": "Backup créé",
+    "data": {
+      "filename": "backup_2025-11-20T06-19-58-608Z.json"
+    },
+    "timestamp": "2025-11-20T06:19:58.955Z"
+  },
+  {
+    "id": 1763625794851,
+    "message": "Backup créé",
+    "data": {
+      "filename": "backup_2025-11-20T08-03-13-634Z.json"
+    },
+    "timestamp": "2025-11-20T08:03:14.781Z"
+  },
+  {
+    "id": 1763629461675,
+    "message": "Backup créé",
+    "data": {
+      "filename": "backup_2025-11-20T09-04-20-669Z.json"
+    },
+    "timestamp": "2025-11-20T09:04:20.772Z"
+  },
+  {
+    "id": 1763633126878,
+    "message": "Backup créé",
+    "data": {
+      "filename": "backup_2025-11-20T10-05-26-142Z.json"
+    },
+    "timestamp": "2025-11-20T10:05:26.175Z"
+  },
+  {
+    "id": 1763636792657,
+    "message": "Backup créé",
+    "data": {
+      "filename": "backup_2025-11-20T11-06-31-964Z.json"
+    },
+    "timestamp": "2025-11-20T11:06:32.484Z"
+  },
+  {
+    "id": 1763640392338,
+    "message": "Backup créé",
+    "data": {
+      "filename": "backup_2025-11-20T12-06-31-840Z.json"
+    },
+    "timestamp": "2025-11-20T12:06:31.868Z"
+  },
+  {
+    "id": 1763644451389,
+    "message": "Backup créé",
+    "data": {
+      "filename": "backup_2025-11-20T13-14-10-388Z.json"
+    },
+    "timestamp": "2025-11-20T13:14:10.401Z"
+  },
+  {
+    "id": 1763644451240,
+    "message": "Serveur démarré",
+    "data": {
+      "port": 3000,
+      "version": "1.0.0",
+      "stats": {
+        "tatamis": 2,
+        "combats": 26,
+        "combatsTermines": 23,
+        "combatsEnCours": 0,
+        "equipes": 4,
+        "combattants": 8,
+        "poules": 2
+      },
+      "nodeVersion": "v22.14.0",
+      "environment": "development"
+    },
+    "timestamp": "2025-11-20T13:14:10.421Z"
+  },
+  {
+    "id": 1763644522337,
+    "message": "Classement général calculé",
+    "data": {
+      "nbEquipesClassees": 2
+    },
+    "timestamp": "2025-11-20T13:15:22.204Z"
+  },
+  {
+    "id": 1763645450319,
+    "message": "Osaekomi démarré: rouge",
+    "data": {
+      "combatId": 1763353352266,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T13:30:49.829Z"
+  },
+  {
+    "id": 1763645452152,
+    "message": "Osaekomi stop",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612
+    },
+    "timestamp": "2025-11-20T13:30:51.567Z"
+  },
+  {
+    "id": 1763645451634,
+    "message": "Osaekomi arrêté",
+    "data": {
+      "combatId": 1763353352266,
+      "duree": 1,
+      "pointsMarques": [],
+      "finCombat": false
+    },
+    "timestamp": "2025-11-20T13:30:51.581Z"
+  },
+  {
+    "id": 1763645451974,
+    "message": "Osaekomi démarré: rouge",
+    "data": {
+      "combatId": 1763353352266,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T13:30:51.595Z"
+  },
+  {
+    "id": 1763645453333,
+    "message": "Osaekomi stop",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612
+    },
+    "timestamp": "2025-11-20T13:30:52.930Z"
+  },
+  {
+    "id": 1763645453067,
+    "message": "Osaekomi arrêté",
+    "data": {
+      "combatId": 1763353352266,
+      "duree": 1,
+      "pointsMarques": [],
+      "finCombat": false
+    },
+    "timestamp": "2025-11-20T13:30:52.937Z"
+  },
+  {
+    "id": 1763645453860,
+    "message": "Osaekomi démarré: rouge",
+    "data": {
+      "combatId": 1763353352266,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T13:30:52.954Z"
+  },
+  {
+    "id": 1763645455721,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 2,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T13:30:54.969Z"
+  },
+  {
+    "id": 1763645456021,
+    "message": "Osaekomi stop",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612
+    },
+    "timestamp": "2025-11-20T13:30:55.467Z"
+  },
+  {
+    "id": 1763645456160,
+    "message": "Osaekomi arrêté",
+    "data": {
+      "combatId": 1763353352266,
+      "duree": 2,
+      "pointsMarques": [],
+      "finCombat": false
+    },
+    "timestamp": "2025-11-20T13:30:55.474Z"
+  },
+  {
+    "id": 1763645456151,
+    "message": "Osaekomi démarré: rouge",
+    "data": {
+      "combatId": 1763353352266,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T13:30:55.747Z"
+  },
+  {
+    "id": 1763645458114,
+    "message": "Osaekomi stop",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612
+    },
+    "timestamp": "2025-11-20T13:30:57.330Z"
+  },
+  {
+    "id": 1763645457700,
+    "message": "Osaekomi arrêté",
+    "data": {
+      "combatId": 1763353352266,
+      "duree": 1,
+      "pointsMarques": [],
+      "finCombat": false
+    },
+    "timestamp": "2025-11-20T13:30:57.337Z"
+  },
+  {
+    "id": 1763645457388,
+    "message": "Osaekomi démarré: rouge",
+    "data": {
+      "combatId": 1763353352266,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T13:30:57.350Z"
+  },
+  {
+    "id": 1763645459870,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 2,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T13:30:59.365Z"
+  },
+  {
+    "id": 1763645459445,
+    "message": "Osaekomi stop",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612
+    },
+    "timestamp": "2025-11-20T13:30:59.376Z"
+  },
+  {
+    "id": 1763645459624,
+    "message": "Osaekomi arrêté",
+    "data": {
+      "combatId": 1763353352266,
+      "duree": 2,
+      "pointsMarques": [],
+      "finCombat": false
+    },
+    "timestamp": "2025-11-20T13:30:59.388Z"
+  },
+  {
+    "id": 1763645460139,
+    "message": "Osaekomi démarré: rouge",
+    "data": {
+      "combatId": 1763353352266,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T13:30:59.399Z"
+  },
+  {
+    "id": 1763645461705,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 2,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T13:31:01.414Z"
+  },
+  {
+    "id": 1763645462772,
+    "message": "Osaekomi stop",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612
+    },
+    "timestamp": "2025-11-20T13:31:01.904Z"
+  },
+  {
+    "id": 1763645462393,
+    "message": "Osaekomi arrêté",
+    "data": {
+      "combatId": 1763353352266,
+      "duree": 2,
+      "pointsMarques": [],
+      "finCombat": false
+    },
+    "timestamp": "2025-11-20T13:31:01.921Z"
+  },
+  {
+    "id": 1763645462201,
+    "message": "Osaekomi démarré: rouge",
+    "data": {
+      "combatId": 1763353352266,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T13:31:01.975Z"
+  },
+  {
+    "id": 1763645464515,
+    "message": "Osaekomi stop",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612
+    },
+    "timestamp": "2025-11-20T13:31:03.908Z"
+  },
+  {
+    "id": 1763645464263,
+    "message": "Osaekomi arrêté",
+    "data": {
+      "combatId": 1763353352266,
+      "duree": 1,
+      "pointsMarques": [],
+      "finCombat": false
+    },
+    "timestamp": "2025-11-20T13:31:03.917Z"
+  },
+  {
+    "id": 1763645464808,
+    "message": "Osaekomi démarré: rouge",
+    "data": {
+      "combatId": 1763353352266,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T13:31:03.927Z"
+  },
+  {
+    "id": 1763645467079,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 2,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T13:31:06.166Z"
+  },
+  {
+    "id": 1763645466519,
+    "message": "Osaekomi stop",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612
+    },
+    "timestamp": "2025-11-20T13:31:06.175Z"
+  },
+  {
+    "id": 1763645466448,
+    "message": "Osaekomi arrêté",
+    "data": {
+      "combatId": 1763353352266,
+      "duree": 2,
+      "pointsMarques": [],
+      "finCombat": false
+    },
+    "timestamp": "2025-11-20T13:31:06.182Z"
+  },
+  {
+    "id": 1763645467186,
+    "message": "Osaekomi démarré: rouge",
+    "data": {
+      "combatId": 1763353352266,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T13:31:06.192Z"
+  },
+  {
+    "id": 1763645468131,
+    "message": "Osaekomi stop",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612
+    },
+    "timestamp": "2025-11-20T13:31:07.460Z"
+  },
+  {
+    "id": 1763645467641,
+    "message": "Osaekomi arrêté",
+    "data": {
+      "combatId": 1763353352266,
+      "duree": 1,
+      "pointsMarques": [],
+      "finCombat": false
+    },
+    "timestamp": "2025-11-20T13:31:07.468Z"
+  },
+  {
+    "id": 1763645468071,
+    "message": "Osaekomi démarré: rouge",
+    "data": {
+      "combatId": 1763353352266,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T13:31:07.483Z"
+  },
+  {
+    "id": 1763645469635,
+    "message": "Osaekomi stop",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612
+    },
+    "timestamp": "2025-11-20T13:31:09.058Z"
+  },
+  {
+    "id": 1763645469903,
+    "message": "Osaekomi arrêté",
+    "data": {
+      "combatId": 1763353352266,
+      "duree": 0,
+      "pointsMarques": [],
+      "finCombat": false
+    },
+    "timestamp": "2025-11-20T13:31:09.226Z"
+  },
+  {
+    "id": 1763645470117,
+    "message": "Osaekomi démarré: rouge",
+    "data": {
+      "combatId": 1763353352266,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T13:31:09.236Z"
+  },
+  {
+    "id": 1763645469610,
+    "message": "Osaekomi démarré: rouge",
+    "data": {
+      "combatId": 1763353352266,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T13:31:09.243Z"
+  },
+  {
+    "id": 1763645469279,
+    "message": "Osaekomi démarré: rouge",
+    "data": {
+      "combatId": 1763353352266,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T13:31:09.253Z"
+  },
+  {
+    "id": 1763645470252,
+    "message": "Osaekomi démarré: rouge",
+    "data": {
+      "combatId": 1763353352266,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T13:31:09.265Z"
+  },
+  {
+    "id": 1763645470828,
+    "message": "Osaekomi stop",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612
+    },
+    "timestamp": "2025-11-20T13:31:10.248Z"
+  },
+  {
+    "id": 1763645470801,
+    "message": "Osaekomi arrêté",
+    "data": {
+      "combatId": 1763353352266,
+      "duree": 1,
+      "pointsMarques": [],
+      "finCombat": false
+    },
+    "timestamp": "2025-11-20T13:31:10.255Z"
+  },
+  {
+    "id": 1763645470481,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 2,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T13:31:10.395Z"
+  },
+  {
+    "id": 1763645470575,
+    "message": "Osaekomi démarré: rouge",
+    "data": {
+      "combatId": 1763353352266,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T13:31:10.402Z"
+  },
+  {
+    "id": 1763645471790,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 2,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T13:31:11.342Z"
+  },
+  {
+    "id": 1763645471864,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 4,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T13:31:11.414Z"
+  },
+  {
+    "id": 1763645471889,
+    "message": "Osaekomi stop",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612
+    },
+    "timestamp": "2025-11-20T13:31:11.561Z"
+  },
+  {
+    "id": 1763645472435,
+    "message": "Osaekomi arrêté",
+    "data": {
+      "combatId": 1763353352266,
+      "duree": 4,
+      "pointsMarques": [],
+      "finCombat": false
+    },
+    "timestamp": "2025-11-20T13:31:11.570Z"
+  },
+  {
+    "id": 1763645473198,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 2,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T13:31:12.324Z"
+  },
+  {
+    "id": 1763645475529,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 4,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T13:31:15.434Z"
+  },
+  {
+    "id": 1763645476285,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 6,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T13:31:15.865Z"
+  },
+  {
+    "id": 1763645475926,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 8,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T13:31:15.882Z"
+  },
+  {
+    "id": 1763645476515,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 10,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T13:31:15.887Z"
+  },
+  {
+    "id": 1763645476158,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 12,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T13:31:15.892Z"
+  },
+  {
+    "id": 1763645477049,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 14,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T13:31:16.307Z"
+  },
+  {
+    "id": 1763645477629,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 16,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T13:31:17.364Z"
+  },
+  {
+    "id": 1763645477794,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 18,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T13:31:17.371Z"
+  },
+  {
+    "id": 1763645479101,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 20,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T13:31:18.305Z"
+  },
+  {
+    "id": 1763645480086,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 22,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T13:31:19.264Z"
+  },
+  {
+    "id": 1763645480230,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 24,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T13:31:19.271Z"
+  },
+  {
+    "id": 1763645480697,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 26,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T13:31:20.254Z"
+  },
+  {
+    "id": 1763645482177,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 28,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T13:31:21.245Z"
+  },
+  {
+    "id": 1763645482233,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 30,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T13:31:21.262Z"
+  },
+  {
+    "id": 1763645484185,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 32,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T13:31:23.580Z"
+  },
+  {
+    "id": 1763645483832,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 34,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T13:31:23.801Z"
+  },
+  {
+    "id": 1763645484452,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 36,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T13:31:23.808Z"
+  },
+  {
+    "id": 1763645484600,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 38,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T13:31:24.295Z"
+  },
+  {
+    "id": 1763645485732,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 40,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T13:31:25.250Z"
+  },
+  {
+    "id": 1763645486185,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 42,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T13:31:25.262Z"
+  },
+  {
+    "id": 1763645503597,
+    "message": "Arrêt du serveur",
+    "data": {
+      "signal": "SIGINT"
+    },
+    "timestamp": "2025-11-20T13:31:43.113Z"
+  },
+  {
+    "id": 1763645503273,
+    "message": "Arrêt du serveur",
+    "data": {
+      "signal": "SIGINT"
+    },
+    "timestamp": "2025-11-20T13:31:43.120Z"
+  },
+  {
+    "id": 1763645518864,
+    "message": "Backup créé",
+    "data": {
+      "filename": "backup_2025-11-20T13-31-58-647Z.json"
+    },
+    "timestamp": "2025-11-20T13:31:58.659Z"
+  },
+  {
+    "id": 1763645519618,
+    "message": "Serveur démarré",
+    "data": {
+      "port": 3000,
+      "version": "1.0.0",
+      "stats": {
+        "tatamis": 2,
+        "combats": 26,
+        "combatsTermines": 23,
+        "combatsEnCours": 1,
+        "equipes": 4,
+        "combattants": 8,
+        "poules": 2
+      },
+      "nodeVersion": "v22.14.0",
+      "environment": "development"
+    },
+    "timestamp": "2025-11-20T13:31:58.678Z"
+  },
+  {
+    "id": 1763645527291,
+    "message": "Point marqué: wazari rouge",
+    "data": {
+      "combatId": 1763353352266,
+      "type": "wazari",
+      "cote": "rouge",
+      "combatTermine": false
+    },
+    "timestamp": "2025-11-20T13:32:07.224Z"
+  },
+  {
+    "id": 1763645529693,
+    "message": "Point marqué: wazari bleu",
+    "data": {
+      "combatId": 1763353352266,
+      "type": "wazari",
+      "cote": "bleu",
+      "combatTermine": false
+    },
+    "timestamp": "2025-11-20T13:32:08.766Z"
+  },
+  {
+    "id": 1763645530943,
+    "message": "Point marqué: yuko bleu",
+    "data": {
+      "combatId": 1763353352266,
+      "type": "yuko",
+      "cote": "bleu",
+      "combatTermine": false
+    },
+    "timestamp": "2025-11-20T13:32:10.425Z"
+  },
+  {
+    "id": 1763645532496,
+    "message": "Point marqué: yuko rouge",
+    "data": {
+      "combatId": 1763353352266,
+      "type": "yuko",
+      "cote": "rouge",
+      "combatTermine": false
+    },
+    "timestamp": "2025-11-20T13:32:11.520Z"
+  },
+  {
+    "id": 1763645534280,
+    "message": "Point marqué: shido rouge",
+    "data": {
+      "combatId": 1763353352266,
+      "type": "shido",
+      "cote": "rouge",
+      "combatTermine": false
+    },
+    "timestamp": "2025-11-20T13:32:13.824Z"
+  },
+  {
+    "id": 1763645535254,
+    "message": "Point marqué: shido bleu",
+    "data": {
+      "combatId": 1763353352266,
+      "type": "shido",
+      "cote": "bleu",
+      "combatTermine": false
+    },
+    "timestamp": "2025-11-20T13:32:14.832Z"
+  },
+  {
+    "id": 1763645554380,
+    "message": "Point marqué: shido bleu",
+    "data": {
+      "combatId": 1763353352266,
+      "type": "shido",
+      "cote": "bleu",
+      "combatTermine": false
+    },
+    "timestamp": "2025-11-20T13:32:33.776Z"
+  },
+  {
+    "id": 1763645595358,
+    "message": "Osaekomi démarré: bleu",
+    "data": {
+      "combatId": 1763353352266,
+      "cote": "bleu"
+    },
+    "timestamp": "2025-11-20T13:33:14.731Z"
+  },
+  {
+    "id": 1763645597264,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 2,
+      "cote": "bleu"
+    },
+    "timestamp": "2025-11-20T13:33:16.744Z"
+  },
+  {
+    "id": 1763645598508,
+    "message": "Osaekomi stop",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612
+    },
+    "timestamp": "2025-11-20T13:33:17.582Z"
+  },
+  {
+    "id": 1763645597790,
+    "message": "Osaekomi arrêté",
+    "data": {
+      "combatId": 1763353352266,
+      "duree": 2,
+      "pointsMarques": [],
+      "finCombat": false
+    },
+    "timestamp": "2025-11-20T13:33:17.589Z"
+  },
+  {
+    "id": 1763645612679,
+    "message": "Arrêt du serveur",
+    "data": {
+      "signal": "SIGINT"
+    },
+    "timestamp": "2025-11-20T13:33:32.254Z"
+  },
+  {
+    "id": 1763645612715,
+    "message": "Arrêt du serveur",
+    "data": {
+      "signal": "SIGINT"
+    },
+    "timestamp": "2025-11-20T13:33:32.260Z"
+  },
+  {
+    "id": 1763645628274,
+    "message": "Backup créé",
+    "data": {
+      "filename": "backup_2025-11-20T13-33-47-315Z.json"
+    },
+    "timestamp": "2025-11-20T13:33:47.326Z"
+  },
+  {
+    "id": 1763645628234,
+    "message": "Serveur démarré",
+    "data": {
+      "port": 3000,
+      "version": "1.0.0",
+      "stats": {
+        "tatamis": 2,
+        "combats": 26,
+        "combatsTermines": 23,
+        "combatsEnCours": 0,
+        "equipes": 4,
+        "combattants": 8,
+        "poules": 2
+      },
+      "nodeVersion": "v22.14.0",
+      "environment": "development"
+    },
+    "timestamp": "2025-11-20T13:33:47.341Z"
+  },
+  {
+    "id": 1763645669526,
+    "message": "Osaekomi démarré: rouge",
+    "data": {
+      "combatId": 1763353352266,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T13:34:29.426Z"
+  },
+  {
+    "id": 1763645672002,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 2,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T13:34:31.443Z"
+  },
+  {
+    "id": 1763645673500,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 4,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T13:34:33.439Z"
+  },
+  {
+    "id": 1763645675479,
+    "message": "Osaekomi stop",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612
+    },
+    "timestamp": "2025-11-20T13:34:34.492Z"
+  },
+  {
+    "id": 1763645674839,
+    "message": "Osaekomi arrêté",
+    "data": {
+      "combatId": 1763353352266,
+      "duree": 5,
+      "pointsMarques": [
+        "yuko"
+      ],
+      "finCombat": false
+    },
+    "timestamp": "2025-11-20T13:34:34.501Z"
+  },
+  {
+    "id": 1763645676968,
+    "message": "Osaekomi démarré: rouge",
+    "data": {
+      "combatId": 1763353352266,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T13:34:36.073Z"
+  },
+  {
+    "id": 1763645678148,
+    "message": "Osaekomi stop",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612
+    },
+    "timestamp": "2025-11-20T13:34:37.638Z"
+  },
+  {
+    "id": 1763645677778,
+    "message": "Osaekomi arrêté",
+    "data": {
+      "combatId": 1763353352266,
+      "duree": 1,
+      "pointsMarques": [],
+      "finCombat": false
+    },
+    "timestamp": "2025-11-20T13:34:37.647Z"
+  },
+  {
+    "id": 1763649495526,
+    "message": "Backup créé",
+    "data": {
+      "filename": "backup_2025-11-20T14-38-14-711Z.json"
+    },
+    "timestamp": "2025-11-20T14:38:14.758Z"
+  },
+  {
+    "id": 1763653094720,
+    "message": "Backup créé",
+    "data": {
+      "filename": "backup_2025-11-20T15-38-14-537Z.json"
+    },
+    "timestamp": "2025-11-20T15:38:14.570Z"
+  },
+  {
+    "id": 1763656694967,
+    "message": "Backup créé",
+    "data": {
+      "filename": "backup_2025-11-20T16-38-14-611Z.json"
+    },
+    "timestamp": "2025-11-20T16:38:14.647Z"
+  },
+  {
+    "id": 1763660294830,
+    "message": "Backup créé",
+    "data": {
+      "filename": "backup_2025-11-20T17-38-14-420Z.json"
+    },
+    "timestamp": "2025-11-20T17:38:14.433Z"
+  },
+  {
+    "id": 1763660518942,
+    "message": "Arrêt du serveur",
+    "data": {
+      "signal": "SIGINT"
+    },
+    "timestamp": "2025-11-20T17:41:58.374Z"
+  },
+  {
+    "id": 1763660519069,
+    "message": "Arrêt du serveur",
+    "data": {
+      "signal": "SIGINT"
+    },
+    "timestamp": "2025-11-20T17:41:58.387Z"
+  },
+  {
+    "id": 1763660736246,
+    "message": "Backup créé",
+    "data": {
+      "filename": "backup_2025-11-20T17-45-35-326Z.json"
+    },
+    "timestamp": "2025-11-20T17:45:35.343Z"
+  },
+  {
+    "id": 1763660736215,
+    "message": "Serveur démarré",
+    "data": {
+      "port": 3000,
+      "version": "1.0.0",
+      "stats": {
+        "tatamis": 2,
+        "combats": 26,
+        "combatsTermines": 23,
+        "combatsEnCours": 0,
+        "equipes": 4,
+        "combattants": 8,
+        "poules": 2
+      },
+      "nodeVersion": "v22.14.0",
+      "environment": "development"
+    },
+    "timestamp": "2025-11-20T17:45:35.368Z"
+  },
+  {
+    "id": 1763660755627,
+    "message": "Classement général calculé",
+    "data": {
+      "nbEquipesClassees": 2
+    },
+    "timestamp": "2025-11-20T17:45:55.013Z"
+  },
+  {
+    "id": 1763660768663,
+    "message": "Combat remis à zéro",
+    "data": {
+      "combatId": 1763353352266
+    },
+    "timestamp": "2025-11-20T17:46:08.275Z"
+  },
+  {
+    "id": 1763660791726,
+    "message": "Point marqué: shido bleu",
+    "data": {
+      "combatId": 1763353352266,
+      "type": "shido",
+      "cote": "bleu",
+      "combatTermine": false
+    },
+    "timestamp": "2025-11-20T17:46:31.319Z"
+  },
+  {
+    "id": 1763660795551,
+    "message": "Point marqué: yuko rouge",
+    "data": {
+      "combatId": 1763353352266,
+      "type": "yuko",
+      "cote": "rouge",
+      "combatTermine": false
+    },
+    "timestamp": "2025-11-20T17:46:35.534Z"
+  },
+  {
+    "id": 1763660802077,
+    "message": "Point marqué: wazari rouge",
+    "data": {
+      "combatId": 1763353352266,
+      "type": "wazari",
+      "cote": "rouge",
+      "combatTermine": false
+    },
+    "timestamp": "2025-11-20T17:46:41.452Z"
+  },
+  {
+    "id": 1763660812940,
+    "message": "Point marqué: yuko bleu",
+    "data": {
+      "combatId": 1763353352266,
+      "type": "yuko",
+      "cote": "bleu",
+      "combatTermine": false
+    },
+    "timestamp": "2025-11-20T17:46:52.045Z"
+  },
+  {
+    "id": 1763660817315,
+    "message": "Point marqué: yuko rouge",
+    "data": {
+      "combatId": 1763353352266,
+      "type": "yuko",
+      "cote": "rouge",
+      "combatTermine": false
+    },
+    "timestamp": "2025-11-20T17:46:56.793Z"
+  },
+  {
+    "id": 1763660820121,
+    "message": "Osaekomi démarré: rouge",
+    "data": {
+      "combatId": 1763353352266,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T17:46:59.280Z"
+  },
+  {
+    "id": 1763660822155,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 2,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T17:47:01.295Z"
+  },
+  {
+    "id": 1763660824120,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 4,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T17:47:03.291Z"
+  },
+  {
+    "id": 1763660825681,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 6,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T17:47:05.291Z"
+  },
+  {
+    "id": 1763660828065,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 8,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T17:47:07.311Z"
+  },
+  {
+    "id": 1763660829413,
+    "message": "Osaekomi stop",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612
+    },
+    "timestamp": "2025-11-20T17:47:09.341Z"
+  },
+  {
+    "id": 1763660830027,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 0,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T17:47:09.352Z"
+  },
+  {
+    "id": 1763660829827,
+    "message": "Classement de poule calculé: Poule B",
+    "data": {
+      "pouleId": 2,
+      "nbEquipes": 2
+    },
+    "timestamp": "2025-11-20T17:47:09.365Z"
+  },
+  {
+    "id": 1763660829655,
+    "message": "Classements mis à jour après combat",
+    "data": {
+      "combatId": 1763353352266,
+      "poulesMAJ": [
+        2
+      ]
+    },
+    "timestamp": "2025-11-20T17:47:09.438Z"
+  },
+  {
+    "id": 1763660830240,
+    "message": "Osaekomi arrêté",
+    "data": {
+      "combatId": 1763353352266,
+      "duree": 10,
+      "pointsMarques": [
+        "wazari"
+      ],
+      "finCombat": true
+    },
+    "timestamp": "2025-11-20T17:47:09.475Z"
+  },
+  {
+    "id": 1763660829546,
+    "message": "Classement de poule calculé: Poule B",
+    "data": {
+      "pouleId": 2,
+      "nbEquipes": 2
+    },
+    "timestamp": "2025-11-20T17:47:09.481Z"
+  },
+  {
+    "id": 1763660829518,
+    "message": "Classements mis à jour après combat",
+    "data": {
+      "combatId": 1763353352266,
+      "poulesMAJ": [
+        2
+      ]
+    },
+    "timestamp": "2025-11-20T17:47:09.488Z"
+  },
+  {
+    "id": 1763660829855,
+    "message": "Score confrontation calculé pour TATAMI 1",
+    "data": {
+      "tatamiId": 1760637707612,
+      "scoreRouge": 22,
+      "scoreBleu": 1
+    },
+    "timestamp": "2025-11-20T17:47:09.497Z"
+  },
+  {
+    "id": 1763660875768,
+    "message": "Classement de poule calculé: Poule B",
+    "data": {
+      "pouleId": 2,
+      "nbEquipes": 2
+    },
+    "timestamp": "2025-11-20T17:47:55.105Z"
+  },
+  {
+    "id": 1763660875219,
+    "message": "Classements mis à jour après combat",
+    "data": {
+      "combatId": 1763353352266,
+      "poulesMAJ": [
+        2
+      ]
+    },
+    "timestamp": "2025-11-20T17:47:55.111Z"
+  },
+  {
+    "id": 1763660876041,
+    "message": "Score confrontation calculé pour TATAMI 1",
+    "data": {
+      "tatamiId": 1760637707612,
+      "scoreRouge": 22,
+      "scoreBleu": 1
+    },
+    "timestamp": "2025-11-20T17:47:55.118Z"
+  },
+  {
+    "id": 1763660878965,
+    "message": "Combat remis à zéro",
+    "data": {
+      "combatId": 1763353352266
+    },
+    "timestamp": "2025-11-20T17:47:58.547Z"
+  },
+  {
+    "id": 1763660887787,
+    "message": "Osaekomi démarré: rouge",
+    "data": {
+      "combatId": 1763353352266,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T17:48:07.063Z"
+  },
+  {
+    "id": 1763660889622,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 2,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T17:48:09.075Z"
+  },
+  {
+    "id": 1763660891228,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 4,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T17:48:11.074Z"
+  },
+  {
+    "id": 1763660892462,
+    "message": "Osaekomi stop",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612
+    },
+    "timestamp": "2025-11-20T17:48:11.682Z"
+  },
+  {
+    "id": 1763660892013,
+    "message": "Osaekomi arrêté",
+    "data": {
+      "combatId": 1763353352266,
+      "duree": 4,
+      "pointsMarques": [],
+      "finCombat": false
+    },
+    "timestamp": "2025-11-20T17:48:11.694Z"
+  },
+  {
+    "id": 1763660894332,
+    "message": "Osaekomi démarré: bleu",
+    "data": {
+      "combatId": 1763353352266,
+      "cote": "bleu"
+    },
+    "timestamp": "2025-11-20T17:48:13.647Z"
+  },
+  {
+    "id": 1763660896408,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 2,
+      "cote": "bleu"
+    },
+    "timestamp": "2025-11-20T17:48:15.657Z"
+  },
+  {
+    "id": 1763660896996,
+    "message": "Osaekomi stop",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612
+    },
+    "timestamp": "2025-11-20T17:48:16.815Z"
+  },
+  {
+    "id": 1763660897121,
+    "message": "Osaekomi arrêté",
+    "data": {
+      "combatId": 1763353352266,
+      "duree": 3,
+      "pointsMarques": [],
+      "finCombat": false
+    },
+    "timestamp": "2025-11-20T17:48:16.828Z"
+  },
+  {
+    "id": 1763660916884,
+    "message": "Combat remis à zéro",
+    "data": {
+      "combatId": 1763353352266
+    },
+    "timestamp": "2025-11-20T17:48:35.953Z"
+  },
+  {
+    "id": 1763660920652,
+    "message": "Osaekomi démarré: rouge",
+    "data": {
+      "combatId": 1763353352266,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T17:48:40.591Z"
+  },
+  {
+    "id": 1763660923007,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 2,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T17:48:42.602Z"
+  },
+  {
+    "id": 1763660924315,
+    "message": "Osaekomi stop",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612
+    },
+    "timestamp": "2025-11-20T17:48:43.843Z"
+  },
+  {
+    "id": 1763660924637,
+    "message": "Osaekomi arrêté",
+    "data": {
+      "combatId": 1763353352266,
+      "duree": 3,
+      "pointsMarques": [],
+      "finCombat": false
+    },
+    "timestamp": "2025-11-20T17:48:43.859Z"
+  },
+  {
+    "id": 1763660924850,
+    "message": "Osaekomi démarré: bleu",
+    "data": {
+      "combatId": 1763353352266,
+      "cote": "bleu"
+    },
+    "timestamp": "2025-11-20T17:48:44.756Z"
+  },
+  {
+    "id": 1763660927203,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 2,
+      "cote": "bleu"
+    },
+    "timestamp": "2025-11-20T17:48:46.768Z"
+  },
+  {
+    "id": 1763660928659,
+    "message": "Osaekomi stop",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612
+    },
+    "timestamp": "2025-11-20T17:48:48.019Z"
+  },
+  {
+    "id": 1763660928227,
+    "message": "Osaekomi arrêté",
+    "data": {
+      "combatId": 1763353352266,
+      "duree": 3,
+      "pointsMarques": [],
+      "finCombat": false
+    },
+    "timestamp": "2025-11-20T17:48:48.029Z"
+  },
+  {
+    "id": 1763660971644,
+    "message": "Osaekomi démarré: rouge",
+    "data": {
+      "combatId": 1763353352266,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T17:49:31.470Z"
+  },
+  {
+    "id": 1763660972678,
+    "message": "Osaekomi stop",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612
+    },
+    "timestamp": "2025-11-20T17:49:32.593Z"
+  },
+  {
+    "id": 1763660973274,
+    "message": "Osaekomi arrêté",
+    "data": {
+      "combatId": 1763353352266,
+      "duree": 1,
+      "pointsMarques": [],
+      "finCombat": false
+    },
+    "timestamp": "2025-11-20T17:49:32.636Z"
+  },
+  {
+    "id": 1763660973865,
+    "message": "Osaekomi démarré: bleu",
+    "data": {
+      "combatId": 1763353352266,
+      "cote": "bleu"
+    },
+    "timestamp": "2025-11-20T17:49:33.385Z"
+  },
+  {
+    "id": 1763660974635,
+    "message": "Osaekomi stop",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612
+    },
+    "timestamp": "2025-11-20T17:49:34.240Z"
+  },
+  {
+    "id": 1763660974408,
+    "message": "Osaekomi arrêté",
+    "data": {
+      "combatId": 1763353352266,
+      "duree": 0,
+      "pointsMarques": [],
+      "finCombat": false
+    },
+    "timestamp": "2025-11-20T17:49:34.251Z"
+  },
+  {
+    "id": 1763660980211,
+    "message": "Osaekomi démarré: rouge",
+    "data": {
+      "combatId": 1763353352266,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T17:49:39.538Z"
+  },
+  {
+    "id": 1763660982474,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 2,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T17:49:41.555Z"
+  },
+  {
+    "id": 1763660984320,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 4,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T17:49:43.549Z"
+  },
+  {
+    "id": 1763660985981,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 6,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T17:49:45.551Z"
+  },
+  {
+    "id": 1763660987657,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 8,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T17:49:47.553Z"
+  },
+  {
+    "id": 1763660989721,
+    "message": "Osaekomi update",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612,
+      "counter": 10,
+      "cote": "rouge"
+    },
+    "timestamp": "2025-11-20T17:49:49.552Z"
+  },
+  {
+    "id": 1763660991773,
+    "message": "Osaekomi stop",
+    "data": {
+      "type": "combat",
+      "tatamiId": 1760637707612
+    },
+    "timestamp": "2025-11-20T17:49:51.383Z"
+  },
+  {
+    "id": 1763660992387,
+    "message": "Osaekomi arrêté",
+    "data": {
+      "combatId": 1763353352266,
+      "duree": 11,
+      "pointsMarques": [
+        "wazari"
+      ],
+      "finCombat": false
+    },
+    "timestamp": "2025-11-20T17:49:51.393Z"
+  },
+  {
+    "id": 1763661002136,
+    "message": "Classement de poule calculé: Poule B",
+    "data": {
+      "pouleId": 2,
+      "nbEquipes": 2
+    },
+    "timestamp": "2025-11-20T17:50:01.429Z"
+  },
+  {
+    "id": 1763661001488,
+    "message": "Classements mis à jour après combat",
+    "data": {
+      "combatId": 1763353352266,
+      "poulesMAJ": [
+        2
+      ]
+    },
+    "timestamp": "2025-11-20T17:50:01.436Z"
+  },
+  {
+    "id": 1763661001905,
+    "message": "Score confrontation calculé pour TATAMI 1",
+    "data": {
+      "tatamiId": 1760637707612,
+      "scoreRouge": 10,
+      "scoreBleu": 0
+    },
+    "timestamp": "2025-11-20T17:50:01.444Z"
+  },
+  {
+    "id": 1763661005578,
+    "message": "TATAMI 1 - Combat suivant",
+    "data": {
+      "tatamiId": 1760637707612,
+      "index": 1,
+      "combatId": 1763353352574
+    },
+    "timestamp": "2025-11-20T17:50:04.716Z"
+  },
+  {
+    "id": 1763661005471,
+    "message": "TATAMI 1 - Combat précédent",
+    "data": {
+      "tatamiId": 1760637707612,
+      "index": 0,
+      "combatId": 1763353352266
+    },
+    "timestamp": "2025-11-20T17:50:04.724Z"
+  },
+  {
+    "id": 1763661009771,
+    "message": "TATAMI 1 - Combat suivant",
+    "data": {
+      "tatamiId": 1760637707612,
+      "index": 1,
+      "combatId": 1763353352574
+    },
+    "timestamp": "2025-11-20T17:50:09.382Z"
+  },
+  {
+    "id": 1763661010295,
+    "message": "TATAMI 1 - Combat précédent",
+    "data": {
+      "tatamiId": 1760637707612,
+      "index": 0,
+      "combatId": 1763353352266
+    },
+    "timestamp": "2025-11-20T17:50:09.394Z"
+  },
+  {
+    "id": 1763661011720,
+    "message": "TATAMI 1 - Combat suivant",
+    "data": {
+      "tatamiId": 1760637707612,
+      "index": 1,
+      "combatId": 1763353352574
+    },
+    "timestamp": "2025-11-20T17:50:11.657Z"
+  },
+  {
+    "id": 1763661012514,
+    "message": "TATAMI 1 - Combat précédent",
+    "data": {
+      "tatamiId": 1760637707612,
+      "index": 0,
+      "combatId": 1763353352266
+    },
+    "timestamp": "2025-11-20T17:50:11.672Z"
+  },
+  {
+    "id": 1763661012784,
+    "message": "TATAMI 1 - Combat suivant",
+    "data": {
+      "tatamiId": 1760637707612,
+      "index": 1,
+      "combatId": 1763353352574
+    },
+    "timestamp": "2025-11-20T17:50:11.932Z"
+  },
+  {
+    "id": 1763661011966,
+    "message": "TATAMI 1 - Combat précédent",
+    "data": {
+      "tatamiId": 1760637707612,
+      "index": 0,
+      "combatId": 1763353352266
+    },
+    "timestamp": "2025-11-20T17:50:11.945Z"
+  },
+  {
+    "id": 1763661013300,
+    "message": "TATAMI 1 - Combat suivant",
+    "data": {
+      "tatamiId": 1760637707612,
+      "index": 1,
+      "combatId": 1763353352574
+    },
+    "timestamp": "2025-11-20T17:50:12.418Z"
+  },
+  {
+    "id": 1763661012447,
+    "message": "TATAMI 1 - Combat précédent",
+    "data": {
+      "tatamiId": 1760637707612,
+      "index": 0,
+      "combatId": 1763353352266
+    },
+    "timestamp": "2025-11-20T17:50:12.431Z"
+  },
+  {
+    "id": 1763661013029,
+    "message": "TATAMI 1 - Combat suivant",
+    "data": {
+      "tatamiId": 1760637707612,
+      "index": 1,
+      "combatId": 1763353352574
+    },
+    "timestamp": "2025-11-20T17:50:12.495Z"
+  },
+  {
+    "id": 1763661012665,
+    "message": "TATAMI 1 - Combat précédent",
+    "data": {
+      "tatamiId": 1760637707612,
+      "index": 0,
+      "combatId": 1763353352266
+    },
+    "timestamp": "2025-11-20T17:50:12.506Z"
+  },
+  {
+    "id": 1763661017308,
+    "message": "TATAMI 1 - Combat suivant",
+    "data": {
+      "tatamiId": 1760637707612,
+      "index": 1,
+      "combatId": 1763353352574
+    },
+    "timestamp": "2025-11-20T17:50:16.445Z"
+  },
+  {
+    "id": 1763661017238,
+    "message": "TATAMI 1 - Combat précédent",
+    "data": {
+      "tatamiId": 1760637707612,
+      "index": 0,
+      "combatId": 1763353352266
+    },
+    "timestamp": "2025-11-20T17:50:16.930Z"
+  },
+  {
+    "id": 1763661111121,
+    "message": "TATAMI 1 - Combat suivant",
+    "data": {
+      "tatamiId": 1760637707612,
+      "index": 1,
+      "combatId": 1763353352574
+    },
+    "timestamp": "2025-11-20T17:51:50.885Z"
+  },
+  {
+    "id": 1763661140042,
+    "message": "Point marqué: yuko bleu",
+    "data": {
+      "combatId": 1763353352574,
+      "type": "yuko",
+      "cote": "bleu",
+      "combatTermine": false
+    },
+    "timestamp": "2025-11-20T17:52:19.748Z"
+  },
+  {
+    "id": 1763661144437,
+    "message": "Point marqué: yuko rouge",
+    "data": {
+      "combatId": 1763353352574,
+      "type": "yuko",
+      "cote": "rouge",
+      "combatTermine": false
+    },
+    "timestamp": "2025-11-20T17:52:23.715Z"
+  },
+  {
+    "id": 1763661166300,
+    "message": "Point marqué: wazari bleu",
+    "data": {
+      "combatId": 1763353352574,
+      "type": "wazari",
+      "cote": "bleu",
+      "combatTermine": false
+    },
+    "timestamp": "2025-11-20T17:52:45.876Z"
+  },
+  {
+    "id": 1763661200146,
+    "message": "Classement de poule calculé: Poule B",
+    "data": {
+      "pouleId": 2,
+      "nbEquipes": 2
+    },
+    "timestamp": "2025-11-20T17:53:19.646Z"
+  },
+  {
+    "id": 1763661199761,
+    "message": "Classements mis à jour après combat",
+    "data": {
+      "combatId": 1763353352574,
+      "poulesMAJ": [
+        2
+      ]
+    },
+    "timestamp": "2025-11-20T17:53:19.651Z"
+  },
+  {
+    "id": 1763661200156,
+    "message": "Score confrontation calculé pour TATAMI 1",
+    "data": {
+      "tatamiId": 1760637707612,
+      "scoreRouge": 11,
+      "scoreBleu": 11
+    },
+    "timestamp": "2025-11-20T17:53:19.657Z"
+  },
+  {
+    "id": 1763661206805,
+    "message": "TATAMI 1 - Combat précédent",
+    "data": {
+      "tatamiId": 1760637707612,
+      "index": 0,
+      "combatId": 1763353352266
+    },
+    "timestamp": "2025-11-20T17:53:26.763Z"
+  },
+  {
+    "id": 1763661208968,
+    "message": "TATAMI 1 - Combat suivant",
+    "data": {
+      "tatamiId": 1760637707612,
+      "index": 1,
+      "combatId": 1763353352574
+    },
+    "timestamp": "2025-11-20T17:53:28.134Z"
+  },
+  {
+    "id": 1763661208210,
+    "message": "TATAMI 1 - Combat précédent",
+    "data": {
+      "tatamiId": 1760637707612,
+      "index": 0,
+      "combatId": 1763353352266
+    },
+    "timestamp": "2025-11-20T17:53:28.149Z"
+  },
+  {
+    "id": 1763661210392,
+    "message": "TATAMI 1 - Combat suivant",
+    "data": {
+      "tatamiId": 1760637707612,
+      "index": 1,
+      "combatId": 1763353352574
+    },
+    "timestamp": "2025-11-20T17:53:29.769Z"
+  },
+  {
+    "id": 1763661209816,
+    "message": "TATAMI 1 - Combat précédent",
+    "data": {
+      "tatamiId": 1760637707612,
+      "index": 0,
+      "combatId": 1763353352266
+    },
+    "timestamp": "2025-11-20T17:53:29.784Z"
+  },
+  {
+    "id": 1763661209844,
+    "message": "TATAMI 1 - Combat suivant",
+    "data": {
+      "tatamiId": 1760637707612,
+      "index": 1,
+      "combatId": 1763353352574
+    },
+    "timestamp": "2025-11-20T17:53:29.816Z"
+  },
+  {
+    "id": 1763661210550,
+    "message": "TATAMI 1 - Combat précédent",
+    "data": {
+      "tatamiId": 1760637707612,
+      "index": 0,
+      "combatId": 1763353352266
+    },
+    "timestamp": "2025-11-20T17:53:29.837Z"
+  },
+  {
+    "id": 1763661210561,
+    "message": "TATAMI 1 - Combat suivant",
+    "data": {
+      "tatamiId": 1760637707612,
+      "index": 1,
+      "combatId": 1763353352574
+    },
+    "timestamp": "2025-11-20T17:53:29.934Z"
+  },
+  {
+    "id": 1763661210550,
+    "message": "TATAMI 1 - Combat précédent",
+    "data": {
+      "tatamiId": 1760637707612,
+      "index": 0,
+      "combatId": 1763353352266
+    },
+    "timestamp": "2025-11-20T17:53:29.948Z"
+  },
+  {
+    "id": 1763661210839,
+    "message": "TATAMI 1 - Combat suivant",
+    "data": {
+      "tatamiId": 1760637707612,
+      "index": 1,
+      "combatId": 1763353352574
+    },
+    "timestamp": "2025-11-20T17:53:30.493Z"
+  },
+  {
+    "id": 1763661211456,
+    "message": "TATAMI 1 - Combat précédent",
+    "data": {
+      "tatamiId": 1760637707612,
+      "index": 0,
+      "combatId": 1763353352266
+    },
+    "timestamp": "2025-11-20T17:53:30.502Z"
+  },
+  {
+    "id": 1763661211953,
+    "message": "TATAMI 1 - Combat suivant",
+    "data": {
+      "tatamiId": 1760637707612,
+      "index": 1,
+      "combatId": 1763353352574
+    },
+    "timestamp": "2025-11-20T17:53:31.118Z"
+  },
+  {
+    "id": 1763661211882,
+    "message": "TATAMI 1 - Combat précédent",
+    "data": {
+      "tatamiId": 1760637707612,
+      "index": 0,
+      "combatId": 1763353352266
+    },
+    "timestamp": "2025-11-20T17:53:31.132Z"
+  },
+  {
+    "id": 1763661211487,
+    "message": "TATAMI 1 - Combat suivant",
+    "data": {
+      "tatamiId": 1760637707612,
+      "index": 1,
+      "combatId": 1763353352574
+    },
+    "timestamp": "2025-11-20T17:53:31.144Z"
+  },
+  {
+    "id": 1763661211759,
+    "message": "TATAMI 1 - Combat précédent",
+    "data": {
+      "tatamiId": 1760637707612,
+      "index": 0,
+      "combatId": 1763353352266
+    },
+    "timestamp": "2025-11-20T17:53:31.165Z"
+  },
+  {
+    "id": 1763661212651,
+    "message": "TATAMI 1 - Combat suivant",
+    "data": {
+      "tatamiId": 1760637707612,
+      "index": 1,
+      "combatId": 1763353352574
+    },
+    "timestamp": "2025-11-20T17:53:32.353Z"
+  },
+  {
+    "id": 1763661212814,
+    "message": "TATAMI 1 - Combat précédent",
+    "data": {
+      "tatamiId": 1760637707612,
+      "index": 0,
+      "combatId": 1763353352266
+    },
+    "timestamp": "2025-11-20T17:53:32.363Z"
+  },
+  {
+    "id": 1763661221438,
+    "message": "TATAMI 1 - Combat suivant",
+    "data": {
+      "tatamiId": 1760637707612,
+      "index": 1,
+      "combatId": 1763353352574
+    },
+    "timestamp": "2025-11-20T17:53:40.479Z"
+  },
+  {
+    "id": 1763661221255,
+    "message": "TATAMI 1 - Combat précédent",
+    "data": {
+      "tatamiId": 1760637707612,
+      "index": 0,
+      "combatId": 1763353352266
+    },
+    "timestamp": "2025-11-20T17:53:41.184Z"
+  },
+  {
+    "id": 1763661221960,
+    "message": "TATAMI 1 - Combat suivant",
+    "data": {
+      "tatamiId": 1760637707612,
+      "index": 1,
+      "combatId": 1763353352574
+    },
+    "timestamp": "2025-11-20T17:53:41.769Z"
+  },
+  {
+    "id": 1763661222303,
+    "message": "TATAMI 1 - Combat précédent",
+    "data": {
+      "tatamiId": 1760637707612,
+      "index": 0,
+      "combatId": 1763353352266
+    },
+    "timestamp": "2025-11-20T17:53:41.852Z"
+  },
+  {
+    "id": 1763661222296,
+    "message": "TATAMI 1 - Combat suivant",
+    "data": {
+      "tatamiId": 1760637707612,
+      "index": 1,
+      "combatId": 1763353352574
+    },
+    "timestamp": "2025-11-20T17:53:41.864Z"
+  },
+  {
+    "id": 1763661222274,
+    "message": "TATAMI 1 - Combat précédent",
+    "data": {
+      "tatamiId": 1760637707612,
+      "index": 0,
+      "combatId": 1763353352266
+    },
+    "timestamp": "2025-11-20T17:53:41.876Z"
+  },
+  {
+    "id": 1763661222856,
+    "message": "TATAMI 1 - Combat suivant",
+    "data": {
+      "tatamiId": 1760637707612,
+      "index": 1,
+      "combatId": 1763353352574
+    },
+    "timestamp": "2025-11-20T17:53:41.890Z"
+  },
+  {
+    "id": 1763661222200,
+    "message": "TATAMI 1 - Combat précédent",
+    "data": {
+      "tatamiId": 1760637707612,
+      "index": 0,
+      "combatId": 1763353352266
+    },
+    "timestamp": "2025-11-20T17:53:41.908Z"
+  },
+  {
+    "id": 1763661222632,
+    "message": "TATAMI 1 - Combat suivant",
+    "data": {
+      "tatamiId": 1760637707612,
+      "index": 1,
+      "combatId": 1763353352574
+    },
+    "timestamp": "2025-11-20T17:53:41.917Z"
+  },
+  {
+    "id": 1763661222520,
+    "message": "TATAMI 1 - Combat précédent",
+    "data": {
+      "tatamiId": 1760637707612,
+      "index": 0,
+      "combatId": 1763353352266
+    },
+    "timestamp": "2025-11-20T17:53:41.935Z"
+  },
+  {
+    "id": 1763661222777,
+    "message": "TATAMI 1 - Combat suivant",
+    "data": {
+      "tatamiId": 1760637707612,
+      "index": 1,
+      "combatId": 1763353352574
+    },
+    "timestamp": "2025-11-20T17:53:41.959Z"
+  },
+  {
+    "id": 1763661222468,
+    "message": "TATAMI 1 - Combat précédent",
+    "data": {
+      "tatamiId": 1760637707612,
+      "index": 0,
+      "combatId": 1763353352266
+    },
+    "timestamp": "2025-11-20T17:53:41.976Z"
+  },
+  {
+    "id": 1763661222510,
+    "message": "TATAMI 1 - Combat suivant",
+    "data": {
+      "tatamiId": 1760637707612,
+      "index": 1,
+      "combatId": 1763353352574
+    },
+    "timestamp": "2025-11-20T17:53:41.988Z"
+  },
+  {
+    "id": 1763661222279,
+    "message": "TATAMI 1 - Combat précédent",
+    "data": {
+      "tatamiId": 1760637707612,
+      "index": 0,
+      "combatId": 1763353352266
+    },
+    "timestamp": "2025-11-20T17:53:42.103Z"
+  },
+  {
+    "id": 1763661223004,
+    "message": "TATAMI 1 - Combat suivant",
+    "data": {
+      "tatamiId": 1760637707612,
+      "index": 1,
+      "combatId": 1763353352574
+    },
+    "timestamp": "2025-11-20T17:53:42.216Z"
+  },
+  {
+    "id": 1763661222794,
+    "message": "TATAMI 1 - Combat précédent",
+    "data": {
+      "tatamiId": 1760637707612,
+      "index": 0,
+      "combatId": 1763353352266
+    },
+    "timestamp": "2025-11-20T17:53:42.291Z"
+  },
+  {
+    "id": 1763661222845,
+    "message": "TATAMI 1 - Combat suivant",
+    "data": {
+      "tatamiId": 1760637707612,
+      "index": 1,
+      "combatId": 1763353352574
+    },
+    "timestamp": "2025-11-20T17:53:42.657Z"
+  },
+  {
+    "id": 1763661223128,
+    "message": "TATAMI 1 - Combat précédent",
+    "data": {
+      "tatamiId": 1760637707612,
+      "index": 0,
+      "combatId": 1763353352266
+    },
+    "timestamp": "2025-11-20T17:53:42.674Z"
   }
 ]
