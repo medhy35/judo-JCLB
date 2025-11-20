@@ -920,3 +920,43 @@ body.spectator-mode .combattants-display {
         font-size: 1.5rem;
     }
 }
+
+/* ==========================================
+   MODAL AIDE RACCOURCIS CLAVIER
+   ========================================== */
+
+#modalKeyboardHelp kbd {
+    display: inline-block;
+    padding: 0.3rem 0.6rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    line-height: 1;
+    color: #24292e;
+    background-color: #fafbfc;
+    border: 1px solid #d1d5da;
+    border-radius: 6px;
+    box-shadow: inset 0 -1px 0 #d1d5da;
+    font-family: 'Courier New', monospace;
+    min-width: 2.5rem;
+    text-align: center;
+}
+
+#modalKeyboardHelp .table td:first-child {
+    width: 40%;
+    font-weight: 500;
+}
+
+#modalKeyboardHelp .table td:last-child {
+    width: 60%;
+    color: #495057;
+}
+
+#modalKeyboardHelp .card {
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+#modalKeyboardHelp .card-header {
+    border-radius: 8px 8px 0 0 !important;
+    font-weight: 600;
+}
