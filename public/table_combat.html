@@ -1344,14 +1344,14 @@
             combatSimule[`yuko${couleur}`] = yukosTotal;
             combatSimule[cote].yuko = yukosTotal;
 
-            // VÉRIFIER SI 2 WAZARI = FIN DE COMBAT
-            const seuilWazari = CONFIG?.combat?.thresholds?.wazariForIppon || 2;
-            if (wazarisTotal >= seuilWazari) {
-                // Combat terminé par double wazari - arrêter l'osaekomi automatiquement
-                showNotification(`DOUBLE WAZARI - ${cote.toUpperCase()} GAGNE!`, 'success');
-                stopOsaekomi(); // Arrêter l'osaekomi immédiatement
-                return;
-            }
+            // DÉSACTIVÉ : Pas d'arrêt auto même avec 2 wazari
+            // L'osaekomi continue jusqu'à 20s ou jusqu'à ce que l'arbitre appuie sur H
+            // const seuilWazari = CONFIG?.combat?.thresholds?.wazariForIppon || 2;
+            // if (wazarisTotal >= seuilWazari) {
+            //     showNotification(`DOUBLE WAZARI - ${cote.toUpperCase()} GAGNE!`, 'success');
+            //     stopOsaekomi();
+            //     return;
+            // }
 
         } else if (duree >= seuils.yuko) {
             // 10s = +1 Yuko simple
