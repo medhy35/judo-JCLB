@@ -537,6 +537,9 @@
 <!-- Victory Overlay -->
 <div class="victory-overlay" id="victoryOverlay">
     <div class="victory-stars" id="victoryStars"></div>
+    <button class="victory-close-btn" onclick="hideVictory()" title="Fermer (Échap)">
+        <i class="fas fa-times"></i>
+    </button>
     <div class="victory-content">
         <div class="victory-trophy">
             <i class="fas fa-trophy"></i>
@@ -548,9 +551,12 @@
         </div>
         <div class="victory-method" id="victoryMethod">Par IPPON</div>
         <div class="victory-score" id="victoryScore"></div>
-        <button class="btn btn-light btn-lg mt-4 victory-btn" onclick="hideVictory()">
-            <i class="fas fa-check me-2"></i>Continuer
+        <button class="btn btn-success btn-lg mt-4 victory-btn-main" onclick="hideVictory()">
+            <i class="fas fa-arrow-right me-2"></i>CONTINUER
         </button>
+        <div class="victory-hint mt-3">
+            <small>Appuyez sur <kbd>Échap</kbd> pour fermer</small>
+        </div>
     </div>
 </div>
 <div class="fin-rencontre-overlay" id="finRencontreOverlay">
@@ -2049,7 +2055,15 @@
             case 'h':
                 stopOsaekomi();
                 break;
-            case 'escape': // Échap pour fermer les modals
+            case 'escape': // Échap pour fermer les modals et l'overlay de victoire
+                // Fermer l'overlay de victoire si visible
+                const victoryOverlay = document.getElementById('victoryOverlay');
+                if (victoryOverlay && victoryOverlay.style.display === 'flex') {
+                    hideVictory();
+                    return;
+                }
+
+                // Fermer les modals Bootstrap
                 const openModals = document.querySelectorAll('.modal.show');
                 openModals.forEach(modal => {
                     const modalInstance = bootstrap.Modal.getInstance(modal);
