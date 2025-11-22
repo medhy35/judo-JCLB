@@ -548,37 +548,228 @@ body {
     100% { transform: rotate(360deg); }
 }
 
+/* ==========================================
+   OVERLAY DE VICTOIRE - VERSION AMÉLIORÉE
+   ========================================== */
+
 .victory-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.8);
+    background: linear-gradient(135deg, rgba(13, 27, 42, 0.95), rgba(27, 38, 59, 0.95));
+    backdrop-filter: blur(10px);
     display: none;
     justify-content: center;
     align-items: center;
     z-index: 9999;
     color: white;
     text-align: center;
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.victory-stars {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.victory-star {
+    position: absolute;
+    font-size: 2rem;
+    color: #ffd700;
+    opacity: 0;
+    animation: starFall linear infinite;
+    text-shadow: 0 0 10px #ffd700, 0 0 20px #ffd700;
+}
+
+@keyframes starFall {
+    0% {
+        opacity: 0;
+        transform: translateY(-100%) rotate(0deg);
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(100vh) rotate(360deg);
+    }
 }
 
 .victory-content {
-    animation: victoryPulse 2s infinite;
+    position: relative;
+    z-index: 1;
+    animation: victoryZoomIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 30px;
+    padding: 3rem 4rem;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    border: 2px solid rgba(255, 215, 0, 0.3);
+    max-width: 800px;
 }
 
-.victory-content h1 {
-    font-size: 4rem;
+@keyframes victoryZoomIn {
+    0% {
+        transform: scale(0.3) rotate(-10deg);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+    }
+}
+
+.victory-trophy {
+    font-size: 6rem;
     margin-bottom: 1rem;
+    animation: trophyBounce 2s ease-in-out infinite;
+    filter: drop-shadow(0 0 20px #ffd700);
 }
 
-.victory-content p {
+.victory-trophy i {
+    background: linear-gradient(135deg, #ffd700, #ffed4e);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+@keyframes trophyBounce {
+    0%, 100% {
+        transform: translateY(0) scale(1);
+    }
+    50% {
+        transform: translateY(-20px) scale(1.1);
+    }
+}
+
+.victory-title {
+    font-size: 4rem;
+    font-weight: 900;
+    margin-bottom: 2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    background: linear-gradient(135deg, #ffd700, #ffed4e, #ffd700);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+    animation: titlePulse 2s ease-in-out infinite;
+}
+
+@keyframes titlePulse {
+    0%, 100% {
+        transform: scale(1);
+        filter: brightness(1);
+    }
+    50% {
+        transform: scale(1.05);
+        filter: brightness(1.2);
+    }
+}
+
+.victory-winner-card {
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 215, 0, 0.1));
+    border: 2px solid rgba(255, 215, 0, 0.5);
+    border-radius: 20px;
+    padding: 2rem 3rem;
+    margin: 2rem auto;
+    max-width: 600px;
+    box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+}
+
+.victory-winner-name {
+    font-size: 3rem;
+    font-weight: 700;
+    color: #ffd700;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+}
+
+.victory-winner-team {
     font-size: 1.5rem;
+    color: rgba(255, 255, 255, 0.8);
+    font-style: italic;
 }
 
-@keyframes victoryPulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
+.victory-method {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #fff;
+    margin: 2rem 0;
+    padding: 1rem 2rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.victory-score {
+    margin: 2rem 0;
+}
+
+.victory-score-detail {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 15px;
+    padding: 1.5rem;
+}
+
+.victory-score-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    margin: 0.5rem 0;
+    border-radius: 10px;
+}
+
+.victory-score-line.winner {
+    background: rgba(76, 175, 80, 0.2);
+    border: 2px solid rgba(76, 175, 80, 0.5);
+}
+
+.victory-score-line.loser {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    opacity: 0.7;
+}
+
+.victory-score-line .score-name {
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.victory-score-line .score-points .badge {
+    margin: 0 0.3rem;
+    font-size: 0.9rem;
+}
+
+.victory-btn {
+    font-size: 1.3rem;
+    padding: 1rem 3rem;
+    border-radius: 50px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
+}
+
+.victory-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(255, 255, 255, 0.3);
 }
 
 /* ==========================================
