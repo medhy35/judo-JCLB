@@ -215,14 +215,15 @@ class CombatService {
                 throw new Error(`Type de point invalide: ${type}`);
         }
 
-        // Vérifier si le combat doit se terminer
-        const raisonFin = this.verifierFinCombat(combatCopie);
-        if (raisonFin) {
-            combatCopie.etat = 'terminé';
-            combatCopie.dateFin = new Date().toISOString();
-            combatCopie.raisonFin = raisonFin;
-            combatCopie.vainqueur = this.determinerVainqueur(combatCopie);
-        }
+        // DÉSACTIVÉ : Pas de fin automatique du combat
+        // L'arbitre décide manuellement quand terminer (touche F)
+        // const raisonFin = this.verifierFinCombat(combatCopie);
+        // if (raisonFin) {
+        //     combatCopie.etat = 'terminé';
+        //     combatCopie.dateFin = new Date().toISOString();
+        //     combatCopie.raisonFin = raisonFin;
+        //     combatCopie.vainqueur = this.determinerVainqueur(combatCopie);
+        // }
 
         return combatCopie;
     }
@@ -249,11 +250,11 @@ class CombatService {
             // NE PAS effacer les autres scores ! L'ippon s'ajoute aux scores existants
             // Les wazari et yuko précédents (hors osaekomi) restent, mais sont "masqués" par l'ippon
 
-            // Combat terminé par Ippon
-            combatCopie.etat = 'terminé';
-            combatCopie.dateFin = new Date().toISOString();
-            combatCopie.raisonFin = 'osaekomi_ippon';
-            combatCopie.vainqueur = cote;
+            // DÉSACTIVÉ : Pas de fin automatique, l'arbitre décide avec F
+            // combatCopie.etat = 'terminé';
+            // combatCopie.dateFin = new Date().toISOString();
+            // combatCopie.raisonFin = 'osaekomi_ippon';
+            // combatCopie.vainqueur = cote;
 
         } else if (duree >= osaekomoConfig.wazari) {
             // 15s = +1 Wazari + conversion d'1 Yuko DE CET OSAEKOMI
@@ -275,13 +276,14 @@ class CombatService {
 
             combatCopie[`yuko${couleur}`] = yukoActuel;
 
-            // Vérifier si double wazari = victoire
-            if (combatCopie[`wazari${couleur}`] >= 2) {
-                combatCopie.etat = 'terminé';
-                combatCopie.dateFin = new Date().toISOString();
-                combatCopie.raisonFin = 'double_wazari';
-                combatCopie.vainqueur = cote;
-            }
+            // DÉSACTIVÉ : Pas de fin automatique pour double wazari
+            // L'arbitre décide manuellement avec la touche F
+            // if (combatCopie[`wazari${couleur}`] >= 2) {
+            //     combatCopie.etat = 'terminé';
+            //     combatCopie.dateFin = new Date().toISOString();
+            //     combatCopie.raisonFin = 'double_wazari';
+            //     combatCopie.vainqueur = cote;
+            // }
 
         } else if (duree >= osaekomoConfig.yuko) {
             // 10s = +1 Yuko simple

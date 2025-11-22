@@ -741,47 +741,47 @@
     function updateScoreDisplay() {
         if (!combat) return;
 
-        // Affichage rouge
+        // Affichage rouge - BADGES CLIQUABLES pour retirer
         let rougeHtml = '';
         if (combat.rouge?.ippon || combat.ipponRouge) {
-            rougeHtml += '<div class="score-badge score-ippon">IPPON</div>';
+            rougeHtml += '<div class="score-badge score-ippon clickable-badge" onclick="retirerPoint(\'rouge\', \'ippon\')" title="Cliquer pour retirer">IPPON</div>';
         } else {
             const wazariRouge = combat.rouge?.wazari || combat.wazariRouge || 0;
             const yukoRouge = combat.rouge?.yuko || combat.yukoRouge || 0;
 
             if (wazariRouge > 0) {
-                rougeHtml += `<div class="score-badge score-rouge">${wazariRouge} WAZARI</div>`;
+                rougeHtml += `<div class="score-badge score-rouge clickable-badge" onclick="retirerPoint('rouge', 'wazari')" title="Cliquer pour retirer">${wazariRouge} WAZARI</div>`;
             }
             if (yukoRouge > 0) {
-                rougeHtml += `<div class="score-badge score-rouge">${yukoRouge} YUKO</div>`;
+                rougeHtml += `<div class="score-badge score-rouge clickable-badge" onclick="retirerPoint('rouge', 'yuko')" title="Cliquer pour retirer">${yukoRouge} YUKO</div>`;
             }
         }
 
         const shidoRouge = combat.rouge?.shido || combat.penalitesRouge || 0;
         if (shidoRouge > 0) {
-            rougeHtml += `<div class="score-badge" style="background: #757575; color: white;">${shidoRouge} SHIDO</div>`;
+            rougeHtml += `<div class="score-badge clickable-badge" style="background: #757575; color: white;" onclick="retirerPoint('rouge', 'shido')" title="Cliquer pour retirer">${shidoRouge} SHIDO</div>`;
         }
         document.getElementById('rougeScores').innerHTML = rougeHtml;
 
-        // Affichage bleu
+        // Affichage bleu - BADGES CLIQUABLES pour retirer
         let bleuHtml = '';
         if (combat.bleu?.ippon || combat.ipponBleu) {
-            bleuHtml += '<div class="score-badge score-ippon">IPPON</div>';
+            bleuHtml += '<div class="score-badge score-ippon clickable-badge" onclick="retirerPoint(\'bleu\', \'ippon\')" title="Cliquer pour retirer">IPPON</div>';
         } else {
             const wazariBleu = combat.bleu?.wazari || combat.wazariBleu || 0;
             const yukoBleu = combat.bleu?.yuko || combat.yukoBleu || 0;
 
             if (wazariBleu > 0) {
-                bleuHtml += `<div class="score-badge score-bleu">${wazariBleu} WAZARI</div>`;
+                bleuHtml += `<div class="score-badge score-bleu clickable-badge" onclick="retirerPoint('bleu', 'wazari')" title="Cliquer pour retirer">${wazariBleu} WAZARI</div>`;
             }
             if (yukoBleu > 0) {
-                bleuHtml += `<div class="score-badge score-bleu">${yukoBleu} YUKO</div>`;
+                bleuHtml += `<div class="score-badge score-bleu clickable-badge" onclick="retirerPoint('bleu', 'yuko')" title="Cliquer pour retirer">${yukoBleu} YUKO</div>`;
             }
         }
 
         const shidoBleu = combat.bleu?.shido || combat.penalitesBleu || 0;
         if (shidoBleu > 0) {
-            bleuHtml += `<div class="score-badge" style="background: #757575; color: white;">${shidoBleu} SHIDO</div>`;
+            bleuHtml += `<div class="score-badge clickable-badge" style="background: #757575; color: white;" onclick="retirerPoint('bleu', 'shido')" title="Cliquer pour retirer">${shidoBleu} SHIDO</div>`;
         }
         document.getElementById('bleuScores').innerHTML = bleuHtml;
     }
@@ -1059,26 +1059,52 @@
                 timer = timerLocal;
                 updateScoreDisplay();
 
-                if (combat.etat === 'terminé') {
-                    stopTimerDisplay();
-                    stopOsaekomi();
-                    showCombatTermine();
-
-                    setTimeout(() => {
-                        reloadTatamiScore();
-                    }, 500);
-
-                    if (combat.vainqueur) {
-                        const vainqueurNom = combat.vainqueur === 'rouge' ?
-                            combat.rouge.nom : combat.bleu.nom;
-                        showVictory(vainqueurNom, combat.raisonFin);
-                    }
-                }
+                // DÉSACTIVÉ : Fin automatique du combat
+                // L'arbitre décide manuellement avec la touche F
 
                 showNotification(`${type.toUpperCase()} ${cote}`, 'success');
             } else {
                 const error = await response.json();
                 showNotification(error.error || 'Erreur lors du marquage', 'danger');
+            }
+        } catch (error) {
+            showNotification('Erreur de connexion', 'danger');
+        }
+    }
+
+    /**
+     * Retirer un point (clic sur badge)
+     */
+    async function retirerPoint(cote, type) {
+        if (!combat) return;
+
+        // Confirmation avant de retirer
+        if (!confirm(`Retirer ${type.toUpperCase()} ${cote} ?`)) {
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/combats/${combat.id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    action: 'correction',
+                    cote: cote,
+                    operation: 'retirer',
+                    type: type
+                })
+            });
+
+            if (response.ok) {
+                const updatedCombat = await response.json();
+                const timerLocal = timer;
+                combat = updatedCombat;
+                timer = timerLocal;
+                updateScoreDisplay();
+                showNotification(`${type.toUpperCase()} ${cote} retiré`, 'info');
+            } else {
+                const error = await response.json();
+                showNotification(error.error || 'Erreur lors du retrait', 'danger');
             }
         } catch (error) {
             showNotification('Erreur de connexion', 'danger');
@@ -1137,11 +1163,8 @@
                         });
                     }
 
-                    // Auto-arrêt à 20 secondes (seuil Ippon)
-                    const seuilIppon = CONFIG?.combat?.osaekomi?.ippon || 20;
-                    if (osaekomiTimer >= seuilIppon) {
-                        stopOsaekomi();
-                    }
+                    // DÉSACTIVÉ : Pas d'auto-arrêt, l'arbitre décide avec H
+                    // L'osaekomi continue même au-delà de 20 secondes
                 }, 1000);
 
                 showNotification(`OSAEKOMI ${cote.toUpperCase()}`, 'warning');
@@ -1192,21 +1215,8 @@
                     showNotification(message, 'info');
                 }
 
-                // Vérifier si le combat est terminé
-                if (result.finCombat && combat.etat === 'terminé') {
-                    stopTimerDisplay();
-                    showCombatTermine();
-
-                    setTimeout(() => {
-                        reloadTatamiScore();
-                    }, 500);
-
-                    if (combat.vainqueur) {
-                        const vainqueurNom = combat.vainqueur === 'rouge' ?
-                            combat.rouge.nom : combat.bleu.nom;
-                        showVictory(vainqueurNom, combat.raisonFin || 'osaekomi_ippon');
-                    }
-                }
+                // DÉSACTIVÉ : Pas de fin automatique après osaekomi
+                // L'arbitre décide manuellement avec la touche F
             } else {
                 const error = await response.json();
                 showNotification(error.error || 'Erreur arrêt osaekomi', 'danger');
@@ -1544,8 +1554,18 @@
                     syncTimerWithBackend();
                 }
             } else {
-                stopTimerDisplay();
-                finirCombatTemps();
+                // Timer à 0 : on continue à 0, pas de fin automatique
+                // L'arbitre décide avec la touche F
+                timer = 0;
+                updateTimerDisplay();
+                // Notification uniquement la première fois
+                if (timer === 0) {
+                    showNotification('Temps écoulé - Appuyez sur F pour terminer', 'warning');
+                }
+                const syncInterval = CONFIG?.combat?.timerSyncInterval || 10;
+                if (Math.floor(Date.now() / 1000) % syncInterval === 0) {
+                    syncTimerWithBackend();
+                }
             }
         }, 1000);
     }

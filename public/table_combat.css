@@ -145,6 +145,23 @@ body {
     to { background: #ffed4a; }
 }
 
+/* Badges cliquables pour retirer des points */
+.clickable-badge {
+    cursor: pointer;
+    transition: transform 0.2s, opacity 0.2s, box-shadow 0.2s;
+    user-select: none;
+}
+
+.clickable-badge:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+.clickable-badge:active {
+    transform: scale(0.95);
+}
+
 /* ==========================================
    TIMER CENTRAL
    ========================================== */

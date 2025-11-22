@@ -122,29 +122,30 @@ class CombatsController {
             // Mise à jour normale
             combat = dataService.update('combats', combatId, updates);
 
-            // Vérification automatique de fin de combat
-            const raisonFin = combatService.verifierFinCombat(combat);
-            if (raisonFin && combat.etat !== 'terminé') {
-                const vainqueur = combatService.determinerVainqueur(combat);
-                const finalUpdates = {
-                    etat: 'terminé',
-                    dateFin: new Date().toISOString(),
-                    raisonFin,
-                    vainqueur
-                };
-
-                combat = dataService.update('combats', combatId, finalUpdates);
-
-                // Mettre à jour les classements
-                const classementService = require('../services/classementService');
-                classementService.mettreAJourClassements(combat);
-
-                dataService.addLog('Combat terminé automatiquement', {
-                    combatId: combat.id,
-                    raison: raisonFin,
-                    vainqueur
-                });
-            }
+            // DÉSACTIVÉ : Pas de vérification automatique de fin de combat
+            // L'arbitre décide manuellement avec la touche F
+            // const raisonFin = combatService.verifierFinCombat(combat);
+            // if (raisonFin && combat.etat !== 'terminé') {
+            //     const vainqueur = combatService.determinerVainqueur(combat);
+            //     const finalUpdates = {
+            //         etat: 'terminé',
+            //         dateFin: new Date().toISOString(),
+            //         raisonFin,
+            //         vainqueur
+            //     };
+            //
+            //     combat = dataService.update('combats', combatId, finalUpdates);
+            //
+            //     // Mettre à jour les classements
+            //     const classementService = require('../services/classementService');
+            //     classementService.mettreAJourClassements(combat);
+            //
+            //     dataService.addLog('Combat terminé automatiquement', {
+            //         combatId: combat.id,
+            //         raison: raisonFin,
+            //         vainqueur
+            //     });
+            // }
 
             // Enrichir le combat avant de le retourner
             const combatEnrichi = combatService.enrichCombat(combat);
