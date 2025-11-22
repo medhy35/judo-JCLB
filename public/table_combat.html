@@ -749,47 +749,53 @@
     function updateScoreDisplay() {
         if (!combat) return;
 
-        // Affichage rouge - BADGES CLIQUABLES pour retirer
+        // Vérifier si on est en mode spectateur
+        const isSpectator = document.body.classList.contains('spectator-mode');
+        const clickable = isSpectator ? '' : 'clickable-badge';
+        const onclickAttr = (cote, type) => isSpectator ? '' : `onclick="window.retirerPoint('${cote}', '${type}')"`;
+        const titleAttr = isSpectator ? '' : 'title="Cliquer pour retirer"';
+
+        // Affichage rouge - BADGES CLIQUABLES pour retirer (sauf en mode spectateur)
         let rougeHtml = '';
         if (combat.rouge?.ippon || combat.ipponRouge) {
-            rougeHtml += '<div class="score-badge score-ippon clickable-badge" onclick="retirerPoint(\'rouge\', \'ippon\')" title="Cliquer pour retirer">IPPON</div>';
+            rougeHtml += `<div class="score-badge score-ippon ${clickable}" ${onclickAttr('rouge', 'ippon')} ${titleAttr}>IPPON</div>`;
         } else {
             const wazariRouge = combat.rouge?.wazari || combat.wazariRouge || 0;
             const yukoRouge = combat.rouge?.yuko || combat.yukoRouge || 0;
 
             if (wazariRouge > 0) {
-                rougeHtml += `<div class="score-badge score-rouge clickable-badge" onclick="retirerPoint('rouge', 'wazari')" title="Cliquer pour retirer">${wazariRouge} WAZARI</div>`;
+                rougeHtml += `<div class="score-badge score-rouge ${clickable}" ${onclickAttr('rouge', 'wazari')} ${titleAttr}>${wazariRouge} WAZARI</div>`;
             }
             if (yukoRouge > 0) {
-                rougeHtml += `<div class="score-badge score-rouge clickable-badge" onclick="retirerPoint('rouge', 'yuko')" title="Cliquer pour retirer">${yukoRouge} YUKO</div>`;
+                rougeHtml += `<div class="score-badge score-rouge ${clickable}" ${onclickAttr('rouge', 'yuko')} ${titleAttr}>${yukoRouge} YUKO</div>`;
             }
         }
 
         const shidoRouge = combat.rouge?.shido || combat.penalitesRouge || 0;
         if (shidoRouge > 0) {
-            rougeHtml += `<div class="score-badge clickable-badge" style="background: #757575; color: white;" onclick="retirerPoint('rouge', 'shido')" title="Cliquer pour retirer">${shidoRouge} SHIDO</div>`;
+            rougeHtml += `<div class="score-badge ${clickable}" style="background: #757575; color: white;" ${onclickAttr('rouge', 'shido')} ${titleAttr}>${shidoRouge} SHIDO</div>`;
         }
         document.getElementById('rougeScores').innerHTML = rougeHtml;
 
-        // Affichage bleu - BADGES CLIQUABLES pour retirer
+        // Affichage bleu - BADGES CLIQUABLES pour retirer (sauf en mode spectateur)
         let bleuHtml = '';
         if (combat.bleu?.ippon || combat.ipponBleu) {
-            bleuHtml += '<div class="score-badge score-ippon clickable-badge" onclick="retirerPoint(\'bleu\', \'ippon\')" title="Cliquer pour retirer">IPPON</div>';
+            bleuHtml += `<div class="score-badge score-ippon ${clickable}" ${onclickAttr('bleu', 'ippon')} ${titleAttr}>IPPON</div>`;
         } else {
             const wazariBleu = combat.bleu?.wazari || combat.wazariBleu || 0;
             const yukoBleu = combat.bleu?.yuko || combat.yukoBleu || 0;
 
             if (wazariBleu > 0) {
-                bleuHtml += `<div class="score-badge score-bleu clickable-badge" onclick="retirerPoint('bleu', 'wazari')" title="Cliquer pour retirer">${wazariBleu} WAZARI</div>`;
+                bleuHtml += `<div class="score-badge score-bleu ${clickable}" ${onclickAttr('bleu', 'wazari')} ${titleAttr}>${wazariBleu} WAZARI</div>`;
             }
             if (yukoBleu > 0) {
-                bleuHtml += `<div class="score-badge score-bleu clickable-badge" onclick="retirerPoint('bleu', 'yuko')" title="Cliquer pour retirer">${yukoBleu} YUKO</div>`;
+                bleuHtml += `<div class="score-badge score-bleu ${clickable}" ${onclickAttr('bleu', 'yuko')} ${titleAttr}>${yukoBleu} YUKO</div>`;
             }
         }
 
         const shidoBleu = combat.bleu?.shido || combat.penalitesBleu || 0;
         if (shidoBleu > 0) {
-            bleuHtml += `<div class="score-badge clickable-badge" style="background: #757575; color: white;" onclick="retirerPoint('bleu', 'shido')" title="Cliquer pour retirer">${shidoBleu} SHIDO</div>`;
+            bleuHtml += `<div class="score-badge ${clickable}" style="background: #757575; color: white;" ${onclickAttr('bleu', 'shido')} ${titleAttr}>${shidoBleu} SHIDO</div>`;
         }
         document.getElementById('bleuScores').innerHTML = bleuHtml;
     }
@@ -1082,9 +1088,18 @@
 
     /**
      * Retirer un point (clic sur badge)
+     * IMPORTANT : Fonction exposée globalement pour onclick
      */
-    async function retirerPoint(cote, type) {
-        if (!combat) return;
+    window.retirerPoint = async function(cote, type) {
+        if (!combat) {
+            showNotification('Aucun combat en cours', 'warning');
+            return;
+        }
+
+        if (combat.etat === 'terminé') {
+            showNotification('Combat terminé - Impossible de retirer', 'warning');
+            return;
+        }
 
         // Confirmation avant de retirer
         if (!confirm(`Retirer ${type.toUpperCase()} ${cote} ?`)) {
@@ -1115,9 +1130,10 @@
                 showNotification(error.error || 'Erreur lors du retrait', 'danger');
             }
         } catch (error) {
+            console.error('Erreur retrait point:', error);
             showNotification('Erreur de connexion', 'danger');
         }
-    }
+    };
 
     // =======================================
     // GESTION OSAEKOMI
@@ -1340,8 +1356,7 @@
             return; // Pas encore de seuil
         }
 
-        // Mettre à jour l'affichage
-        const vraiCombat = combat;
+        // Mettre à jour l'affichage avec les scores simulés
         combat = combatSimule;
         updateScoreDisplay();
 
@@ -1357,10 +1372,8 @@
             }
         }
 
-        // Restaurer après un délai
-        setTimeout(() => {
-            combat = vraiCombat;
-        }, 100);
+        // NE PAS restaurer le vrai combat ici - garder la simulation affichée
+        // Elle sera mise à jour par le backend quand l'osaekomi s'arrêtera
     }
 
     // =======================================
