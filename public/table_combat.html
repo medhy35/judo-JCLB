@@ -1300,13 +1300,16 @@
             wazari: CONFIG?.combat?.osaekomi?.wazari || 10, // 10 secondes pour wazari
             ippon: CONFIG?.combat?.osaekomi?.ippon || 20    // 20 secondes pour ippon
         };
-        const combatSimule = JSON.parse(JSON.stringify(combat)); // Partir du combat ACTUEL
+
+        // IMPORTANT : Toujours partir du combat actuel (pas d'un combat simulé précédent)
+        const combatActuel = combat;
+        const combatSimule = JSON.parse(JSON.stringify(combatActuel));
         const couleur = cote.charAt(0).toUpperCase() + cote.slice(1);
 
-        // Récupérer les scores actuels
-        let wazariActuel = combatSimule[`wazari${couleur}`] || 0;
-        let yukoActuel = combatSimule[`yuko${couleur}`] || 0;
-        let ipponActuel = combatSimule[`ippon${couleur}`] || false;
+        // Récupérer les scores actuels DU COMBAT RÉEL
+        let wazariActuel = combatActuel[`wazari${couleur}`] || 0;
+        let yukoActuel = combatActuel[`yuko${couleur}`] || 0;
+        let ipponActuel = combatActuel[`ippon${couleur}`] || false;
 
         // Si déjà ippon, ne rien faire
         if (ipponActuel) {
@@ -1326,9 +1329,9 @@
             combatSimule[cote].yuko = yukoActuel;
 
         } else if (duree >= seuils.wazari) {
-            // 15s = +1 Wazari + 1 Yuko de cet osaekomi, puis conversion
+            // 10s = +1 Wazari + 1 Yuko de cet osaekomi, puis conversion
 
-            // Cet osaekomi génère 1 yuko (de 10s à 15s)
+            // Cet osaekomi génère 1 yuko (de 5s à 10s)
             let yukosTotal = yukoActuel + 1;
 
             // Ajouter 1 wazari
@@ -1344,26 +1347,31 @@
             combatSimule[`yuko${couleur}`] = yukosTotal;
             combatSimule[cote].yuko = yukosTotal;
 
-            // DÉSACTIVÉ : Pas d'arrêt auto même avec 2 wazari
-            // L'osaekomi continue jusqu'à 20s ou jusqu'à ce que l'arbitre appuie sur H
-            // const seuilWazari = CONFIG?.combat?.thresholds?.wazariForIppon || 2;
-            // if (wazarisTotal >= seuilWazari) {
-            //     showNotification(`DOUBLE WAZARI - ${cote.toUpperCase()} GAGNE!`, 'success');
-            //     stopOsaekomi();
-            //     return;
-            // }
+            // VÉRIFIER SI 2 WAZARI = ARRÊTER L'OSAEKOMI
+            const seuilWazari = CONFIG?.combat?.thresholds?.wazariForIppon || 2;
+            if (wazarisTotal >= seuilWazari) {
+                showNotification(`DOUBLE WAZARI (${wazarisTotal}) - Arrêt osaekomi!`, 'success');
+                stopOsaekomi(); // Arrêter l'osaekomi immédiatement
+                return;
+            }
 
         } else if (duree >= seuils.yuko) {
-            // 10s = +1 Yuko simple
+            // 5s = +1 Yuko simple
             combatSimule[`yuko${couleur}`] = yukoActuel + 1;
             combatSimule[cote].yuko = yukoActuel + 1;
         } else {
             return; // Pas encore de seuil
         }
 
-        // Mettre à jour l'affichage avec les scores simulés
+        // IMPORTANT : Afficher la simulation SANS écraser combat global
+        // On va créer un affichage temporaire
+        const combatSauvegarde = combat;
         combat = combatSimule;
         updateScoreDisplay();
+        // Restaurer immédiatement après l'affichage
+        setTimeout(() => {
+            combat = combatSauvegarde;
+        }, 50);
 
         // Notifications aux seuils
         const estNouveauSeuil = (duree === seuils.yuko) || (duree === seuils.wazari) || (duree === seuils.ippon);
@@ -1376,9 +1384,6 @@
                 showNotification(`OSAEKOMI: +1 YUKO!`, 'success');
             }
         }
-
-        // NE PAS restaurer le vrai combat ici - garder la simulation affichée
-        // Elle sera mise à jour par le backend quand l'osaekomi s'arrêtera
     }
 
     // =======================================
