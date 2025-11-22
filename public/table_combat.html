@@ -749,13 +749,12 @@
     function updateScoreDisplay() {
         if (!combat) return;
 
-        // Vérifier si on est en mode spectateur
-        const isSpectator = document.body.classList.contains('spectator-mode');
-        const clickable = isSpectator ? '' : 'clickable-badge';
-        const onclickAttr = (cote, type) => isSpectator ? '' : `onclick="window.retirerPoint('${cote}', '${type}')"`;
-        const titleAttr = isSpectator ? '' : 'title="Cliquer pour retirer"';
+        // Badges TOUJOURS cliquables (même en mode spectateur)
+        const clickable = 'clickable-badge';
+        const onclickAttr = (cote, type) => `onclick="window.retirerPoint('${cote}', '${type}')"`;
+        const titleAttr = 'title="Cliquer pour retirer"';
 
-        // Affichage rouge - BADGES CLIQUABLES pour retirer (sauf en mode spectateur)
+        // Affichage rouge - BADGES CLIQUABLES pour retirer
         let rougeHtml = '';
         if (combat.rouge?.ippon || combat.ipponRouge) {
             rougeHtml += `<div class="score-badge score-ippon ${clickable}" ${onclickAttr('rouge', 'ippon')} ${titleAttr}>IPPON</div>`;
@@ -777,7 +776,7 @@
         }
         document.getElementById('rougeScores').innerHTML = rougeHtml;
 
-        // Affichage bleu - BADGES CLIQUABLES pour retirer (sauf en mode spectateur)
+        // Affichage bleu - BADGES CLIQUABLES pour retirer
         let bleuHtml = '';
         if (combat.bleu?.ippon || combat.ipponBleu) {
             bleuHtml += `<div class="score-badge score-ippon ${clickable}" ${onclickAttr('bleu', 'ippon')} ${titleAttr}>IPPON</div>`;
@@ -1291,9 +1290,9 @@
 
     async function simulerPointsOsaekomi(cote, duree, initialState) {
         const seuils = {
-            yuko: CONFIG?.combat?.osaekomi?.yuko || 10,
-            wazari: CONFIG?.combat?.osaekomi?.wazari || 15,
-            ippon: CONFIG?.combat?.osaekomi?.ippon || 20
+            yuko: CONFIG?.combat?.osaekomi?.yuko || 5,    // 5 secondes pour yuko
+            wazari: CONFIG?.combat?.osaekomi?.wazari || 10, // 10 secondes pour wazari
+            ippon: CONFIG?.combat?.osaekomi?.ippon || 20    // 20 secondes pour ippon
         };
         const combatSimule = JSON.parse(JSON.stringify(combat)); // Partir du combat ACTUEL
         const couleur = cote.charAt(0).toUpperCase() + cote.slice(1);
