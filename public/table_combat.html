@@ -537,6 +537,9 @@
 <!-- Victory Overlay -->
 <div class="victory-overlay" id="victoryOverlay">
     <div class="victory-stars" id="victoryStars"></div>
+    <button class="victory-close-btn" onclick="hideVictory()" title="Fermer (Échap)">
+        <i class="fas fa-times"></i>
+    </button>
     <div class="victory-content">
         <div class="victory-trophy">
             <i class="fas fa-trophy"></i>
@@ -548,9 +551,12 @@
         </div>
         <div class="victory-method" id="victoryMethod">Par IPPON</div>
         <div class="victory-score" id="victoryScore"></div>
-        <button class="btn btn-light btn-lg mt-4 victory-btn" onclick="hideVictory()">
-            <i class="fas fa-check me-2"></i>Continuer
+        <button class="btn btn-success btn-lg mt-4 victory-btn-main" onclick="hideVictory()">
+            <i class="fas fa-arrow-right me-2"></i>CONTINUER
         </button>
+        <div class="victory-hint mt-3">
+            <small>Appuyez sur <kbd>Échap</kbd> pour fermer</small>
+        </div>
     </div>
 </div>
 <div class="fin-rencontre-overlay" id="finRencontreOverlay">
@@ -749,47 +755,52 @@
     function updateScoreDisplay() {
         if (!combat) return;
 
+        // Badges TOUJOURS cliquables (même en mode spectateur)
+        const clickable = 'clickable-badge';
+        const onclickAttr = (cote, type) => `onclick="window.retirerPoint('${cote}', '${type}')"`;
+        const titleAttr = 'title="Cliquer pour retirer"';
+
         // Affichage rouge - BADGES CLIQUABLES pour retirer
         let rougeHtml = '';
         if (combat.rouge?.ippon || combat.ipponRouge) {
-            rougeHtml += '<div class="score-badge score-ippon clickable-badge" onclick="retirerPoint(\'rouge\', \'ippon\')" title="Cliquer pour retirer">IPPON</div>';
+            rougeHtml += `<div class="score-badge score-ippon ${clickable}" ${onclickAttr('rouge', 'ippon')} ${titleAttr}>IPPON</div>`;
         } else {
             const wazariRouge = combat.rouge?.wazari || combat.wazariRouge || 0;
             const yukoRouge = combat.rouge?.yuko || combat.yukoRouge || 0;
 
             if (wazariRouge > 0) {
-                rougeHtml += `<div class="score-badge score-rouge clickable-badge" onclick="retirerPoint('rouge', 'wazari')" title="Cliquer pour retirer">${wazariRouge} WAZARI</div>`;
+                rougeHtml += `<div class="score-badge score-rouge ${clickable}" ${onclickAttr('rouge', 'wazari')} ${titleAttr}>${wazariRouge} WAZARI</div>`;
             }
             if (yukoRouge > 0) {
-                rougeHtml += `<div class="score-badge score-rouge clickable-badge" onclick="retirerPoint('rouge', 'yuko')" title="Cliquer pour retirer">${yukoRouge} YUKO</div>`;
+                rougeHtml += `<div class="score-badge score-rouge ${clickable}" ${onclickAttr('rouge', 'yuko')} ${titleAttr}>${yukoRouge} YUKO</div>`;
             }
         }
 
         const shidoRouge = combat.rouge?.shido || combat.penalitesRouge || 0;
         if (shidoRouge > 0) {
-            rougeHtml += `<div class="score-badge clickable-badge" style="background: #757575; color: white;" onclick="retirerPoint('rouge', 'shido')" title="Cliquer pour retirer">${shidoRouge} SHIDO</div>`;
+            rougeHtml += `<div class="score-badge ${clickable}" style="background: #757575; color: white;" ${onclickAttr('rouge', 'shido')} ${titleAttr}>${shidoRouge} SHIDO</div>`;
         }
         document.getElementById('rougeScores').innerHTML = rougeHtml;
 
         // Affichage bleu - BADGES CLIQUABLES pour retirer
         let bleuHtml = '';
         if (combat.bleu?.ippon || combat.ipponBleu) {
-            bleuHtml += '<div class="score-badge score-ippon clickable-badge" onclick="retirerPoint(\'bleu\', \'ippon\')" title="Cliquer pour retirer">IPPON</div>';
+            bleuHtml += `<div class="score-badge score-ippon ${clickable}" ${onclickAttr('bleu', 'ippon')} ${titleAttr}>IPPON</div>`;
         } else {
             const wazariBleu = combat.bleu?.wazari || combat.wazariBleu || 0;
             const yukoBleu = combat.bleu?.yuko || combat.yukoBleu || 0;
 
             if (wazariBleu > 0) {
-                bleuHtml += `<div class="score-badge score-bleu clickable-badge" onclick="retirerPoint('bleu', 'wazari')" title="Cliquer pour retirer">${wazariBleu} WAZARI</div>`;
+                bleuHtml += `<div class="score-badge score-bleu ${clickable}" ${onclickAttr('bleu', 'wazari')} ${titleAttr}>${wazariBleu} WAZARI</div>`;
             }
             if (yukoBleu > 0) {
-                bleuHtml += `<div class="score-badge score-bleu clickable-badge" onclick="retirerPoint('bleu', 'yuko')" title="Cliquer pour retirer">${yukoBleu} YUKO</div>`;
+                bleuHtml += `<div class="score-badge score-bleu ${clickable}" ${onclickAttr('bleu', 'yuko')} ${titleAttr}>${yukoBleu} YUKO</div>`;
             }
         }
 
         const shidoBleu = combat.bleu?.shido || combat.penalitesBleu || 0;
         if (shidoBleu > 0) {
-            bleuHtml += `<div class="score-badge clickable-badge" style="background: #757575; color: white;" onclick="retirerPoint('bleu', 'shido')" title="Cliquer pour retirer">${shidoBleu} SHIDO</div>`;
+            bleuHtml += `<div class="score-badge ${clickable}" style="background: #757575; color: white;" ${onclickAttr('bleu', 'shido')} ${titleAttr}>${shidoBleu} SHIDO</div>`;
         }
         document.getElementById('bleuScores').innerHTML = bleuHtml;
     }
@@ -1082,9 +1093,18 @@
 
     /**
      * Retirer un point (clic sur badge)
+     * IMPORTANT : Fonction exposée globalement pour onclick
      */
-    async function retirerPoint(cote, type) {
-        if (!combat) return;
+    window.retirerPoint = async function(cote, type) {
+        if (!combat) {
+            showNotification('Aucun combat en cours', 'warning');
+            return;
+        }
+
+        if (combat.etat === 'terminé') {
+            showNotification('Combat terminé - Impossible de retirer', 'warning');
+            return;
+        }
 
         // Confirmation avant de retirer
         if (!confirm(`Retirer ${type.toUpperCase()} ${cote} ?`)) {
@@ -1115,9 +1135,10 @@
                 showNotification(error.error || 'Erreur lors du retrait', 'danger');
             }
         } catch (error) {
+            console.error('Erreur retrait point:', error);
             showNotification('Erreur de connexion', 'danger');
         }
-    }
+    };
 
     // =======================================
     // GESTION OSAEKOMI
@@ -1275,9 +1296,9 @@
 
     async function simulerPointsOsaekomi(cote, duree, initialState) {
         const seuils = {
-            yuko: CONFIG?.combat?.osaekomi?.yuko || 10,
-            wazari: CONFIG?.combat?.osaekomi?.wazari || 15,
-            ippon: CONFIG?.combat?.osaekomi?.ippon || 20
+            yuko: CONFIG?.combat?.osaekomi?.yuko || 5,    // 5 secondes pour yuko
+            wazari: CONFIG?.combat?.osaekomi?.wazari || 10, // 10 secondes pour wazari
+            ippon: CONFIG?.combat?.osaekomi?.ippon || 20    // 20 secondes pour ippon
         };
         const combatSimule = JSON.parse(JSON.stringify(combat)); // Partir du combat ACTUEL
         const couleur = cote.charAt(0).toUpperCase() + cote.slice(1);
@@ -1340,8 +1361,7 @@
             return; // Pas encore de seuil
         }
 
-        // Mettre à jour l'affichage
-        const vraiCombat = combat;
+        // Mettre à jour l'affichage avec les scores simulés
         combat = combatSimule;
         updateScoreDisplay();
 
@@ -1357,10 +1377,8 @@
             }
         }
 
-        // Restaurer après un délai
-        setTimeout(() => {
-            combat = vraiCombat;
-        }, 100);
+        // NE PAS restaurer le vrai combat ici - garder la simulation affichée
+        // Elle sera mise à jour par le backend quand l'osaekomi s'arrêtera
     }
 
     // =======================================
@@ -2037,7 +2055,15 @@
             case 'h':
                 stopOsaekomi();
                 break;
-            case 'escape': // Échap pour fermer les modals
+            case 'escape': // Échap pour fermer les modals et l'overlay de victoire
+                // Fermer l'overlay de victoire si visible
+                const victoryOverlay = document.getElementById('victoryOverlay');
+                if (victoryOverlay && victoryOverlay.style.display === 'flex') {
+                    hideVictory();
+                    return;
+                }
+
+                // Fermer les modals Bootstrap
                 const openModals = document.querySelectorAll('.modal.show');
                 openModals.forEach(modal => {
                     const modalInstance = bootstrap.Modal.getInstance(modal);
