@@ -536,12 +536,20 @@
 
 <!-- Victory Overlay -->
 <div class="victory-overlay" id="victoryOverlay">
+    <div class="victory-stars" id="victoryStars"></div>
     <div class="victory-content">
-        <h1><i class="fas fa-trophy"></i></h1>
-        <h2 id="victoryWinner">VICTOIRE!</h2>
-        <p id="victoryMethod">Par Ippon</p>
-        <button class="btn btn-primary btn-lg mt-3" onclick="hideVictory()">
-            Continuer
+        <div class="victory-trophy">
+            <i class="fas fa-trophy"></i>
+        </div>
+        <h1 class="victory-title">VICTOIRE !</h1>
+        <div class="victory-winner-card">
+            <div class="victory-winner-name" id="victoryWinnerName">COMBATTANT</div>
+            <div class="victory-winner-team" id="victoryWinnerTeam">Équipe</div>
+        </div>
+        <div class="victory-method" id="victoryMethod">Par IPPON</div>
+        <div class="victory-score" id="victoryScore"></div>
+        <button class="btn btn-light btn-lg mt-4 victory-btn" onclick="hideVictory()">
+            <i class="fas fa-check me-2"></i>Continuer
         </button>
     </div>
 </div>
@@ -741,47 +749,47 @@
     function updateScoreDisplay() {
         if (!combat) return;
 
-        // Affichage rouge
+        // Affichage rouge - BADGES CLIQUABLES pour retirer
         let rougeHtml = '';
         if (combat.rouge?.ippon || combat.ipponRouge) {
-            rougeHtml += '<div class="score-badge score-ippon">IPPON</div>';
+            rougeHtml += '<div class="score-badge score-ippon clickable-badge" onclick="retirerPoint(\'rouge\', \'ippon\')" title="Cliquer pour retirer">IPPON</div>';
         } else {
             const wazariRouge = combat.rouge?.wazari || combat.wazariRouge || 0;
             const yukoRouge = combat.rouge?.yuko || combat.yukoRouge || 0;
 
             if (wazariRouge > 0) {
-                rougeHtml += `<div class="score-badge score-rouge">${wazariRouge} WAZARI</div>`;
+                rougeHtml += `<div class="score-badge score-rouge clickable-badge" onclick="retirerPoint('rouge', 'wazari')" title="Cliquer pour retirer">${wazariRouge} WAZARI</div>`;
             }
             if (yukoRouge > 0) {
-                rougeHtml += `<div class="score-badge score-rouge">${yukoRouge} YUKO</div>`;
+                rougeHtml += `<div class="score-badge score-rouge clickable-badge" onclick="retirerPoint('rouge', 'yuko')" title="Cliquer pour retirer">${yukoRouge} YUKO</div>`;
             }
         }
 
         const shidoRouge = combat.rouge?.shido || combat.penalitesRouge || 0;
         if (shidoRouge > 0) {
-            rougeHtml += `<div class="score-badge" style="background: #757575; color: white;">${shidoRouge} SHIDO</div>`;
+            rougeHtml += `<div class="score-badge clickable-badge" style="background: #757575; color: white;" onclick="retirerPoint('rouge', 'shido')" title="Cliquer pour retirer">${shidoRouge} SHIDO</div>`;
         }
         document.getElementById('rougeScores').innerHTML = rougeHtml;
 
-        // Affichage bleu
+        // Affichage bleu - BADGES CLIQUABLES pour retirer
         let bleuHtml = '';
         if (combat.bleu?.ippon || combat.ipponBleu) {
-            bleuHtml += '<div class="score-badge score-ippon">IPPON</div>';
+            bleuHtml += '<div class="score-badge score-ippon clickable-badge" onclick="retirerPoint(\'bleu\', \'ippon\')" title="Cliquer pour retirer">IPPON</div>';
         } else {
             const wazariBleu = combat.bleu?.wazari || combat.wazariBleu || 0;
             const yukoBleu = combat.bleu?.yuko || combat.yukoBleu || 0;
 
             if (wazariBleu > 0) {
-                bleuHtml += `<div class="score-badge score-bleu">${wazariBleu} WAZARI</div>`;
+                bleuHtml += `<div class="score-badge score-bleu clickable-badge" onclick="retirerPoint('bleu', 'wazari')" title="Cliquer pour retirer">${wazariBleu} WAZARI</div>`;
             }
             if (yukoBleu > 0) {
-                bleuHtml += `<div class="score-badge score-bleu">${yukoBleu} YUKO</div>`;
+                bleuHtml += `<div class="score-badge score-bleu clickable-badge" onclick="retirerPoint('bleu', 'yuko')" title="Cliquer pour retirer">${yukoBleu} YUKO</div>`;
             }
         }
 
         const shidoBleu = combat.bleu?.shido || combat.penalitesBleu || 0;
         if (shidoBleu > 0) {
-            bleuHtml += `<div class="score-badge" style="background: #757575; color: white;">${shidoBleu} SHIDO</div>`;
+            bleuHtml += `<div class="score-badge clickable-badge" style="background: #757575; color: white;" onclick="retirerPoint('bleu', 'shido')" title="Cliquer pour retirer">${shidoBleu} SHIDO</div>`;
         }
         document.getElementById('bleuScores').innerHTML = bleuHtml;
     }
@@ -1059,26 +1067,52 @@
                 timer = timerLocal;
                 updateScoreDisplay();
 
-                if (combat.etat === 'terminé') {
-                    stopTimerDisplay();
-                    stopOsaekomi();
-                    showCombatTermine();
-
-                    setTimeout(() => {
-                        reloadTatamiScore();
-                    }, 500);
-
-                    if (combat.vainqueur) {
-                        const vainqueurNom = combat.vainqueur === 'rouge' ?
-                            combat.rouge.nom : combat.bleu.nom;
-                        showVictory(vainqueurNom, combat.raisonFin);
-                    }
-                }
+                // DÉSACTIVÉ : Fin automatique du combat
+                // L'arbitre décide manuellement avec la touche F
 
                 showNotification(`${type.toUpperCase()} ${cote}`, 'success');
             } else {
                 const error = await response.json();
                 showNotification(error.error || 'Erreur lors du marquage', 'danger');
+            }
+        } catch (error) {
+            showNotification('Erreur de connexion', 'danger');
+        }
+    }
+
+    /**
+     * Retirer un point (clic sur badge)
+     */
+    async function retirerPoint(cote, type) {
+        if (!combat) return;
+
+        // Confirmation avant de retirer
+        if (!confirm(`Retirer ${type.toUpperCase()} ${cote} ?`)) {
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/combats/${combat.id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    action: 'correction',
+                    cote: cote,
+                    operation: 'retirer',
+                    type: type
+                })
+            });
+
+            if (response.ok) {
+                const updatedCombat = await response.json();
+                const timerLocal = timer;
+                combat = updatedCombat;
+                timer = timerLocal;
+                updateScoreDisplay();
+                showNotification(`${type.toUpperCase()} ${cote} retiré`, 'info');
+            } else {
+                const error = await response.json();
+                showNotification(error.error || 'Erreur lors du retrait', 'danger');
             }
         } catch (error) {
             showNotification('Erreur de connexion', 'danger');
@@ -1137,7 +1171,7 @@
                         });
                     }
 
-                    // Auto-arrêt à 20 secondes (seuil Ippon)
+                    // Auto-arrêt à 20 secondes (seuil Ippon) - RÈGLE DU JUDO
                     const seuilIppon = CONFIG?.combat?.osaekomi?.ippon || 20;
                     if (osaekomiTimer >= seuilIppon) {
                         stopOsaekomi();
@@ -1192,21 +1226,8 @@
                     showNotification(message, 'info');
                 }
 
-                // Vérifier si le combat est terminé
-                if (result.finCombat && combat.etat === 'terminé') {
-                    stopTimerDisplay();
-                    showCombatTermine();
-
-                    setTimeout(() => {
-                        reloadTatamiScore();
-                    }, 500);
-
-                    if (combat.vainqueur) {
-                        const vainqueurNom = combat.vainqueur === 'rouge' ?
-                            combat.rouge.nom : combat.bleu.nom;
-                        showVictory(vainqueurNom, combat.raisonFin || 'osaekomi_ippon');
-                    }
-                }
+                // DÉSACTIVÉ : Pas de fin automatique après osaekomi
+                // L'arbitre décide manuellement avec la touche F
             } else {
                 const error = await response.json();
                 showNotification(error.error || 'Erreur arrêt osaekomi', 'danger');
@@ -1544,8 +1565,18 @@
                     syncTimerWithBackend();
                 }
             } else {
-                stopTimerDisplay();
-                finirCombatTemps();
+                // Timer à 0 : on continue à 0, pas de fin automatique
+                // L'arbitre décide avec la touche F
+                timer = 0;
+                updateTimerDisplay();
+                // Notification uniquement la première fois
+                if (timer === 0) {
+                    showNotification('Temps écoulé - Appuyez sur F pour terminer', 'warning');
+                }
+                const syncInterval = CONFIG?.combat?.timerSyncInterval || 10;
+                if (Math.floor(Date.now() / 1000) % syncInterval === 0) {
+                    syncTimerWithBackend();
+                }
             }
         }, 1000);
     }
@@ -1759,12 +1790,63 @@
             'osaekomi_ippon': 'Par IPPON (Osaekomi)'
         };
 
-        document.getElementById('victoryWinner').textContent = `${vainqueur} GAGNE!`;
+        if (!combat) return;
+
+        // Déterminer le combattant gagnant
+        const gagnant = combat.vainqueur === 'rouge' ? combat.rouge : combat.bleu;
+        const perdant = combat.vainqueur === 'rouge' ? combat.bleu : combat.rouge;
+
+        // Remplir les informations
+        document.getElementById('victoryWinnerName').textContent = gagnant.nom || vainqueur;
+        document.getElementById('victoryWinnerTeam').textContent = gagnant.equipe || '';
         document.getElementById('victoryMethod').textContent = raisonTexte[raison] || raison;
+
+        // Afficher les scores
+        const scoreHtml = `
+            <div class="victory-score-detail">
+                <div class="victory-score-line winner">
+                    <span class="score-name">${gagnant.nom}</span>
+                    <span class="score-points">
+                        ${gagnant.ippon ? '<span class="badge bg-warning text-dark">IPPON</span>' : ''}
+                        ${gagnant.wazari > 0 ? `<span class="badge bg-info">${gagnant.wazari} WAZARI</span>` : ''}
+                        ${gagnant.yuko > 0 ? `<span class="badge bg-secondary">${gagnant.yuko} YUKO</span>` : ''}
+                    </span>
+                </div>
+                <div class="victory-score-line loser">
+                    <span class="score-name">${perdant.nom}</span>
+                    <span class="score-points">
+                        ${perdant.ippon ? '<span class="badge bg-warning text-dark">IPPON</span>' : ''}
+                        ${perdant.wazari > 0 ? `<span class="badge bg-info">${perdant.wazari} WAZARI</span>` : ''}
+                        ${perdant.yuko > 0 ? `<span class="badge bg-secondary">${perdant.yuko} YUKO</span>` : ''}
+                    </span>
+                </div>
+            </div>
+        `;
+        document.getElementById('victoryScore').innerHTML = scoreHtml;
+
+        // Créer des étoiles animées
+        createVictoryStars();
+
         document.getElementById('victoryOverlay').style.display = 'flex';
 
         document.getElementById('btnNext').style.display = 'block';
         document.getElementById('btnPrev').style.display = 'block';
+    }
+
+    function createVictoryStars() {
+        const starsContainer = document.getElementById('victoryStars');
+        starsContainer.innerHTML = '';
+
+        for (let i = 0; i < 50; i++) {
+            const star = document.createElement('div');
+            star.className = 'victory-star';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.animationDelay = Math.random() * 3 + 's';
+            star.style.animationDuration = (Math.random() * 2 + 2) + 's';
+            star.innerHTML = '★';
+            starsContainer.appendChild(star);
+        }
     }
 
     function hideVictory() {
