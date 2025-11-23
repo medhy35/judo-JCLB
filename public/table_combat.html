@@ -74,6 +74,7 @@
             <div class="timer-central">
                 <div class="etat-combat etat-prevu" id="etatCombat">Prêt</div>
                 <div class="timer-display" id="timerDisplay">4:00</div>
+                <div class="categorie-age-display" id="categorieAgeDisplay" style="font-size: 0.9rem; color: #666; margin-top: 5px;"></div>
                 <!-- ⚠️ NOUVEAU : Contrôles rapides du timer -->
                 <div class="timer-controls" id="timerControls">
                     <button class="btn-timer-adjust" onclick="adjustTimer(-30)" title="Retirer 30s">
@@ -644,6 +645,7 @@
         try {
             CONFIG = await fetch('/api/config').then(r => r.json());
             console.log('✅ Config chargée:', CONFIG);
+            // Le timer sera défini par getDureeCombat() quand le combat sera chargé
             timer = CONFIG.combat.dureeParDefaut || 240;
         } catch (error) {
             console.error('❌ Erreur chargement config:', error);
@@ -735,6 +737,24 @@
         }
     }
 
+    /**
+     * Obtenir la durée du combat selon sa catégorie d'âge
+     */
+    function getDureeCombat(combat) {
+        // Si le combat a une catégorie d'âge définie
+        if (combat.categorieAge && CONFIG?.combat?.categoriesAge) {
+            const categorie = CONFIG.combat.categoriesAge.find(
+                cat => cat.nom === combat.categorieAge
+            );
+            if (categorie) {
+                return categorie.duree;
+            }
+        }
+
+        // Sinon, utiliser la durée du combat ou la durée par défaut
+        return combat.timer || CONFIG?.combat?.dureeParDefaut || 240;
+    }
+
     function updateCombatDisplay() {
         if (!combat) {
             showNoCombat();
@@ -750,8 +770,18 @@
 
         const chronoActif = timerInterval !== null;
         if (!chronoActif) {
-            timer = combat.timer || CONFIG?.combat?.dureeParDefaut || 240;
+            timer = getDureeCombat(combat);
         }
+
+        // Afficher la catégorie d'âge si définie
+        const categorieDisplay = document.getElementById('categorieAgeDisplay');
+        if (combat.categorieAge) {
+            categorieDisplay.textContent = combat.categorieAge;
+            categorieDisplay.style.display = 'block';
+        } else {
+            categorieDisplay.style.display = 'none';
+        }
+
         updateScoreDisplay();
         updateTimerDisplay();
         updateEtatCombat();
@@ -1006,7 +1036,7 @@
             if (response.ok) {
                 const resetCombat = await response.json();
                 combat = resetCombat;
-                timer = combat.timer || 240;
+                timer = getDureeCombat(combat);
 
                 updateCombatDisplay();
                 stopTimerDisplay();
