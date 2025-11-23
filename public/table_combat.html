@@ -615,6 +615,7 @@
     let osaekomiState = { active: false, cote: null };
     let correctionCote = null;
     let CONFIG = null;
+    let isProcessingAction = false; // Protection contre doubles appuis
 
     // =======================================
     // INITIALISATION
@@ -1100,6 +1101,14 @@
     async function marquerPoint(cote, type) {
         if (!combat || combat.etat === 'terminé') return;
 
+        // Protection contre doubles appuis rapides
+        if (isProcessingAction) {
+            console.log('Action déjà en cours, ignorée');
+            return;
+        }
+
+        isProcessingAction = true;
+
         try {
             const response = await fetch(`/api/combats/${combat.id}`, {
                 method: 'PATCH',
@@ -1132,6 +1141,11 @@
             }
         } catch (error) {
             showNotification('Erreur de connexion', 'danger');
+        } finally {
+            // Débloquer après un court délai pour éviter les doubles appuis
+            setTimeout(() => {
+                isProcessingAction = false;
+            }, 200);
         }
     }
 
@@ -1150,10 +1164,18 @@
             return;
         }
 
+        // Protection contre doubles clics rapides
+        if (isProcessingAction) {
+            console.log('Action déjà en cours, retrait ignoré');
+            return;
+        }
+
         // Confirmation avant de retirer
         if (!confirm(`Retirer ${type.toUpperCase()} ${cote} ?`)) {
             return;
         }
+
+        isProcessingAction = true;
 
         try {
             const response = await fetch(`/api/combats/${combat.id}`, {
@@ -1181,6 +1203,11 @@
         } catch (error) {
             console.error('Erreur retrait point:', error);
             showNotification('Erreur de connexion', 'danger');
+        } finally {
+            // Débloquer après un court délai
+            setTimeout(() => {
+                isProcessingAction = false;
+            }, 200);
         }
     };
 
