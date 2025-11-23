@@ -1078,6 +1078,13 @@
                 timer = timerLocal;
                 updateScoreDisplay();
 
+                // Si le combat est terminé automatiquement, arrêter le timer et afficher la victoire
+                if (combat.etat === 'terminé') {
+                    stopTimerDisplay();
+                    updateCombatDisplay();
+                    showVictory(combat.vainqueur, combat.raisonFin);
+                }
+
                 showNotification(`${type.toUpperCase()} ${cote}`, 'success');
             } else {
                 const error = await response.json();
@@ -1233,6 +1240,13 @@
                 if (result.combat) {
                     combat = result.combat;
                     updateScoreDisplay(); // Ceci affichera les vrais scores du backend
+                }
+
+                // Si le combat est terminé automatiquement, arrêter le timer et afficher la victoire
+                if (combat.etat === 'terminé') {
+                    stopTimerDisplay();
+                    updateCombatDisplay();
+                    showVictory(combat.vainqueur, combat.raisonFin);
                 }
 
                 // Afficher le résumé final (sans doubler les notifications)
@@ -1581,11 +1595,15 @@
                 timer = 0;
                 updateTimerDisplay();
 
-                // Si pas d'osaekomi en cours, terminer le combat
+                // Si pas d'osaekomi en cours, synchroniser avec backend qui terminera automatiquement
                 if (!osaekomiState.active && combat && combat.etat !== 'terminé') {
                     stopTimerDisplay();
-                    terminerCombat();
-                    showNotification('Temps écoulé - Combat terminé', 'warning');
+                    // Sync avec backend qui détectera timer=0 et terminera le combat
+                    syncTimerWithBackend().then(() => {
+                        // Recharger le combat pour obtenir l'état terminé
+                        loadData();
+                    });
+                    showNotification('Temps écoulé', 'warning');
                 } else if (osaekomiState.active) {
                     // Si osaekomi en cours, continuer (osaekomi peut aller jusqu'à 20s)
                     const syncInterval = CONFIG?.combat?.timerSyncInterval || 10;

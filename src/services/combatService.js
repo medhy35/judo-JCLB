@@ -171,6 +171,11 @@ class CombatService {
             return 'disqualification';
         }
 
+        // Timer à 0 (sans osaekomi en cours)
+        if (combat.timer !== undefined && combat.timer <= 0 && combat.etat === 'en cours') {
+            return 'temps_ecoule';
+        }
+
         // Fin en golden score avec avantage
         if (combat.etat === 'golden_score') {
             if ((combat.wazariRouge || 0) > 0 || (combat.wazariBleu || 0) > 0 ||
