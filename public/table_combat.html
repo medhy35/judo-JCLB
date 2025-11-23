@@ -482,6 +482,10 @@
                                             <td><kbd>F</kbd></td>
                                             <td>Terminer le combat</td>
                                         </tr>
+                                        <tr>
+                                            <td><kbd>U</kbd></td>
+                                            <td>Reprendre combat terminé</td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -943,6 +947,45 @@
                 }
 
                 showNotification('Combat arrêté', 'info');
+            }
+        } catch (error) {
+            showNotification('Erreur', 'danger');
+        }
+    }
+
+    async function reprendreCombat() {
+        if (!combat) return;
+
+        // Vérifier que le combat est bien terminé
+        if (combat.etat !== 'terminé') {
+            showNotification('Le combat n\'est pas terminé', 'warning');
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/combats/${combat.id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    etat: 'en cours',
+                    dateFin: null,
+                    raisonFin: null,
+                    vainqueur: null
+                })
+            });
+
+            if (response.ok) {
+                const updatedCombat = await response.json();
+                combat = updatedCombat;
+                updateCombatDisplay();
+                hideVictory();
+
+                // Redémarrer le timer si > 0
+                if (timer > 0) {
+                    startTimerDisplay();
+                }
+
+                showNotification('Combat repris - Vous pouvez corriger les scores', 'success');
             }
         } catch (error) {
             showNotification('Erreur', 'danger');
@@ -2093,6 +2136,10 @@
             case 'f': // F = Finish (Terminer le combat)
                 e.preventDefault();
                 stopCombat();
+                break;
+            case 'u': // U = Undo / Reprendre le combat terminé
+                e.preventDefault();
+                reprendreCombat();
                 break;
             case 'p': // P = Plein écran
                 e.preventDefault();
