@@ -1078,9 +1078,6 @@
                 timer = timerLocal;
                 updateScoreDisplay();
 
-                // DÉSACTIVÉ : Fin automatique du combat
-                // L'arbitre décide manuellement avec la touche F
-
                 showNotification(`${type.toUpperCase()} ${cote}`, 'success');
             } else {
                 const error = await response.json();
@@ -1246,9 +1243,6 @@
 
                     showNotification(message, 'info');
                 }
-
-                // DÉSACTIVÉ : Pas de fin automatique après osaekomi
-                // L'arbitre décide manuellement avec la touche F
             } else {
                 const error = await response.json();
                 showNotification(error.error || 'Erreur arrêt osaekomi', 'danger');
@@ -1583,17 +1577,21 @@
                     syncTimerWithBackend();
                 }
             } else {
-                // Timer à 0 : on continue à 0, pas de fin automatique
-                // L'arbitre décide avec la touche F
+                // Timer à 0 : terminer automatiquement SAUF si osaekomi en cours
                 timer = 0;
                 updateTimerDisplay();
-                // Notification uniquement la première fois
-                if (timer === 0) {
-                    showNotification('Temps écoulé - Appuyez sur F pour terminer', 'warning');
-                }
-                const syncInterval = CONFIG?.combat?.timerSyncInterval || 10;
-                if (Math.floor(Date.now() / 1000) % syncInterval === 0) {
-                    syncTimerWithBackend();
+
+                // Si pas d'osaekomi en cours, terminer le combat
+                if (!osaekomiState.active && combat && combat.etat !== 'terminé') {
+                    stopTimerDisplay();
+                    terminerCombat();
+                    showNotification('Temps écoulé - Combat terminé', 'warning');
+                } else if (osaekomiState.active) {
+                    // Si osaekomi en cours, continuer (osaekomi peut aller jusqu'à 20s)
+                    const syncInterval = CONFIG?.combat?.timerSyncInterval || 10;
+                    if (Math.floor(Date.now() / 1000) % syncInterval === 0) {
+                        syncTimerWithBackend();
+                    }
                 }
             }
         }, 1000);
