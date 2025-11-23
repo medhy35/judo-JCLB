@@ -180,6 +180,9 @@ class CombatsController {
             case 'reset':
                 return await this._handleReset(combat);
 
+            case 'reprendre_combat':
+                return await this._handleReprendreCombat(combat);
+
             default:
                 return { error: 'Action non reconnue' };
         }
@@ -452,6 +455,34 @@ class CombatsController {
 
         return {
             combat: combatService.enrichCombat(combatReset)
+        };
+    }
+
+    /**
+     * Reprendre un combat terminé (pour correction)
+     * @private
+     */
+    async _handleReprendreCombat(combat) {
+        if (combat.etat !== 'terminé') {
+            return { error: 'Le combat n\'est pas terminé' };
+        }
+
+        const repriseUpdates = {
+            etat: 'en cours',
+            dateFin: null,
+            raisonFin: null,
+            vainqueur: null
+        };
+
+        const combatRepris = dataService.update('combats', combat.id, repriseUpdates);
+        const combatService = require('../services/combatService');
+
+        dataService.addLog('Combat repris pour correction', {
+            combatId: combat.id
+        });
+
+        return {
+            combat: combatService.enrichCombat(combatRepris)
         };
     }
 
