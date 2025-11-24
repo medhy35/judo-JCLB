@@ -13,6 +13,48 @@
     "enableGoldenScore": false,
     "pauseEntreRounds": 60,
     "tempsPreparation": 30,
+    "categoriesAge": [
+      {
+        "nom": "Mini-poussins",
+        "duree": 120,
+        "poids": {
+          "masculin": ["-32"],
+          "feminin": ["-27", "-35"]
+        }
+      },
+      {
+        "nom": "Poussins",
+        "duree": 120,
+        "poids": {
+          "masculin": ["-32"],
+          "feminin": ["-35"]
+        }
+      },
+      {
+        "nom": "Benjamins",
+        "duree": 180,
+        "poids": {
+          "masculin": ["-34"],
+          "feminin": ["-44"]
+        }
+      },
+      {
+        "nom": "Minimes",
+        "duree": 180,
+        "poids": {
+          "masculin": ["-55"],
+          "feminin": ["-42"]
+        }
+      },
+      {
+        "nom": "Juniors/Seniors",
+        "duree": 240,
+        "poids": {
+          "masculin": ["-65", "-95"],
+          "feminin": []
+        }
+      }
+    ],
     "osaekomi": {
       "yuko": 5,
       "wazari": 10,

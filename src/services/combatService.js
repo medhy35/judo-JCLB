@@ -354,6 +354,27 @@ class CombatService {
     }
 
     /**
+     * Détermine la catégorie d'âge d'un combattant selon son poids et sexe
+     * @param {string} sexe - "M" ou "F"
+     * @param {string} poids - Ex: "-34", "-55", etc.
+     * @returns {string|null} Nom de la catégorie d'âge ou null
+     */
+    determinerCategorieAge(sexe, poids) {
+        const combatConfig = configService.getCombatConfig();
+        const categoriesAge = combatConfig.categoriesAge || [];
+
+        // Rechercher la catégorie correspondante
+        for (const categorie of categoriesAge) {
+            const listePoids = sexe === 'M' ? categorie.poids.masculin : categorie.poids.feminin;
+            if (listePoids && listePoids.includes(poids)) {
+                return categorie.nom;
+            }
+        }
+
+        return null; // Aucune catégorie trouvée
+    }
+
+    /**
      * Génère les combats entre deux équipes
      * @param {string} equipeAId
      * @param {string} equipeBId
@@ -379,9 +400,22 @@ class CombatService {
                 const rouge = categoriesA[categorie][0];
                 const bleu = categoriesB[categorie][0];
 
+                // Déterminer la catégorie d'âge automatiquement
+                const categorieAge = this.determinerCategorieAge(rouge.sexe, rouge.poids);
+
+                // Déterminer la durée selon la catégorie d'âge
+                let duree = combatConfig.dureeParDefaut;
+                if (categorieAge && combatConfig.categoriesAge) {
+                    const catConfig = combatConfig.categoriesAge.find(c => c.nom === categorieAge);
+                    if (catConfig) {
+                        duree = catConfig.duree;
+                    }
+                }
+
                 const combat = dataService.add('combats', {
                     rouge: { ...rouge, equipeId: equipeAId },
                     bleu: { ...bleu, equipeId: equipeBId },
+                    categorieAge: categorieAge, // Nouvelle propriété
                     etat: 'prévu',
                     ipponRouge: false,
                     ipponBleu: false,
@@ -391,7 +425,7 @@ class CombatService {
                     yukoBleu: 0,
                     penalitesRouge: 0,
                     penalitesBleu: 0,
-                    timer: combatConfig.dureeParDefaut,
+                    timer: duree, // Utilise la durée de la catégorie
                     dateCreation: new Date().toISOString()
                 });
 
