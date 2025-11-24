@@ -770,7 +770,9 @@
 
         const chronoActif = timerInterval !== null;
         if (!chronoActif) {
-            timer = getDureeCombat(combat);
+            // Restaurer le timer depuis le backend si disponible (après pause/reprendre),
+            // sinon utiliser la durée par défaut (nouveau combat)
+            timer = (combat.timer !== undefined && combat.timer !== null) ? combat.timer : getDureeCombat(combat);
         }
 
         // Afficher la catégorie d'âge si définie
@@ -1317,8 +1319,9 @@
         const dureeOsaekomi = osaekomiTimer;
         const coteOsaekomi = osaekomiState.cote;
 
-        // Nettoyer l'affichage local immédiatement
-        cleanupOsaekomoDisplay();
+        // Nettoyer l'affichage local immédiatement (sans mettre à jour les scores)
+        // Les scores seront mis à jour après la réponse du backend
+        cleanupOsaekomoDisplay(false);
 
         try {
             const response = await fetch(`/api/combats/${combat.id}`, {
@@ -1370,7 +1373,7 @@
         }
     }
 
-    function cleanupOsaekomoDisplay() {
+    function cleanupOsaekomoDisplay(updateScores = true) {
         // Sauvegarder l'état avant de le reset
         const wasActive = osaekomiState.active;
 
@@ -1391,7 +1394,10 @@
         osaekomiState = { active: false, cote: null };
 
         // Remettre l'affichage des scores à jour avec les vraies données
-        updateScoreDisplay();
+        // (sauf si on attend une réponse du backend, auquel cas l'appelant le fera)
+        if (updateScores) {
+            updateScoreDisplay();
+        }
 
         // Notifier via WebSocket SEULEMENT si un osaekomi était actif
         if (wasActive) {
