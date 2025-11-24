@@ -1,1 +1,67 @@
-[]
+[
+  {
+    "nom": "Tapis 1",
+    "etat": "occupé",
+    "combatsIds": [
+      1764006238038,
+      1764006238469
+    ],
+    "indexCombatActuel": 1,
+    "dateCreation": "2025-11-24T16:12:27.766Z",
+    "historique": [
+      {
+        "timestamp": "2025-11-24T16:13:14.315Z",
+        "action": "assigner_combats",
+        "combatsIds": [
+          1764000794523,
+          1764000794702
+        ],
+        "nombreCombats": 2
+      },
+      {
+        "timestamp": "2025-11-24T17:35:59.271Z",
+        "action": "combat_suivant",
+        "ancienIndex": 0,
+        "nouveauIndex": 1
+      },
+      {
+        "timestamp": "2025-11-24T17:43:49.503Z",
+        "action": "liberer_tatami",
+        "combatsLiberes": 2
+      },
+      {
+        "timestamp": "2025-11-24T17:43:57.927Z",
+        "action": "assigner_combats",
+        "combatsIds": [
+          1764006238038,
+          1764006238469
+        ],
+        "nombreCombats": 2
+      },
+      {
+        "timestamp": "2025-11-24T17:45:57.660Z",
+        "action": "combat_suivant",
+        "ancienIndex": 0,
+        "nouveauIndex": 1
+      }
+    ],
+    "scoreConfrontation": {
+      "rouge": 100,
+      "bleu": 1
+    },
+    "id": 1764000747802
+  },
+  {
+    "nom": "Tapis 2",
+    "etat": "libre",
+    "combatsIds": [],
+    "indexCombatActuel": 0,
+    "dateCreation": "2025-11-24T16:12:36.118Z",
+    "historique": [],
+    "scoreConfrontation": {
+      "rouge": 0,
+      "bleu": 0
+    },
+    "id": 1764000756435
+  }
+]

@@ -1,1 +1,66 @@
-[]
+[
+  {
+    "nom": "Claire Dubois",
+    "sexe": "F",
+    "poids": "-27",
+    "equipeId": "limeil",
+    "dateCreation": "2025-11-24T16:09:41.841Z",
+    "id": 1764000582670
+  },
+  {
+    "nom": "Julien Morel",
+    "sexe": "M",
+    "poids": "-95",
+    "equipeId": "limeil",
+    "dateCreation": "2025-11-24T16:10:01.127Z",
+    "id": 1764000601824
+  },
+  {
+    "nom": "Sofia Marques",
+    "sexe": "F",
+    "poids": "-27",
+    "equipeId": "sucy",
+    "dateCreation": "2025-11-24T16:10:14.393Z",
+    "id": 1764000614641
+  },
+  {
+    "nom": "Mamadou Keita",
+    "sexe": "M",
+    "poids": "-95",
+    "equipeId": "sucy",
+    "dateCreation": "2025-11-24T16:10:29.686Z",
+    "id": 1764000630185
+  },
+  {
+    "nom": "Clara Vonetti",
+    "sexe": "F",
+    "poids": "-27",
+    "equipeId": "marolles",
+    "dateCreation": "2025-11-24T16:11:11.104Z",
+    "id": 1764000671773
+  },
+  {
+    "nom": "Thaïs Sanogo",
+    "sexe": "M",
+    "poids": "-95",
+    "equipeId": "marolles",
+    "dateCreation": "2025-11-24T16:11:24.443Z",
+    "id": 1764000685061
+  },
+  {
+    "nom": "Kyara Ouattara",
+    "sexe": "F",
+    "poids": "-27",
+    "equipeId": "paris",
+    "dateCreation": "2025-11-24T16:11:45.735Z",
+    "id": 1764000705902
+  },
+  {
+    "nom": "Thomas Bernard",
+    "sexe": "M",
+    "poids": "-95",
+    "equipeId": "paris",
+    "dateCreation": "2025-11-24T16:12:01.952Z",
+    "id": 1764000722630
+  }
+]

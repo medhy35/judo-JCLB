@@ -1,1 +1,119 @@
-[]
+[
+  {
+    "id": 1,
+    "nom": "Poule A",
+    "equipesIds": [
+      "paris",
+      "limeil",
+      "sucy",
+      "marolles"
+    ],
+    "rencontres": [
+      {
+        "id": 1764000779091,
+        "equipeA": "paris",
+        "equipeB": "limeil",
+        "combatsIds": [
+          1764000794523,
+          1764000794702
+        ],
+        "resultat": null,
+        "etat": "assignee"
+      },
+      {
+        "id": 1764000778746,
+        "equipeA": "paris",
+        "equipeB": "sucy",
+        "combatsIds": [
+          1764006238038,
+          1764006238469
+        ],
+        "resultat": null,
+        "etat": "assignee"
+      },
+      {
+        "id": 1764000779416,
+        "equipeA": "paris",
+        "equipeB": "marolles",
+        "combatsIds": [],
+        "resultat": null,
+        "etat": "prevue"
+      },
+      {
+        "id": 1764000778978,
+        "equipeA": "limeil",
+        "equipeB": "sucy",
+        "combatsIds": [],
+        "resultat": null,
+        "etat": "prevue"
+      },
+      {
+        "id": 1764000779340,
+        "equipeA": "limeil",
+        "equipeB": "marolles",
+        "combatsIds": [],
+        "resultat": null,
+        "etat": "prevue"
+      },
+      {
+        "id": 1764000779488,
+        "equipeA": "sucy",
+        "equipeB": "marolles",
+        "combatsIds": [],
+        "resultat": null,
+        "etat": "prevue"
+      }
+    ],
+    "classement": [
+      {
+        "equipeId": "paris",
+        "nom": "Paris",
+        "points": 2,
+        "victoires": 2,
+        "defaites": 0,
+        "egalites": 0,
+        "confrontationsJouees": 2,
+        "pointsMarques": 120,
+        "pointsEncaisses": 2,
+        "differentiel": 118
+      },
+      {
+        "equipeId": "marolles",
+        "nom": "Marolles",
+        "points": 0,
+        "victoires": 0,
+        "defaites": 0,
+        "egalites": 0,
+        "confrontationsJouees": 0,
+        "pointsMarques": 0,
+        "pointsEncaisses": 0,
+        "differentiel": 0
+      },
+      {
+        "equipeId": "limeil",
+        "nom": "Limeil-Brevannes",
+        "points": 0,
+        "victoires": 0,
+        "defaites": 1,
+        "egalites": 0,
+        "confrontationsJouees": 1,
+        "pointsMarques": 1,
+        "pointsEncaisses": 20,
+        "differentiel": -19
+      },
+      {
+        "equipeId": "sucy",
+        "nom": "sucy-en-brie",
+        "points": 0,
+        "victoires": 0,
+        "defaites": 1,
+        "egalites": 0,
+        "confrontationsJouees": 1,
+        "pointsMarques": 1,
+        "pointsEncaisses": 100,
+        "differentiel": -99
+      }
+    ],
+    "derniereMiseAJour": "2025-11-24T17:53:02.572Z"
+  }
+]

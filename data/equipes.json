@@ -1,1 +1,38 @@
-[]
+[
+  {
+    "id": "limeil",
+    "nom": "Limeil-Brevannes",
+    "couleur": "primary",
+    "dateCreation": "2025-11-24T16:08:31.175Z",
+    "victoires": 0,
+    "points": 0,
+    "scoreGlobal": 0
+  },
+  {
+    "id": "sucy",
+    "nom": "sucy-en-brie",
+    "couleur": "primary",
+    "dateCreation": "2025-11-24T16:08:46.381Z",
+    "victoires": 0,
+    "points": 0,
+    "scoreGlobal": 0
+  },
+  {
+    "id": "marolles",
+    "nom": "Marolles",
+    "couleur": "primary",
+    "dateCreation": "2025-11-24T16:09:01.084Z",
+    "victoires": 0,
+    "points": 0,
+    "scoreGlobal": 0
+  },
+  {
+    "id": "paris",
+    "nom": "Paris",
+    "couleur": "primary",
+    "dateCreation": "2025-11-24T16:09:18.896Z",
+    "victoires": 0,
+    "points": 0,
+    "scoreGlobal": 0
+  }
+]

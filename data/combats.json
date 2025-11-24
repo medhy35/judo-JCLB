@@ -1,1 +1,147 @@
-[]
+[
+  {
+    "rouge": {
+      "nom": "Kyara Ouattara",
+      "sexe": "F",
+      "poids": "-27",
+      "equipeId": "paris",
+      "dateCreation": "2025-11-24T16:11:45.735Z",
+      "id": 1764000705902
+    },
+    "bleu": {
+      "nom": "Claire Dubois",
+      "sexe": "F",
+      "poids": "-27",
+      "equipeId": "limeil",
+      "dateCreation": "2025-11-24T16:09:41.841Z",
+      "id": 1764000582670
+    },
+    "categorieAge": "Mini-poussins",
+    "etat": "terminé",
+    "ipponRouge": false,
+    "ipponBleu": false,
+    "wazariRouge": 2,
+    "wazariBleu": 0,
+    "yukoRouge": 0,
+    "yukoBleu": 1,
+    "penalitesRouge": 0,
+    "penalitesBleu": 0,
+    "timer": 120,
+    "dateCreation": "2025-11-24T16:13:14.308Z",
+    "id": 1764000794523,
+    "osaekomoActif": false,
+    "osaekomoCote": null,
+    "osaekomoDebut": null,
+    "dateFin": "2025-11-24T17:35:48.194Z",
+    "raisonFin": "double_wazari",
+    "vainqueur": "rouge"
+  },
+  {
+    "rouge": {
+      "nom": "Thomas Bernard",
+      "sexe": "M",
+      "poids": "-95",
+      "equipeId": "paris",
+      "dateCreation": "2025-11-24T16:12:01.952Z",
+      "id": 1764000722630
+    },
+    "bleu": {
+      "nom": "Julien Morel",
+      "sexe": "M",
+      "poids": "-95",
+      "equipeId": "limeil",
+      "dateCreation": "2025-11-24T16:10:01.127Z",
+      "id": 1764000601824
+    },
+    "categorieAge": "Juniors/Seniors",
+    "etat": "terminé",
+    "ipponRouge": false,
+    "ipponBleu": false,
+    "wazariRouge": 0,
+    "wazariBleu": 0,
+    "yukoRouge": 0,
+    "yukoBleu": 0,
+    "penalitesRouge": 0,
+    "penalitesBleu": 3,
+    "timer": 234,
+    "dateCreation": "2025-11-24T16:13:14.308Z",
+    "id": 1764000794702,
+    "osaekomoActif": false,
+    "osaekomoCote": null,
+    "osaekomoDebut": null,
+    "dateFin": "2025-11-24T17:41:58.879Z",
+    "raisonFin": "disqualification",
+    "vainqueur": "rouge"
+  },
+  {
+    "rouge": {
+      "nom": "Kyara Ouattara",
+      "sexe": "F",
+      "poids": "-27",
+      "equipeId": "paris",
+      "dateCreation": "2025-11-24T16:11:45.735Z",
+      "id": 1764000705902
+    },
+    "bleu": {
+      "nom": "Sofia Marques",
+      "sexe": "F",
+      "poids": "-27",
+      "equipeId": "sucy",
+      "dateCreation": "2025-11-24T16:10:14.393Z",
+      "id": 1764000614641
+    },
+    "categorieAge": "Mini-poussins",
+    "etat": "terminé",
+    "ipponRouge": false,
+    "ipponBleu": false,
+    "wazariRouge": 0,
+    "wazariBleu": 0,
+    "yukoRouge": 0,
+    "yukoBleu": 1,
+    "penalitesRouge": 3,
+    "penalitesBleu": 0,
+    "timer": 109,
+    "dateCreation": "2025-11-24T17:43:57.918Z",
+    "id": 1764006238038,
+    "dateFin": "2025-11-24T17:44:55.326Z",
+    "raisonFin": "disqualification",
+    "vainqueur": "bleu"
+  },
+  {
+    "rouge": {
+      "nom": "Thomas Bernard",
+      "sexe": "M",
+      "poids": "-95",
+      "equipeId": "paris",
+      "dateCreation": "2025-11-24T16:12:01.952Z",
+      "id": 1764000722630
+    },
+    "bleu": {
+      "nom": "Mamadou Keita",
+      "sexe": "M",
+      "poids": "-95",
+      "equipeId": "sucy",
+      "dateCreation": "2025-11-24T16:10:29.686Z",
+      "id": 1764000630185
+    },
+    "categorieAge": "Juniors/Seniors",
+    "etat": "terminé",
+    "ipponRouge": true,
+    "ipponBleu": false,
+    "wazariRouge": 0,
+    "wazariBleu": 0,
+    "yukoRouge": 0,
+    "yukoBleu": 0,
+    "penalitesRouge": 0,
+    "penalitesBleu": 0,
+    "timer": 0,
+    "dateCreation": "2025-11-24T17:43:57.919Z",
+    "id": 1764006238469,
+    "osaekomoActif": false,
+    "osaekomoCote": null,
+    "osaekomoDebut": null,
+    "dateFin": "2025-11-24T17:53:02.481Z",
+    "raisonFin": "osaekomi_ippon",
+    "vainqueur": "rouge"
+  }
+]

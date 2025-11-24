@@ -308,11 +308,11 @@ body {
 }
 
 .control-rouge h6 {
-    color: var(--rouge-color);
+    color: var(--noir-color);
 }
 
 .control-bleu h6 {
-    color: var(--bleu-color);
+    color: var(--rouge-color);
 }
 
 .control-buttons {
