@@ -1872,10 +1872,19 @@
 
     function setupWebSocket() {
         socket.on('connect', () => {
+            console.log('[SOCKET] Connexion établie, rejoindre la room tatami');
             updateConnectionStatus('Connecté', 'success');
+
+            // Rejoindre la room du tatami pour recevoir les broadcasts
+            socket.emit('join-tatami', tatamiId);
+        });
+
+        socket.on('joined-tatami', (data) => {
+            console.log('[SOCKET] Room rejointe avec succès:', data);
         });
 
         socket.on('disconnect', () => {
+            console.log('[SOCKET] Déconnexion');
             updateConnectionStatus('Déconnecté', 'danger');
         });
 
