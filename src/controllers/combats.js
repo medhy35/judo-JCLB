@@ -146,6 +146,9 @@ class CombatsController {
                 });
             }
 
+            // Invalider le cache pour forcer le rechargement avec les nouvelles données
+            combatService.invalidateCache(combatId);
+
             // Enrichir le combat avant de le retourner
             const combatEnrichi = combatService.enrichCombat(combat);
             res.locals.combat = combatEnrichi;
@@ -223,6 +226,9 @@ class CombatsController {
                 combatTermine: savedCombat.etat === 'terminé'
             });
 
+            // Invalider le cache pour forcer le rechargement avec les nouvelles données
+            combatService.invalidateCache(combat.id);
+
             return {
                 combat: combatService.enrichCombat(savedCombat)
             };
@@ -259,6 +265,9 @@ class CombatsController {
             combatId: combat.id,
             cote
         });
+
+        // Invalider le cache
+        combatService.invalidateCache(combat.id);
 
         return {
             combat: combatService.enrichCombat(combatMisAJour)
@@ -307,6 +316,9 @@ class CombatsController {
                 pointsMarques: result.pointsMarques,
                 finCombat: result.finCombat
             });
+
+            // Invalider le cache
+            combatService.invalidateCache(combat.id);
 
             return {
                 combat: combatService.enrichCombat(combatMisAJour),
@@ -413,6 +425,9 @@ class CombatsController {
                 to
             });
 
+            // Invalider le cache
+            combatService.invalidateCache(combat.id);
+
             return {
                 combat: combatService.enrichCombat(combatMisAJour)
             };
@@ -453,6 +468,9 @@ class CombatsController {
             combatId: combat.id
         });
 
+        // Invalider le cache
+        combatService.invalidateCache(combat.id);
+
         return {
             combat: combatService.enrichCombat(combatReset)
         };
@@ -480,6 +498,9 @@ class CombatsController {
         dataService.addLog('Combat repris pour correction', {
             combatId: combat.id
         });
+
+        // Invalider le cache
+        combatService.invalidateCache(combat.id);
 
         return {
             combat: combatService.enrichCombat(combatRepris)
