@@ -1862,7 +1862,7 @@
                 combat = data.combat;
 
                 // Ne synchroniser le timer que si le chrono est ARRÊTÉ
-                if (!chronoActif && data.combat.timer !== undefined) {
+                if (timerInterval === null && data.combat.timer !== undefined) {
                     timer = data.combat.timer;
                 }
                 // Sinon, on garde le timer local actuel (variable globale 'timer')
