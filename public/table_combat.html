@@ -792,15 +792,6 @@
     function updateScoreDisplay() {
         if (!combat) return;
 
-        console.log('[SCORE] updateScoreDisplay() - Scores actuels:', {
-            rouge: combat.rouge,
-            bleu: combat.bleu,
-            ipponRouge: combat.ipponRouge,
-            wazariRouge: combat.wazariRouge,
-            yukoRouge: combat.yukoRouge,
-            penalitesRouge: combat.penalitesRouge
-        });
-
         // Badges TOUJOURS cliquables (même en mode spectateur)
         const clickable = 'clickable-badge';
         const onclickAttr = (cote, type) => `onclick="window.retirerPoint('${cote}', '${type}')"`;
@@ -849,11 +840,6 @@
             bleuHtml += `<div class="score-badge ${clickable}" style="background: #757575; color: white;" ${onclickAttr('bleu', 'shido')} ${titleAttr}>${shidoBleu} SHIDO</div>`;
         }
         document.getElementById('bleuScores').innerHTML = bleuHtml;
-
-        console.log('[SCORE] HTML généré:', {
-            rougeHtml: rougeHtml.length > 0 ? rougeHtml.substring(0, 100) : 'vide',
-            bleuHtml: bleuHtml.length > 0 ? bleuHtml.substring(0, 100) : 'vide'
-        });
     }
 
     function updateTimerDisplay() {
@@ -1155,7 +1141,6 @@
         }
 
         isProcessingAction = true;
-        console.log(`[MARQUAGE] Début: ${type} ${cote}, Combat ID: ${combat.id}`);
 
         try {
             const response = await fetch(`/api/combats/${combat.id}`, {
@@ -1170,19 +1155,12 @@
 
             if (response.ok) {
                 const updatedCombat = await response.json();
-                console.log(`[MARQUAGE] HTTP OK - Scores reçus:`, {
-                    rouge: updatedCombat.rouge,
-                    bleu: updatedCombat.bleu
-                });
-
                 const timerLocal = timer;
                 combat = updatedCombat;
                 timer = timerLocal;
 
                 // Toujours mettre à jour l'affichage complet pour synchroniser l'état
-                console.log('[MARQUAGE] Appel updateCombatDisplay()');
                 updateCombatDisplay();
-                console.log('[MARQUAGE] updateCombatDisplay() terminé');
 
                 // Si le combat est terminé automatiquement, arrêter le timer et afficher la victoire
                 if (combat.etat === 'terminé') {
@@ -1872,33 +1850,18 @@
 
     function setupWebSocket() {
         socket.on('connect', () => {
-            console.log('[SOCKET] Connexion établie, rejoindre la room tatami');
             updateConnectionStatus('Connecté', 'success');
 
             // Rejoindre la room du tatami pour recevoir les broadcasts
             socket.emit('join-tatami', tatamiId);
         });
 
-        socket.on('joined-tatami', (data) => {
-            console.log('[SOCKET] Room rejointe avec succès:', data);
-        });
-
         socket.on('disconnect', () => {
-            console.log('[SOCKET] Déconnexion');
             updateConnectionStatus('Déconnecté', 'danger');
         });
 
         socket.on('combats:update', (data) => {
-            console.log('[SOCKET] Event combats:update reçu:', {
-                tatamiId: data.tatamiId,
-                combatId: data.combat?.id,
-                currentCombatId: combat?.id,
-                rouge: data.combat?.rouge,
-                bleu: data.combat?.bleu
-            });
-
             if (data.combat && data.combat.id === combat?.id) {
-                console.log('[SOCKET] Mise à jour du combat local');
                 combat = data.combat;
 
                 // Ne synchroniser le timer que si le chrono est ARRÊTÉ
@@ -1907,9 +1870,7 @@
                 }
                 // Sinon, on garde le timer local actuel (variable globale 'timer')
 
-                console.log('[SOCKET] Appel updateCombatDisplay()');
                 updateCombatDisplay();
-                console.log('[SOCKET] updateCombatDisplay() terminé');
 
                 // Vérifier si combat terminé par un autre client
                 if (combat.etat === 'terminé' && combat.vainqueur) {
