@@ -87,6 +87,15 @@ class CombatService {
     }
 
     /**
+     * Invalide le cache pour un combat spécifique
+     * @param {number} combatId - ID du combat
+     */
+    invalidateCache(combatId) {
+        const cacheKey = `combat-${combatId}`;
+        this.cache.delete(cacheKey);
+    }
+
+    /**
      * Enrichit plusieurs combats en une seule fois (optimisé)
      * Charge les données une seule fois pour tous les combats
      * @param {Array} combats - Tableau de combats à enrichir
