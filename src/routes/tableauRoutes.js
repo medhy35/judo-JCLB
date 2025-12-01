@@ -30,6 +30,88 @@ function determineStartPhase(nbEquipes) {
 }
 
 /**
+ * Fait avancer automatiquement le vainqueur d'un match au tour suivant
+ * @param {Object} tableau - L'objet tableau complet
+ * @param {string} type - Type de tableau (principal/consolante/bronze)
+ * @param {string} phase - Phase actuelle
+ * @param {number} matchId - ID du match
+ * @param {Object} match - Objet match avec le vainqueur
+ */
+function advanceWinner(tableau, type, phase, matchId, match) {
+    if (!match.vainqueur) return; // Pas de vainqueur, on ne fait rien
+
+    const winner = match.vainqueur === 'A' ? match.equipeA : match.equipeB;
+    const loser = match.vainqueur === 'A' ? match.equipeB : match.equipeA;
+
+    // Match bronze: pas d'avancement
+    if (type === 'bronze') {
+        dataService.addLog('Match bronze terminé', { matchId, medailleBronze: winner });
+        return;
+    }
+
+    const currentTableau = tableau[type];
+
+    // Avancement dans le tableau selon la phase
+    if (phase === 'seizieme') {
+        const nextIndex = Math.floor((matchId - 1) / 2);
+        const nextMatch = currentTableau.huitieme[nextIndex];
+        if ((matchId % 2) === 1) nextMatch.equipeA = winner;
+        else nextMatch.equipeB = winner;
+    } else if (phase === 'huitieme') {
+        const nextIndex = Math.floor((matchId - 1) / 2);
+        const nextMatch = currentTableau.quart[nextIndex];
+        if ((matchId % 2) === 1) nextMatch.equipeA = winner;
+        else nextMatch.equipeB = winner;
+    } else if (phase === 'quart') {
+        const nextIndex = Math.floor((matchId - 1) / 2);
+        const nextMatch = currentTableau.demi[nextIndex];
+        if ((matchId % 2) === 1) nextMatch.equipeA = winner;
+        else nextMatch.equipeB = winner;
+    } else if (phase === 'demi') {
+        // Demi-finale: gagnant va en finale
+        const finaleMatch = currentTableau.finale[0];
+        if (matchId === 1) finaleMatch.equipeA = winner;
+        else finaleMatch.equipeB = winner;
+
+        // Si tableau Principal: perdant va en match bronze
+        if (type === 'principal' && loser) {
+            const bronzeMatch = tableau.bronze[matchId - 1];
+            if (bronzeMatch) {
+                bronzeMatch.equipeA = loser;
+            }
+        }
+    } else if (phase === 'finale') {
+        // Finale du tableau Consolante: les 2 finalistes vont en bronze
+        if (type === 'consolante') {
+            // Le vainqueur et le perdant vont tous les deux en bronze
+            const bronzeMatch1 = tableau.bronze[0];
+            const bronzeMatch2 = tableau.bronze[1];
+
+            // Placer les finalistes consolante en position B des matchs bronze
+            if (bronzeMatch1 && !bronzeMatch1.equipeB) {
+                bronzeMatch1.equipeB = winner;
+            } else if (bronzeMatch2 && !bronzeMatch2.equipeB) {
+                bronzeMatch2.equipeB = winner;
+            }
+
+            if (loser) {
+                if (bronzeMatch1 && !bronzeMatch1.equipeB) {
+                    bronzeMatch1.equipeB = loser;
+                } else if (bronzeMatch2 && !bronzeMatch2.equipeB) {
+                    bronzeMatch2.equipeB = loser;
+                }
+            }
+        }
+
+        dataService.addLog(`Finale ${type} terminée`, { champion: winner });
+    }
+
+    dataService.addLog('Vainqueur avancé automatiquement', {
+        type, phase, matchId, winner, nextPhase: getNextPhase(phase)
+    });
+}
+
+/**
  * Génère les matchs pour une phase avec gestion des byes
  */
 function generateMatches(teams, phaseKey) {
@@ -177,6 +259,24 @@ function setupTableauRoutes(router) {
             bronze: bronze
         };
 
+        // AVANCEMENT AUTOMATIQUE DES BYES: Parcourir tous les matchs et avancer les vainqueurs de byes
+        const phases = ['seizieme', 'huitieme', 'quart', 'demi', 'finale'];
+        const types = ['principal', 'consolante'];
+
+        for (const type of types) {
+            for (const phase of phases) {
+                const matches = tableau[type][phase];
+                if (!matches || matches.length === 0) continue;
+
+                for (const match of matches) {
+                    if (match.hasBye && match.vainqueur) {
+                        // Ce match a un bye, avancer automatiquement le vainqueur
+                        advanceWinner(tableau, type, phase, match.id, match);
+                    }
+                }
+            }
+        }
+
         dataService.writeFile('tableau', tableau);
         dataService.addLog('Tableaux créés (Principal + Consolante + Bronze)', {
             nbEquipesPrincipal: principal.length,
@@ -320,6 +420,9 @@ function setupTableauRoutes(router) {
 
                 if (match.vainqueur) {
                     match.dateFinMatch = new Date().toISOString();
+
+                    // AVANCEMENT AUTOMATIQUE: Faire avancer le vainqueur au tour suivant
+                    advanceWinner(tableau, type, phase, +id, match);
                 }
 
                 dataService.writeFile('tableau', tableau);
@@ -454,6 +557,11 @@ function setupTableauRoutes(router) {
         if (req.body.scoreA !== undefined) match.scoreA = req.body.scoreA;
         if (req.body.scoreB !== undefined) match.scoreB = req.body.scoreB;
         if (req.body.vainqueur !== undefined) match.vainqueur = req.body.vainqueur;
+
+        // AVANCEMENT AUTOMATIQUE: Si un vainqueur est défini, avancer au tour suivant
+        if (match.vainqueur) {
+            advanceWinner(tableau, type, phase, +id, match);
+        }
 
         dataService.writeFile('tableau', tableau);
         dataService.addLog('Match mis à jour manuellement', { type, phase, matchId: id });
