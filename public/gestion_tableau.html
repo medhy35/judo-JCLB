@@ -1575,29 +1575,19 @@
         }
 
         try {
-            // Mettre à jour le match
-            let response = await fetch(`/api/tableau/${type}/${phase}/${matchId}`, {
+            // Mettre à jour le match - L'avancement se fait AUTOMATIQUEMENT côté serveur
+            const response = await fetch(`/api/tableau/${type}/${phase}/${matchId}`, {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ scoreA, scoreB, vainqueur })
             });
 
             if (response.ok) {
-                // Faire avancer le vainqueur à la phase suivante
-                response = await fetch(`/api/tableau/${type}/${phase}/${matchId}/advance`, {
-                    method: 'POST'
-                });
+                const modal = bootstrap.Modal.getInstance(document.getElementById('modalResultat'));
+                modal.hide();
 
-                if (response.ok) {
-                    const modal = bootstrap.Modal.getInstance(document.getElementById('modalResultat'));
-                    modal.hide();
-
-                    showNotification('Résultat enregistré et vainqueur qualifié', 'success');
-                    loadData();
-                } else {
-                    const error = await response.json();
-                    showNotification(error.error || 'Erreur qualification', 'danger');
-                }
+                showNotification('Résultat enregistré et vainqueur qualifié automatiquement', 'success');
+                loadData();
             } else {
                 const error = await response.json();
                 showNotification(error.error || 'Erreur enregistrement', 'danger');
