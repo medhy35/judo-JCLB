@@ -535,28 +535,74 @@
         <!-- État vide par défaut -->
         <div id="emptyState" class="generator-section">
             <i class="fas fa-trophy fa-4x mb-3 text-muted"></i>
-            <h4 class="mb-2">Tableau éliminatoire non généré</h4>
-            <p class="text-muted mb-3">Sélectionnez les équipes qualifiées des poules pour créer le tableau final</p>
+            <h4 class="mb-2">Tableaux éliminatoires non générés</h4>
+            <p class="text-muted mb-3">Sélectionnez les équipes pour les tableaux Principal et Consolante</p>
             <button class="btn btn-primary btn-lg" id="genererTableauBtn2">
-                <i class="fas fa-trophy me-2"></i>Générer le tableau
+                <i class="fas fa-trophy me-2"></i>Générer les tableaux
             </button>
         </div>
 
         <!-- Contenu du tableau -->
         <div id="tableauContent" class="d-none">
-            <!-- Flux des phases -->
-            <div class="phase-flow" id="phaseFlow"></div>
+            <!-- Onglets pour Principal / Consolante / Bronze -->
+            <ul class="nav nav-tabs nav-fill mb-4" id="tableauTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="principal-tab" data-bs-toggle="tab"
+                            data-bs-target="#principal-content" type="button" role="tab">
+                        <i class="fas fa-trophy me-2"></i>Tableau Principal
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="consolante-tab" data-bs-toggle="tab"
+                            data-bs-target="#consolante-content" type="button" role="tab">
+                        <i class="fas fa-medal me-2"></i>Tableau Consolante
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="bronze-tab" data-bs-toggle="tab"
+                            data-bs-target="#bronze-content" type="button" role="tab">
+                        <i class="fas fa-award me-2"></i>Matchs Bronze
+                    </button>
+                </li>
+            </ul>
 
-            <!-- Podium (visible seulement quand finale terminée) -->
-            <div id="podiumSection" class="d-none">
-                <h3 class="text-center mb-4">
-                    <i class="fas fa-trophy text-warning me-2"></i>Podium Final
-                </h3>
-                <div class="podium" id="podiumContainer"></div>
+            <!-- Contenu des onglets -->
+            <div class="tab-content" id="tableauTabContent">
+                <!-- Onglet Principal -->
+                <div class="tab-pane fade show active" id="principal-content" role="tabpanel">
+                    <div class="phase-flow" id="phaseFlowPrincipal"></div>
+                    <div id="phasesContainerPrincipal"></div>
+                    <div id="podiumSectionPrincipal" class="d-none">
+                        <h3 class="text-center mb-4">
+                            <i class="fas fa-trophy text-warning me-2"></i>Champion - Tableau Principal
+                        </h3>
+                        <div class="podium" id="podiumContainerPrincipal"></div>
+                    </div>
+                </div>
+
+                <!-- Onglet Consolante -->
+                <div class="tab-pane fade" id="consolante-content" role="tabpanel">
+                    <div class="phase-flow" id="phaseFlowConsolante"></div>
+                    <div id="phasesContainerConsolante"></div>
+                    <div id="podiumSectionConsolante" class="d-none">
+                        <h3 class="text-center mb-4">
+                            <i class="fas fa-medal text-secondary me-2"></i>Champion - Tableau Consolante
+                        </h3>
+                        <div class="podium" id="podiumContainerConsolante"></div>
+                    </div>
+                </div>
+
+                <!-- Onglet Bronze -->
+                <div class="tab-pane fade" id="bronze-content" role="tabpanel">
+                    <h3 class="text-center mb-4">
+                        <i class="fas fa-award text-warning me-2"></i>Matchs pour la 3ème place
+                    </h3>
+                    <p class="text-center text-muted mb-4">
+                        Perdants des demi-finales Principal vs Finalistes du tableau Consolante
+                    </p>
+                    <div id="bronzeMatchesContainer" class="matches-grid justify-content-center"></div>
+                </div>
             </div>
-
-            <!-- Phases du tableau -->
-            <div id="phasesContainer"></div>
         </div>
     </div>
 </div>
@@ -568,34 +614,78 @@
 
 <!-- Modal Génération Tableau -->
 <div class="modal fade" id="modalGenerateur" tabindex="-1">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">
-                    <i class="fas fa-trophy me-2"></i>Générer le tableau éliminatoire
+                    <i class="fas fa-trophy me-2"></i>Générer les tableaux éliminatoires
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <form id="formGenerateur">
                 <div class="modal-body">
-                    <div class="mb-3">
-                        <label class="form-label">Équipes qualifiées pour les phases finales</label>
-                        <p class="text-muted small">Sélectionnez les équipes qui accèdent au tableau éliminatoire (basé sur les classements de poules)</p>
-                    </div>
-
-                    <div id="equipesQualifieesContainer">
-                        <!-- Contenu dynamique -->
-                    </div>
-
-                    <div class="alert alert-info mt-3">
+                    <div class="alert alert-info">
                         <i class="fas fa-info-circle me-2"></i>
-                        Le système déterminera automatiquement la phase de départ selon le nombre d'équipes sélectionnées
+                        <strong>Système dual:</strong> Sélectionnez les meilleures équipes pour le <strong>Tableau Principal</strong>
+                        et les équipes restantes pour le <strong>Tableau Consolante</strong>.
+                        Les perdants des demi-finales Principal affronteront les finalistes de la Consolante pour les matchs bronze.
+                    </div>
+
+                    <div class="row">
+                        <!-- Tableau Principal -->
+                        <div class="col-md-6">
+                            <div class="card mb-3">
+                                <div class="card-header bg-primary text-white">
+                                    <h6 class="mb-0">
+                                        <i class="fas fa-trophy me-2"></i>Tableau Principal (max 16)
+                                    </h6>
+                                </div>
+                                <div class="card-body">
+                                    <p class="text-muted small">Sélectionnez les meilleures équipes</p>
+                                    <div id="equipesPrincipalContainer" class="qualifiées-grid">
+                                        <!-- Contenu dynamique -->
+                                    </div>
+                                    <div class="mt-2 text-center">
+                                        <small class="text-muted">
+                                            <span id="selectionCountPrincipal">0</span> équipe(s) sélectionnée(s)
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tableau Consolante -->
+                        <div class="col-md-6">
+                            <div class="card mb-3">
+                                <div class="card-header bg-secondary text-white">
+                                    <h6 class="mb-0">
+                                        <i class="fas fa-medal me-2"></i>Tableau Consolante (max 16)
+                                    </h6>
+                                </div>
+                                <div class="card-body">
+                                    <p class="text-muted small">Équipes restantes (optionnel)</p>
+                                    <div id="equipesConsolanteContainer" class="qualifiées-grid">
+                                        <!-- Contenu dynamique -->
+                                    </div>
+                                    <div class="mt-2 text-center">
+                                        <small class="text-muted">
+                                            <span id="selectionCountConsolante">0</span> équipe(s) sélectionnée(s)
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        Minimum: <strong>2 équipes</strong> pour le Tableau Principal
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
                     <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-trophy me-2"></i>Créer le tableau
+                        <i class="fas fa-trophy me-2"></i>Créer les tableaux
                     </button>
                 </div>
             </form>
@@ -713,7 +803,8 @@
     let classementGeneral = [];
     let equipes = [];
     let tatamis = [];
-    let selectedEquipes = [];
+    let selectedEquipesPrincipal = [];
+    let selectedEquipesConsolante = [];
 
     // Initialisation
     document.addEventListener('DOMContentLoaded', function() {
@@ -770,7 +861,11 @@
         const emptyState = document.getElementById('emptyState');
         const tableauContent = document.getElementById('tableauContent');
 
-        const hasMatches = Object.values(tableau).some(phase => phase.length > 0);
+        // Vérifier si au moins un tableau a des matchs
+        const hasPrincipal = tableau.principal && Object.values(tableau.principal).some(phase => phase.length > 0);
+        const hasConsolante = tableau.consolante && Object.values(tableau.consolante).some(phase => phase.length > 0);
+        const hasBronze = tableau.bronze && tableau.bronze.length > 0;
+        const hasMatches = hasPrincipal || hasConsolante || hasBronze;
 
         if (!hasMatches) {
             emptyState.classList.remove('d-none');
@@ -781,22 +876,47 @@
         emptyState.classList.add('d-none');
         tableauContent.classList.remove('d-none');
 
-        renderPhaseFlow();
-        renderPhases();
-        renderPodium();
+        // Rendre chaque tableau
+        renderTableauType('principal', tableau.principal);
+        renderTableauType('consolante', tableau.consolante);
+        renderBronzeMatches();
+    }
+
+    // Rendu d'un type de tableau (principal ou consolante)
+    function renderTableauType(type, tableauData) {
+        if (!tableauData) return;
+
+        const capitalType = type.charAt(0).toUpperCase() + type.slice(1);
+        renderPhaseFlow(type, tableauData);
+        renderPhases(type, tableauData);
+        renderPodium(type, tableauData);
+    }
+
+    // Rendu des matchs bronze
+    function renderBronzeMatches() {
+        const container = document.getElementById('bronzeMatchesContainer');
+        if (!tableau.bronze || tableau.bronze.length === 0) {
+            container.innerHTML = '<p class="text-muted text-center">Aucun match bronze pour le moment</p>';
+            return;
+        }
+
+        const html = tableau.bronze.map(match => createMatchCard(match, 'bronze', 'bronze')).join('');
+        container.innerHTML = html;
     }
 
     // Rendu du flux des phases
-    function renderPhaseFlow() {
-        const container = document.getElementById('phaseFlow');
-        const phases = ['huitième', 'quart', 'demi', 'finale'];
-        const currentPhase = getCurrentPhase();
+    function renderPhaseFlow(type, tableauData) {
+        const container = document.getElementById(`phaseFlow${type.charAt(0).toUpperCase() + type.slice(1)}`);
+        if (!container) return;
+
+        const phases = ['seizieme', 'huitieme', 'quart', 'demi', 'finale'];
+        const currentPhase = getCurrentPhase(type, tableauData);
 
         const html = phases.map((phase, index) => {
-            const hasMatches = tableau[phase] && tableau[phase].length > 0;
+            const hasMatches = tableauData[phase] && tableauData[phase].length > 0;
             if (!hasMatches) return '';
 
-            const isCompleted = isPhaseCompleted(phase);
+            const isCompleted = isPhaseCompleted(phase, tableauData);
             const isCurrent = phase === currentPhase;
 
             let className = 'flow-phase';
@@ -808,7 +928,7 @@
                     <i class="fas fa-${getPhaseIcon(phase)} me-1"></i>
                     ${getPhaseLabel(phase)}
                 </div>
-                ${index < phases.length - 1 && tableau[phases[index + 1]]?.length > 0 ?
+                ${index < phases.length - 1 && tableauData[phases[index + 1]]?.length > 0 ?
                 '<i class="fas fa-arrow-right flow-arrow"></i>' : ''}
             `;
         }).filter(Boolean).join('');
@@ -817,12 +937,14 @@
     }
 
     // Rendu des phases
-    function renderPhases() {
-        const container = document.getElementById('phasesContainer');
-        const phases = ['huitième', 'quart', 'demi', 'finale'];
+    function renderPhases(type, tableauData) {
+        const container = document.getElementById(`phasesContainer${type.charAt(0).toUpperCase() + type.slice(1)}`);
+        if (!container) return;
+
+        const phases = ['seizieme', 'huitieme', 'quart', 'demi', 'finale'];
 
         const html = phases.map(phase => {
-            if (!tableau[phase] || tableau[phase].length === 0) return '';
+            if (!tableauData[phase] || tableauData[phase].length === 0) return '';
 
             return `
                 <div class="phase-section">
@@ -831,7 +953,7 @@
                         ${getPhaseLabel(phase)}
                     </h3>
                     <div class="matches-grid">
-                        ${tableau[phase].map(match => createMatchCard(match, phase)).join('')}
+                        ${tableauData[phase].map(match => createMatchCard(match, phase, type)).join('')}
                     </div>
                 </div>
             `;
@@ -855,15 +977,34 @@
     }
 
     // Création d'une carte de match AVEC bouton d'assignation
-    function createMatchCard(match, phase) {
+    function createMatchCard(match, phase, type) {
         const isFinished = match.vainqueur !== null;
         const hasAssignedCombats = match.combatsIds && match.combatsIds.length > 0;
-        const canBeAssigned = match.equipeA && match.equipeB && !isFinished && !hasAssignedCombats;
+        const canBeAssigned = match.equipeA && match.equipeB && !isFinished && !hasAssignedCombats && !match.hasBye;
+        const isBye = match.hasBye === true;
 
         let cardClass = '';
         if (isFinished) cardClass = 'terminé';
         else if (hasAssignedCombats) cardClass = 'en_cours';
         else if (canBeAssigned) cardClass = 'assignable';
+
+        // Affichage spécial pour les byes
+        if (isBye) {
+            const winner = match.vainqueur === 'A' ? match.equipeA : match.equipeB;
+            return `
+                <div class="match-card terminé">
+                    <div class="match-header">
+                        <div class="match-number">${type === 'bronze' ? match.description : `Match ${match.id}`}</div>
+                        <small class="text-info"><i class="fas fa-forward me-1"></i>Bye - Qualifié d'office</small>
+                    </div>
+                    <div class="equipes-container">
+                        <div class="equipe-item vainqueur">
+                            <div class="equipe-nom">${winner ? getEquipeNom(winner) : 'Équipe qualifiée'}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
 
         return `
             <div class="match-card ${cardClass}">
@@ -872,7 +1013,7 @@
             '<div class="finalist-badge">FINALE</div>' : ''}
 
                 <div class="match-header">
-                    <div class="match-number">Match ${match.id}</div>
+                    <div class="match-number">${type === 'bronze' ? match.description : `Match ${match.id}`}</div>
                     ${hasAssignedCombats ? `
                         <small class="text-success">
                             <i class="fas fa-layer-group me-1"></i>Assigné
@@ -896,7 +1037,7 @@
                        ${match.equipeA && (hasAssignedCombats || isFinished) ? `
     <div class="d-flex align-items-center">
         <input type="number" class="score-input" value="${match.scoreA || 0}"
-            onchange="updateScore('${phase}', ${match.id}, 'A', this.value)"
+            onchange="updateScore('${type}', '${phase}', ${match.id}, 'A', this.value)"
             ${isFinished ? 'readonly' : ''}>
         ${hasAssignedCombats && !isFinished ? `
             <small class="text-muted ms-2">/  ${match.combatsIds ? match.combatsIds.length : 0}</small>
@@ -913,7 +1054,7 @@
                         </div>
                         ${match.equipeB && (hasAssignedCombats || isFinished) ? `
                             <input type="number" class="score-input" value="${match.scoreB || 0}"
-                                onchange="updateScore('${phase}', ${match.id}, 'B', this.value)"
+                                onchange="updateScore('${type}', '${phase}', ${match.id}, 'B', this.value)"
                                 ${isFinished ? 'readonly' : ''}>
                         ` : ''}
                     </div>
@@ -922,25 +1063,25 @@
                 <!-- Actions du match -->
                 <div class="match-actions">
                     ${canBeAssigned ? `
-                        <button class="btn btn-sm btn-warning btn-assign" onclick="openAssignationModal('${phase}', ${match.id})">
+                        <button class="btn btn-sm btn-warning btn-assign" onclick="openAssignationModal('${type}', '${phase}', ${match.id})">
                             <i class="fas fa-layer-group me-1"></i>Assigner au tatami
                         </button>
                     ` : ''}
 
                     ${hasAssignedCombats && !isFinished ? `
-                        <button class="btn btn-sm btn-success" onclick="openResultatModal('${phase}', ${match.id})">
+                        <button class="btn btn-sm btn-success" onclick="openResultatModal('${type}', '${phase}', ${match.id})">
                             <i class="fas fa-save me-1"></i>Saisir résultat
                         </button>
                     ` : ''}
 
                     ${isFinished ? `
-                        <button class="btn btn-sm btn-outline-primary" onclick="editMatch('${phase}', ${match.id})">
+                        <button class="btn btn-sm btn-outline-primary" onclick="editMatch('${type}', '${phase}', ${match.id})">
                             <i class="fas fa-edit me-1"></i>Modifier
                         </button>
                     ` : ''}
 
                     ${hasAssignedCombats ? `
-                        <button class="btn btn-sm btn-outline-info" onclick="voirCombats('${phase}', ${match.id})">
+                        <button class="btn btn-sm btn-outline-info" onclick="voirCombats('${type}', '${phase}', ${match.id})">
                             <i class="fas fa-eye me-1"></i>Voir combats
                         </button>
                     ` : ''}
@@ -950,8 +1091,10 @@
     }
 
     // Fonction pour ouvrir le modal d'assignation
-    function openAssignationModal(phase, matchId) {
-        const match = tableau[phase].find(m => m.id === matchId);
+    function openAssignationModal(type, phase, matchId) {
+        const tableauData = type === 'bronze' ? { bronze: tableau.bronze } : tableau[type];
+        const match = type === 'bronze' ? tableau.bronze.find(m => m.id === matchId) : tableauData[phase]?.find(m => m.id === matchId);
+
         if (!match || !match.equipeA || !match.equipeB) {
             showNotification('Match incomplet pour assignation', 'warning');
             return;
@@ -959,6 +1102,7 @@
 
         document.getElementById('assignPhase').value = phase;
         document.getElementById('assignMatchId').value = matchId;
+        document.getElementById('assignPhase').setAttribute('data-type', type);
 
         document.getElementById('assignMatchInfo').innerHTML = `
             <div class="d-flex justify-content-between align-items-center">
@@ -967,7 +1111,7 @@
                 <strong>${getEquipeNom(match.equipeB)}</strong>
             </div>
             <div class="text-center mt-1">
-                <small class="text-muted">${getPhaseLabel(phase)} - Match ${matchId}</small>
+                <small class="text-muted">${type.toUpperCase()} - ${type === 'bronze' ? match.description : getPhaseLabel(phase) + ' - Match ' + matchId}</small>
             </div>
         `;
 
@@ -976,8 +1120,10 @@
     }
 
     // Fonction pour voir les combats d'un match
-    function voirCombats(phase, matchId) {
-        const match = tableau[phase].find(m => m.id === matchId);
+    function voirCombats(type, phase, matchId) {
+        const tableauData = type === 'bronze' ? { bronze: tableau.bronze } : tableau[type];
+        const match = type === 'bronze' ? tableau.bronze.find(m => m.id === matchId) : tableauData[phase]?.find(m => m.id === matchId);
+
         if (match && match.tatamiId) {
             window.open(`table_combat.html?tatami=${match.tatamiId}`, '_blank');
         } else {
@@ -986,12 +1132,17 @@
     }
 
     // Rendu du podium
-    function renderPodium() {
-        const podiumSection = document.getElementById('podiumSection');
-        const container = document.getElementById('podiumContainer');
+    function renderPodium(type, tableauData) {
+        if (!tableauData) return;
+
+        const capitalType = type.charAt(0).toUpperCase() + type.slice(1);
+        const podiumSection = document.getElementById(`podiumSection${capitalType}`);
+        const container = document.getElementById(`podiumContainer${capitalType}`);
+
+        if (!podiumSection || !container) return;
 
         // Vérifier si la finale est terminée
-        const finale = tableau.finale?.[0];
+        const finale = tableauData.finale?.[0];
         if (!finale || !finale.vainqueur) {
             podiumSection.classList.add('d-none');
             return;
@@ -1002,22 +1153,11 @@
         const champion = finale.vainqueur === 'A' ? finale.equipeA : finale.equipeB;
         const finaliste = finale.vainqueur === 'A' ? finale.equipeB : finale.equipeA;
 
-        // Pour la 3ème place, prendre les perdants des demi-finales
-        let troisiemes = [];
-        if (tableau.demi && tableau.demi.length >= 2) {
-            tableau.demi.forEach(demi => {
-                if (demi.vainqueur) {
-                    const perdant = demi.vainqueur === 'A' ? demi.equipeB : demi.equipeA;
-                    if (perdant) troisiemes.push(perdant);
-                }
-            });
-        }
-
         const html = `
             <div class="podium-place podium-1">
                 <i class="fas fa-trophy fa-2x mb-2"></i>
                 <div class="podium-nom">${getEquipeNom(champion)}</div>
-                <div class="podium-titre">Champion</div>
+                <div class="podium-titre">Champion ${type}</div>
             </div>
 
             <div class="podium-place podium-2">
@@ -1025,14 +1165,6 @@
                 <div class="podium-nom">${getEquipeNom(finaliste)}</div>
                 <div class="podium-titre">Finaliste</div>
             </div>
-
-            ${troisiemes.length > 0 ? `
-                <div class="podium-place podium-3">
-                    <i class="fas fa-award fa-2x mb-2"></i>
-                    <div class="podium-nom">${getEquipeNom(troisiemes[0])}</div>
-                    <div class="podium-titre">3ème place</div>
-                </div>
-            ` : ''}
         `;
 
         container.innerHTML = html;
@@ -1044,26 +1176,35 @@
         if (pollingInterval) clearInterval(pollingInterval);
 
         pollingInterval = setInterval(async () => {
-            const phases = ['huitième', 'quart', 'demi', 'finale'];
+            const phases = ['seizieme', 'huitieme', 'quart', 'demi', 'finale'];
+            const types = ['principal', 'consolante', 'bronze'];
 
-            for (const phase of phases) {
-                if (!tableau[phase]) continue;
+            for (const type of types) {
+                const tableauData = type === 'bronze' ? { bronze: tableau.bronze } : tableau[type];
+                if (!tableauData) continue;
 
-                for (const match of tableau[phase]) {
-                    if (match.combatsIds && match.combatsIds.length > 0 && !match.vainqueur) {
-                        try {
-                            const response = await fetch(`/api/tableau/${phase}/${match.id}/calculer-score`);
-                            if (response.ok) {
-                                const result = await response.json();
+                const phaseList = type === 'bronze' ? ['bronze'] : phases;
 
-                                // Mettre à jour l'affichage si le score a changé
-                                if (result.scoreA !== match.scoreA || result.scoreB !== match.scoreB) {
-                                    loadData(); // Recharger toutes les données
-                                    break;
+                for (const phase of phaseList) {
+                    const matchesArray = type === 'bronze' ? tableau.bronze : tableauData[phase];
+                    if (!matchesArray) continue;
+
+                    for (const match of matchesArray) {
+                        if (match.combatsIds && match.combatsIds.length > 0 && !match.vainqueur) {
+                            try {
+                                const response = await fetch(`/api/tableau/${type}/${phase}/${match.id}/calculer-score`);
+                                if (response.ok) {
+                                    const result = await response.json();
+
+                                    // Mettre à jour l'affichage si le score a changé
+                                    if (result.scoreA !== match.scoreA || result.scoreB !== match.scoreB) {
+                                        loadData(); // Recharger toutes les données
+                                        return; // Sortir complètement après le reload
+                                    }
                                 }
+                            } catch (error) {
+                                console.error('Erreur polling score:', error);
                             }
-                        } catch (error) {
-                            console.error('Erreur polling score:', error);
                         }
                     }
                 }
@@ -1072,11 +1213,11 @@
     }
 
     // Gestion de la soumission d'assignation
-    // Gestion de la soumission d'assignation
     async function handleAssignationSubmit(e) {
         e.preventDefault();
 
         const phase = document.getElementById('assignPhase').value;
+        const type = document.getElementById('assignPhase').getAttribute('data-type');
         const matchId = parseInt(document.getElementById('assignMatchId').value);
         const tatamiId = parseInt(document.getElementById('tatamisList').value);
 
@@ -1085,15 +1226,9 @@
             return;
         }
 
-        const match = tableau[phase].find(m => m.id === matchId);
-        if (!match) {
-            showNotification('Match introuvable', 'danger');
-            return;
-        }
-
         try {
-            // Utiliser directement la route tableau
-            const response = await fetch(`/api/tableau/assign/${phase}/${matchId}`, {
+            // Utiliser la nouvelle route avec :type
+            const response = await fetch(`/api/tableau/${type}/${phase}/${matchId}/assign`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ tatamiId: tatamiId })
@@ -1125,74 +1260,99 @@
         let totalMatches = 0;
         let matchesTermines = 0;
         let equipesQualifiees = 0;
-        let phaseActuelle = '-';
 
-        Object.values(tableau).forEach(phase => {
-            if (phase.length > 0) {
-                totalMatches += phase.length;
-                matchesTermines += phase.filter(m => m.vainqueur !== null).length;
-                equipesQualifiees = Math.max(equipesQualifiees, phase.length * 2);
-            }
-        });
+        // Compter dans le tableau Principal
+        if (tableau.principal) {
+            Object.values(tableau.principal).forEach(phase => {
+                if (phase.length > 0) {
+                    totalMatches += phase.length;
+                    matchesTermines += phase.filter(m => m.vainqueur !== null).length;
+                    equipesQualifiees = Math.max(equipesQualifiees, phase.length * 2);
+                }
+            });
+        }
 
-        phaseActuelle = getCurrentPhase() || 'Terminé';
+        // Compter dans le tableau Consolante
+        if (tableau.consolante) {
+            Object.values(tableau.consolante).forEach(phase => {
+                if (phase.length > 0) {
+                    totalMatches += phase.length;
+                    matchesTermines += phase.filter(m => m.vainqueur !== null).length;
+                }
+            });
+        }
+
+        // Compter les matchs bronze
+        if (tableau.bronze && tableau.bronze.length > 0) {
+            totalMatches += tableau.bronze.length;
+            matchesTermines += tableau.bronze.filter(m => m.vainqueur !== null).length;
+        }
+
+        const phaseActuelle = tableau.principal ? getCurrentPhase('principal', tableau.principal) : '-';
 
         document.getElementById('statEquipesQualifiees').textContent = equipesQualifiees;
         document.getElementById('statMatchsTotal').textContent = totalMatches;
         document.getElementById('statMatchsTermines').textContent = matchesTermines;
-        document.getElementById('statPhaseActuelle').textContent = getPhaseLabel(phaseActuelle);
+        document.getElementById('statPhaseActuelle').textContent = phaseActuelle !== '-' ? getPhaseLabel(phaseActuelle) : '-';
     }
 
     // Mise à jour des équipes qualifiées
     function updateEquipesQualifiees() {
-        const container = document.getElementById('equipesQualifieesContainer');
+        const containerPrincipal = document.getElementById('equipesPrincipalContainer');
+        const containerConsolante = document.getElementById('equipesConsolanteContainer');
 
         if (classementGeneral.length === 0) {
-            container.innerHTML = `
+            const errorHtml = `
                 <div class="alert alert-warning">
                     <i class="fas fa-exclamation-triangle me-2"></i>
-                    Aucun classement général disponible. Veuillez d'abord terminer les poules.
+                    Aucun classement disponible.
                 </div>
             `;
+            containerPrincipal.innerHTML = errorHtml;
+            containerConsolante.innerHTML = errorHtml;
             return;
         }
 
-        const html = `
-            <div class="mb-3">
-                <p class="small text-muted">Classement général des poules :</p>
+        // Rendre les équipes pour Principal
+        containerPrincipal.innerHTML = classementGeneral.slice(0, 16).map((equipe, index) => `
+            <div class="qualifiée-card ${selectedEquipesPrincipal.includes(equipe.equipeId) ? 'selected' : ''}"
+                 onclick="toggleEquipeSelection('${equipe.equipeId}', 'principal')">
+                <div class="d-flex align-items-center mb-2">
+                    <span class="rang-badge ${index < 3 ? `rang-${index + 1}` : ''}">${index + 1}</span>
+                    <strong class="ms-2 small">${equipe.nom}</strong>
+                </div>
+                <div class="small text-muted">
+                    ${equipe.victoires}V • ${equipe.points}pts
+                </div>
             </div>
-            <div class="qualifiées-grid">
-                ${classementGeneral.slice(0, 16).map((equipe, index) => `
-                    <div class="qualifiée-card ${selectedEquipes.includes(equipe.equipeId) ? 'selected' : ''}"
-                         onclick="toggleEquipeSelection('${equipe.equipeId}')">
-                        <div class="d-flex align-items-center mb-2">
-                            <span class="rang-badge ${index < 3 ? `rang-${index + 1}` : ''}">${index + 1}</span>
-                            <strong>${equipe.nom}</strong>
-                        </div>
-                        <div class="small text-muted">
-                            ${equipe.victoires}V • ${equipe.points}pts
-                        </div>
-                    </div>
-                `).join('')}
-            </div>
-            <div class="mt-3">
-                <p class="small text-muted">
-                    <i class="fas fa-info-circle me-1"></i>
-                    <span id="selectionCount">${selectedEquipes.length}</span> équipe(s) sélectionnée(s)
-                </p>
-            </div>
-        `;
+        `).join('');
 
-        container.innerHTML = html;
+        // Rendre les équipes pour Consolante
+        containerConsolante.innerHTML = classementGeneral.slice(0, 16).map((equipe, index) => `
+            <div class="qualifiée-card ${selectedEquipesConsolante.includes(equipe.equipeId) ? 'selected' : ''}"
+                 onclick="toggleEquipeSelection('${equipe.equipeId}', 'consolante')">
+                <div class="d-flex align-items-center mb-2">
+                    <span class="rang-badge ${index < 3 ? `rang-${index + 1}` : ''}">${index + 1}</span>
+                    <strong class="ms-2 small">${equipe.nom}</strong>
+                </div>
+                <div class="small text-muted">
+                    ${equipe.victoires}V • ${equipe.points}pts
+                </div>
+            </div>
+        `).join('');
+
+        // Mettre à jour les compteurs
+        document.getElementById('selectionCountPrincipal').textContent = selectedEquipesPrincipal.length;
+        document.getElementById('selectionCountConsolante').textContent = selectedEquipesConsolante.length;
     }
 
     // Utilitaires
-    function getCurrentPhase() {
-        const phases = ['finale', 'demi', 'quart', 'huitième'];
+    function getCurrentPhase(type, tableauData) {
+        const phases = ['finale', 'demi', 'quart', 'huitieme', 'seizieme'];
 
         for (const phase of phases) {
-            if (tableau[phase] && tableau[phase].length > 0) {
-                const hasIncomplete = tableau[phase].some(m => m.vainqueur === null && m.equipeA && m.equipeB);
+            if (tableauData[phase] && tableauData[phase].length > 0) {
+                const hasIncomplete = tableauData[phase].some(m => m.vainqueur === null && m.equipeA && m.equipeB);
                 if (hasIncomplete) return phase;
             }
         }
@@ -1200,14 +1360,15 @@
         return phases[0]; // Par défaut finale
     }
 
-    function isPhaseCompleted(phase) {
-        if (!tableau[phase] || tableau[phase].length === 0) return false;
-        return tableau[phase].every(m => m.vainqueur !== null);
+    function isPhaseCompleted(phase, tableauData) {
+        if (!tableauData[phase] || tableauData[phase].length === 0) return false;
+        return tableauData[phase].every(m => m.vainqueur !== null);
     }
 
     function getPhaseIcon(phase) {
         const icons = {
-            'huitième': 'list',
+            'seizieme': 'sitemap',
+            'huitieme': 'list',
             'quart': 'th',
             'demi': 'crown',
             'finale': 'trophy'
@@ -1217,7 +1378,8 @@
 
     function getPhaseLabel(phase) {
         const labels = {
-            'huitième': 'Huitièmes',
+            'seizieme': 'Seizièmes de finale',
+            'huitieme': 'Huitièmes de finale',
             'quart': 'Quarts de finale',
             'demi': 'Demi-finales',
             'finale': 'Finale'
@@ -1230,23 +1392,31 @@
         return equipe ? equipe.nom : equipeId;
     }
 
-    function toggleEquipeSelection(equipeId) {
-        const index = selectedEquipes.indexOf(equipeId);
+    function toggleEquipeSelection(equipeId, type) {
+        const selectedArray = type === 'principal' ? selectedEquipesPrincipal : selectedEquipesConsolante;
+        const otherArray = type === 'principal' ? selectedEquipesConsolante : selectedEquipesPrincipal;
+
+        const index = selectedArray.indexOf(equipeId);
         if (index > -1) {
-            selectedEquipes.splice(index, 1);
+            selectedArray.splice(index, 1);
         } else {
-            selectedEquipes.push(equipeId);
+            // Retirer de l'autre tableau si présent
+            const otherIndex = otherArray.indexOf(equipeId);
+            if (otherIndex > -1) {
+                otherArray.splice(otherIndex, 1);
+            }
+            selectedArray.push(equipeId);
         }
         updateEquipesQualifiees();
     }
 
     // Actions
-    async function updateScore(phase, matchId, equipe, score) {
+    async function updateScore(type, phase, matchId, equipe, score) {
         try {
             const scoreData = {};
             scoreData[`score${equipe}`] = parseInt(score) || 0;
 
-            const response = await fetch(`/api/tableau/${phase}/${matchId}`, {
+            const response = await fetch(`/api/tableau/${type}/${phase}/${matchId}`, {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(scoreData)
@@ -1260,12 +1430,14 @@
         }
     }
 
-    function openResultatModal(phase, matchId) {
-        const match = tableau[phase].find(m => m.id === matchId);
+    function openResultatModal(type, phase, matchId) {
+        const tableauData = type === 'bronze' ? { bronze: tableau.bronze } : tableau[type];
+        const match = type === 'bronze' ? tableau.bronze.find(m => m.id === matchId) : tableauData[phase]?.find(m => m.id === matchId);
         if (!match) return;
 
         document.getElementById('matchPhase').value = phase;
         document.getElementById('matchId').value = matchId;
+        document.getElementById('matchPhase').setAttribute('data-type', type);
         document.getElementById('scoreA').value = match.scoreA || 0;
         document.getElementById('scoreB').value = match.scoreB || 0;
         document.getElementById('vainqueurSelect').value = match.vainqueur || '';
@@ -1277,7 +1449,7 @@
                 <strong>${getEquipeNom(match.equipeB)}</strong>
             </div>
             <div class="text-center mt-1">
-                <small class="text-muted">${getPhaseLabel(phase)} - Match ${matchId}</small>
+                <small class="text-muted">${type.toUpperCase()} - ${type === 'bronze' ? match.description : getPhaseLabel(phase) + ' - Match ' + matchId}</small>
             </div>
         `;
 
@@ -1285,8 +1457,8 @@
         modal.show();
     }
 
-    function editMatch(phase, matchId) {
-        openResultatModal(phase, matchId);
+    function editMatch(type, phase, matchId) {
+        openResultatModal(type, phase, matchId);
     }
 
     // Configuration des événements
@@ -1340,13 +1512,18 @@
     async function handleGenerateurSubmit(e) {
         e.preventDefault();
 
-        if (selectedEquipes.length < 2) {
-            showNotification('Sélectionnez au moins 2 équipes', 'warning');
+        if (selectedEquipesPrincipal.length < 2) {
+            showNotification('Sélectionnez au moins 2 équipes pour le Tableau Principal', 'warning');
             return;
         }
 
-        if (selectedEquipes.length > 16) {
-            showNotification('Maximum 16 équipes pour le tableau', 'warning');
+        if (selectedEquipesPrincipal.length > 16) {
+            showNotification('Maximum 16 équipes pour le Tableau Principal', 'warning');
+            return;
+        }
+
+        if (selectedEquipesConsolante.length > 16) {
+            showNotification('Maximum 16 équipes pour le Tableau Consolante', 'warning');
             return;
         }
 
@@ -1354,7 +1531,10 @@
             const response = await fetch('/api/tableau', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ qualifiees: selectedEquipes })
+                body: JSON.stringify({
+                    principal: selectedEquipesPrincipal,
+                    consolante: selectedEquipesConsolante
+                })
             });
 
             if (response.ok) {
@@ -1362,9 +1542,13 @@
                 const modal = bootstrap.Modal.getInstance(document.getElementById('modalGenerateur'));
                 modal.hide();
 
-                showNotification(`Tableau créé ! Phase de départ: ${getPhaseLabel(result.startPhase)}`, 'success');
+                showNotification(
+                    `Tableaux créés ! Principal: ${result.startPhasePrincipal ? getPhaseLabel(result.startPhasePrincipal) : 'N/A'}, Consolante: ${result.startPhaseConsolante ? getPhaseLabel(result.startPhaseConsolante) : 'N/A'}`,
+                    'success'
+                );
                 loadData();
-                selectedEquipes = [];
+                selectedEquipesPrincipal = [];
+                selectedEquipesConsolante = [];
             } else {
                 const error = await response.json();
                 showNotification(error.error || 'Erreur lors de la création', 'danger');
@@ -1379,6 +1563,7 @@
         e.preventDefault();
 
         const phase = document.getElementById('matchPhase').value;
+        const type = document.getElementById('matchPhase').getAttribute('data-type');
         const matchId = parseInt(document.getElementById('matchId').value);
         const scoreA = parseInt(document.getElementById('scoreA').value) || 0;
         const scoreB = parseInt(document.getElementById('scoreB').value) || 0;
@@ -1391,7 +1576,7 @@
 
         try {
             // Mettre à jour le match
-            let response = await fetch(`/api/tableau/${phase}/${matchId}`, {
+            let response = await fetch(`/api/tableau/${type}/${phase}/${matchId}`, {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ scoreA, scoreB, vainqueur })
@@ -1399,7 +1584,7 @@
 
             if (response.ok) {
                 // Faire avancer le vainqueur à la phase suivante
-                response = await fetch(`/api/tableau/advance/${phase}/${matchId}`, {
+                response = await fetch(`/api/tableau/${type}/${phase}/${matchId}/advance`, {
                     method: 'POST'
                 });
 
@@ -1513,7 +1698,8 @@
 
     // Reset des modals
     document.getElementById('modalGenerateur').addEventListener('hidden.bs.modal', function() {
-        selectedEquipes = [];
+        selectedEquipesPrincipal = [];
+        selectedEquipesConsolante = [];
         updateEquipesQualifiees();
     });
 
