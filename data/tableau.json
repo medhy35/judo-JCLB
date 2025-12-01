@@ -1,5 +1,75 @@
 {
-  "quart": [],
-  "demi": [],
-  "finale": []
+  "principal": {
+    "seizieme": [],
+    "huitieme": [],
+    "quart": [],
+    "demi": [
+      {
+        "id": 1,
+        "equipeA": "marolles",
+        "equipeB": "limeil",
+        "scoreA": 0,
+        "scoreB": 0,
+        "vainqueur": null,
+        "hasBye": false,
+        "combatsIds": [],
+        "assigné": false
+      },
+      {
+        "id": 2,
+        "equipeA": "paris",
+        "equipeB": "sucy",
+        "scoreA": 0,
+        "scoreB": 0,
+        "vainqueur": null,
+        "hasBye": false,
+        "combatsIds": [],
+        "assigné": false
+      }
+    ],
+    "finale": [
+      {
+        "id": 1,
+        "equipeA": null,
+        "equipeB": null,
+        "scoreA": 0,
+        "scoreB": 0,
+        "vainqueur": null,
+        "hasBye": false,
+        "combatsIds": [],
+        "assigné": false
+      }
+    ]
+  },
+  "consolante": {
+    "seizieme": [],
+    "huitieme": [],
+    "quart": [],
+    "demi": [],
+    "finale": []
+  },
+  "bronze": [
+    {
+      "id": 1,
+      "equipeA": null,
+      "equipeB": null,
+      "scoreA": 0,
+      "scoreB": 0,
+      "vainqueur": null,
+      "combatsIds": [],
+      "assigné": false,
+      "description": "Bronze #1"
+    },
+    {
+      "id": 2,
+      "equipeA": null,
+      "equipeB": null,
+      "scoreA": 0,
+      "scoreB": 0,
+      "vainqueur": null,
+      "combatsIds": [],
+      "assigné": false,
+      "description": "Bronze #2"
+    }
+  ]
 }
