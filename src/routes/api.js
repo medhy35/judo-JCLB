@@ -348,6 +348,9 @@ router.post('/poules/assign-combat', withBroadcast(async (req, res) => {
     req.tatami = res.locals.tatami;
 }, 'poules'));
 
+// Obtenir les combattants disponibles pour une rencontre
+router.get('/poules/rencontre/:id/combattants-disponibles', poulesController.getCombattantsDisponibles);
+
 // ==========================================
 // ROUTES CLASSEMENTS
 // ==========================================
