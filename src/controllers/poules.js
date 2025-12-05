@@ -270,10 +270,12 @@ class PoulesController {
 
     /**
      * POST /api/poules/assign-combat - Assigner un combat à partir d'une rencontre
+     * Paramètres optionnels:
+     *  - selection: [{categorie, rougeId, bleuId}, ...] pour sélection manuelle
      */
     async assignCombat(req, res) {
         try {
-            const { rencontreId, tatamiId } = req.body;
+            const { rencontreId, tatamiId, selection } = req.body;
 
             if (!rencontreId || !tatamiId) {
                 return res.status(400).json({ error: 'rencontreId et tatamiId requis' });
@@ -296,11 +298,22 @@ class PoulesController {
                 return res.status(404).json({ error: 'Rencontre introuvable' });
             }
 
-            // Générer les combats entre les équipes
-            const combats = combatService.genererCombatsEquipes(
-                rencontre.equipeA,
-                rencontre.equipeB
-            );
+            // Générer les combats - soit avec sélection manuelle, soit automatique
+            let combats;
+            if (selection && Array.isArray(selection) && selection.length > 0) {
+                // Mode sélection manuelle
+                combats = combatService.genererCombatsAvecSelection(
+                    rencontre.equipeA,
+                    rencontre.equipeB,
+                    selection
+                );
+            } else {
+                // Mode automatique (comportement par défaut)
+                combats = combatService.genererCombatsEquipes(
+                    rencontre.equipeA,
+                    rencontre.equipeB
+                );
+            }
 
             if (combats.length === 0) {
                 return res.status(400).json({ error: 'Aucun combat valide généré' });
@@ -324,11 +337,87 @@ class PoulesController {
                 success: true,
                 combatsCrees: combats.length,
                 rencontre,
-                tatami: result.tatami
+                tatami: result.tatami,
+                modeSelection: !!selection
             });
 
         } catch (error) {
             console.error('Erreur assignation combat:', error);
+            res.status(500).json({ error: 'Erreur serveur' });
+        }
+    }
+
+    /**
+     * GET /api/poules/rencontre/:id/combattants-disponibles
+     * Retourne les combattants disponibles par catégorie pour une rencontre
+     */
+    async getCombattantsDisponibles(req, res) {
+        try {
+            const rencontreId = +req.params.id;
+
+            // Trouver la rencontre
+            const poules = dataService.readFile('poules');
+            let rencontre = null;
+
+            for (const poule of poules) {
+                rencontre = poule.rencontres.find(r => r.id === rencontreId);
+                if (rencontre) break;
+            }
+
+            if (!rencontre) {
+                return res.status(404).json({ error: 'Rencontre introuvable' });
+            }
+
+            const combatService = require('../services/combatService');
+            const combattants = dataService.readFile('combattants');
+
+            // Récupérer les combattants de chaque équipe
+            const combattantsA = combattants.filter(c => c.equipeId === rencontre.equipeA);
+            const combattantsB = combattants.filter(c => c.equipeId === rencontre.equipeB);
+
+            // Grouper par catégorie (utilisera la méthode privée via une fonction publique)
+            const categoriesA = {};
+            const categoriesB = {};
+
+            combattantsA.forEach(c => {
+                const categorieAge = c.categorieAge || combatService.determinerCategorieAge(c.sexe, c.poids);
+                const cle = `${categorieAge || 'inconnu'}-${c.sexe}-${c.poids}`;
+                if (!categoriesA[cle]) categoriesA[cle] = [];
+                categoriesA[cle].push(c);
+            });
+
+            combattantsB.forEach(c => {
+                const categorieAge = c.categorieAge || combatService.determinerCategorieAge(c.sexe, c.poids);
+                const cle = `${categorieAge || 'inconnu'}-${c.sexe}-${c.poids}`;
+                if (!categoriesB[cle]) categoriesB[cle] = [];
+                categoriesB[cle].push(c);
+            });
+
+            // Construire la liste des catégories communes
+            const categories = [];
+            Object.keys(categoriesA).forEach(categorie => {
+                if (categoriesB[categorie]) {
+                    const [categorieAge, sexe, poids] = categorie.split('-');
+                    categories.push({
+                        categorie,
+                        categorieAge,
+                        sexe,
+                        poids,
+                        combattantsRouge: categoriesA[categorie],
+                        combattantsBleu: categoriesB[categorie]
+                    });
+                }
+            });
+
+            res.json({
+                rencontreId,
+                equipeA: rencontre.equipeA,
+                equipeB: rencontre.equipeB,
+                categories
+            });
+
+        } catch (error) {
+            console.error('Erreur récupération combattants disponibles:', error);
             res.status(500).json({ error: 'Erreur serveur' });
         }
     }

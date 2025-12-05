@@ -452,6 +452,72 @@ class CombatService {
     }
 
     /**
+     * Génère les combats entre deux équipes avec sélection manuelle des combattants
+     * @param {string} equipeAId
+     * @param {string} equipeBId
+     * @param {Array} selection - Liste des combattants sélectionnés par catégorie
+     *   Format: [{categorie, rougeId, bleuId}, ...]
+     * @returns {Array} Liste des combats créés
+     */
+    genererCombatsAvecSelection(equipeAId, equipeBId, selection) {
+        if (!Array.isArray(selection) || selection.length === 0) {
+            return [];
+        }
+
+        const combatConfig = configService.getCombatConfig();
+        const combattants = dataService.readFile('combattants');
+        const combatsCrees = [];
+
+        selection.forEach(sel => {
+            const rouge = combattants.find(c => c.id === sel.rougeId);
+            const bleu = combattants.find(c => c.id === sel.bleuId);
+
+            if (!rouge || !bleu) {
+                return; // Skip si un combattant est introuvable
+            }
+
+            // Utiliser la catégorie d'âge du combattant
+            const categorieAge = rouge.categorieAge || this.determinerCategorieAge(rouge.sexe, rouge.poids);
+
+            // Déterminer la durée selon la catégorie d'âge
+            let duree = combatConfig.dureeParDefaut;
+            if (categorieAge && combatConfig.categoriesAge) {
+                const catConfig = combatConfig.categoriesAge.find(c => c.nom === categorieAge);
+                if (catConfig) {
+                    duree = catConfig.duree;
+                }
+            }
+
+            const combat = dataService.add('combats', {
+                rouge: { ...rouge, equipeId: equipeAId },
+                bleu: { ...bleu, equipeId: equipeBId },
+                categorieAge: categorieAge,
+                etat: 'prévu',
+                ipponRouge: false,
+                ipponBleu: false,
+                wazariRouge: 0,
+                wazariBleu: 0,
+                yukoRouge: 0,
+                yukoBleu: 0,
+                penalitesRouge: 0,
+                penalitesBleu: 0,
+                timer: duree,
+                dateCreation: new Date().toISOString()
+            });
+
+            combatsCrees.push(combat);
+        });
+
+        dataService.addLog(`${combatsCrees.length} combats générés avec sélection entre équipes`, {
+            equipeA: equipeAId,
+            equipeB: equipeBId,
+            combatsIds: combatsCrees.map(c => c.id)
+        });
+
+        return combatsCrees;
+    }
+
+    /**
      * Groupe les combattants par catégorie (poids + sexe)
      * @private
      */
@@ -459,7 +525,12 @@ class CombatService {
         const groupes = {};
 
         combattants.forEach(c => {
-            const categorie = `${c.sexe}-${c.poids}`;
+            // Utiliser la catégorie d'âge du combattant ou la déterminer en fallback
+            const categorieAge = c.categorieAge || this.determinerCategorieAge(c.sexe, c.poids);
+
+            // Grouper par catégorie d'âge + sexe + poids
+            // Cela permet d'avoir des combats séparés pour mini-poussin -27kg et poussin -27kg
+            const categorie = `${categorieAge || 'inconnu'}-${c.sexe}-${c.poids}`;
             if (!groupes[categorie]) {
                 groupes[categorie] = [];
             }
