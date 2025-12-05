@@ -361,6 +361,17 @@
                         <input type="text" id="combattantNom" class="form-control" required
                                placeholder="Ex: Jean Dupont">
                     </div>
+                    <div class="mb-3">
+                        <label for="combattantCategorieAge" class="form-label">Catégorie d'âge *</label>
+                        <select class="form-select" id="combattantCategorieAge" required>
+                            <option value="">-- Choisir catégorie d'âge --</option>
+                            <option value="Mini-poussins">Mini-poussins</option>
+                            <option value="Poussins">Poussins</option>
+                            <option value="Benjamins">Benjamins</option>
+                            <option value="Minimes">Minimes</option>
+                            <option value="Juniors/Seniors">Juniors/Seniors</option>
+                        </select>
+                    </div>
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="combattantSexe" class="form-label">Sexe *</label>
@@ -371,9 +382,9 @@
                             </select>
                         </div>
                         <div class="col-md-6">
-                            <label for="combattantPoids" class="form-label">Catégorie *</label>
+                            <label for="combattantPoids" class="form-label">Poids *</label>
                             <select class="form-select" id="combattantPoids" required>
-                                <option value="">-- Choisir catégorie --</option>
+                                <option value="">-- Choisir poids --</option>
                             </select>
                         </div>
                     </div>
@@ -612,6 +623,7 @@
                                     <div>
                                         <h6 class="mb-1">${combattant.nom}</h6>
                                         <div class="d-flex gap-2">
+                                            <span class="badge bg-info text-dark">${combattant.categorieAge || 'N/A'}</span>
                                             <span class="badge poids-badge">${combattant.poids} kg</span>
                                             <span class="badge sexe-badge ${combattant.sexe}">${combattant.sexe === 'M' ? 'Masculin' : 'Féminin'}</span>
                                         </div>
@@ -753,6 +765,7 @@
         const editId = document.getElementById('combattantEditId').value;
         const formData = {
             nom: document.getElementById('combattantNom').value.trim(),
+            categorieAge: document.getElementById('combattantCategorieAge').value,
             sexe: document.getElementById('combattantSexe').value,
             poids: document.getElementById('combattantPoids').value,
             equipeId: document.getElementById('combattantEquipeId').value
@@ -822,6 +835,7 @@
         document.getElementById('modalCombattantTitle').innerHTML = '<i class="fas fa-edit me-2"></i>Modifier le combattant';
         document.getElementById('combattantEditId').value = combattant.id;
         document.getElementById('combattantNom').value = combattant.nom;
+        document.getElementById('combattantCategorieAge').value = combattant.categorieAge || '';
         document.getElementById('combattantSexe').value = combattant.sexe;
         updateCategoriesOptions();
         document.getElementById('combattantPoids').value = combattant.poids;

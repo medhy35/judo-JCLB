@@ -47,9 +47,9 @@ class CombattantsController {
      */
     async create(req, res) {
         try {
-            const { nom, sexe, poids, equipeId } = req.body;
+            const { nom, sexe, poids, equipeId, categorieAge } = req.body;
 
-            if (!nom || !sexe || !poids || !equipeId) {
+            if (!nom || !sexe || !poids || !equipeId || !categorieAge) {
                 return res.status(400).json({ error: 'Tous les champs sont requis' });
             }
 
@@ -69,6 +69,17 @@ class CombattantsController {
             if (!['M', 'F'].includes(sexe)) {
                 return res.status(400).json({ error: 'Sexe doit être M ou F' });
             }
+
+            // Vérifier la catégorie d'âge
+            const categoriesAgeConfig = configService.get('combat.categoriesAge');
+            const categoriesAgeValides = categoriesAgeConfig.map(c => c.nom);
+            if (!categoriesAgeValides.includes(categorieAge)) {
+                return res.status(400).json({
+                    error: 'Catégorie d\'âge invalide',
+                    categoriesValides: categoriesAgeValides
+                });
+            }
+
             const categoriesPoids = configService.get('combattants.categoriesPoids');
             const categoriesValides = sexe === 'M'
                 ? categoriesPoids.masculin
@@ -91,6 +102,7 @@ class CombattantsController {
 
             const newCombattant = {
                 nom: nom.trim(),
+                categorieAge,
                 sexe,
                 poids,
                 equipeId,
@@ -126,7 +138,7 @@ class CombattantsController {
             }
 
             // Valider les champs modifiables
-            const champsValides = ['nom', 'sexe', 'poids', 'equipeId'];
+            const champsValides = ['nom', 'sexe', 'poids', 'equipeId', 'categorieAge'];
             const updatesFiltered = {};
 
             Object.keys(updates).forEach(key => {
@@ -145,6 +157,17 @@ class CombattantsController {
 
             if (updatesFiltered.sexe && !['M', 'F'].includes(updatesFiltered.sexe)) {
                 return res.status(400).json({ error: 'Sexe doit être M ou F' });
+            }
+
+            if (updatesFiltered.categorieAge) {
+                const categoriesAgeConfig = configService.get('combat.categoriesAge');
+                const categoriesAgeValides = categoriesAgeConfig.map(c => c.nom);
+                if (!categoriesAgeValides.includes(updatesFiltered.categorieAge)) {
+                    return res.status(400).json({
+                        error: 'Catégorie d\'âge invalide',
+                        categoriesValides: categoriesAgeValides
+                    });
+                }
             }
 
             if (updatesFiltered.nom) {
