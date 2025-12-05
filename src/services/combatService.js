@@ -459,7 +459,12 @@ class CombatService {
         const groupes = {};
 
         combattants.forEach(c => {
-            const categorie = `${c.sexe}-${c.poids}`;
+            // Déterminer la catégorie d'âge pour ce combattant
+            const categorieAge = this.determinerCategorieAge(c.sexe, c.poids);
+
+            // Grouper par catégorie d'âge + sexe + poids
+            // Cela permet d'avoir des combats séparés pour mini-poussin -27kg et poussin -27kg
+            const categorie = `${categorieAge || 'inconnu'}-${c.sexe}-${c.poids}`;
             if (!groupes[categorie]) {
                 groupes[categorie] = [];
             }
