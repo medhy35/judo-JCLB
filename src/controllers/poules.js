@@ -381,14 +381,14 @@ class PoulesController {
 
             combattantsA.forEach(c => {
                 const categorieAge = c.categorieAge || combatService.determinerCategorieAge(c.sexe, c.poids);
-                const cle = `${categorieAge || 'inconnu'}-${c.sexe}-${c.poids}`;
+                const cle = `${categorieAge || 'inconnu'}|${c.sexe}|${c.poids}`;
                 if (!categoriesA[cle]) categoriesA[cle] = [];
                 categoriesA[cle].push(c);
             });
 
             combattantsB.forEach(c => {
                 const categorieAge = c.categorieAge || combatService.determinerCategorieAge(c.sexe, c.poids);
-                const cle = `${categorieAge || 'inconnu'}-${c.sexe}-${c.poids}`;
+                const cle = `${categorieAge || 'inconnu'}|${c.sexe}|${c.poids}`;
                 if (!categoriesB[cle]) categoriesB[cle] = [];
                 categoriesB[cle].push(c);
             });
@@ -397,7 +397,7 @@ class PoulesController {
             const categories = [];
             Object.keys(categoriesA).forEach(categorie => {
                 if (categoriesB[categorie]) {
-                    const [categorieAge, sexe, poids] = categorie.split('-');
+                    const [categorieAge, sexe, poids] = categorie.split('|');
                     categories.push({
                         categorie,
                         categorieAge,
