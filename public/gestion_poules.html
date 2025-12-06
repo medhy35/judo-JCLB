@@ -387,7 +387,7 @@
 
 <!-- Modal Sélection Combattants -->
 <div class="modal fade" id="modalSelectionCombattants" tabindex="-1">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">
@@ -397,29 +397,12 @@
             </div>
             <div class="modal-body">
                 <input type="hidden" id="selectionRencontreId">
-                <input type="hidden" id="selectionEquipeAId">
-                <input type="hidden" id="selectionEquipeBId">
                 <div class="alert alert-info">
                     <i class="fas fa-info-circle me-2"></i>
-                    Cochez les combattants qui vont participer. Le système créera automatiquement les combats par catégorie (âge + sexe + poids).
+                    Pour chaque catégorie, choisissez le combattant (titulaire ou remplaçant) de chaque équipe
                 </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <h6 class="text-danger fw-bold mb-3">
-                            <i class="fas fa-square me-2"></i><span id="equipeANom"></span> (Rouge)
-                        </h6>
-                        <div id="combattantsEquipeA" class="list-group">
-                            <!-- Contenu dynamique -->
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <h6 class="text-primary fw-bold mb-3">
-                            <i class="fas fa-square me-2"></i><span id="equipeBNom"></span> (Bleu)
-                        </h6>
-                        <div id="combattantsEquipeB" class="list-group">
-                            <!-- Contenu dynamique -->
-                        </div>
-                    </div>
+                <div id="categoriesSelectionContainer">
+                    <!-- Contenu dynamique -->
                 </div>
             </div>
             <div class="modal-footer">
@@ -977,62 +960,48 @@
         const equipeB = equipes.find(e => e.id === rencontre.equipeB) || { nom: rencontre.equipeB };
 
         document.getElementById('selectionRencontreId').value = rencontreId;
-        document.getElementById('selectionEquipeAId').value = rencontre.equipeA;
-        document.getElementById('selectionEquipeBId').value = rencontre.equipeB;
-        document.getElementById('equipeANom').textContent = equipeA.nom;
-        document.getElementById('equipeBNom').textContent = equipeB.nom;
 
-        // Construire la liste des combattants de l'équipe A
-        const allCombattantsA = [];
-        const allCombattantsB = [];
-
-        data.categories.forEach(cat => {
-            allCombattantsA.push(...cat.combattantsRouge);
-            allCombattantsB.push(...cat.combattantsBleu);
-        });
-
-        // Supprimer les doublons (au cas où)
-        const uniqueCombattantsA = [...new Map(allCombattantsA.map(c => [c.id, c])).values()];
-        const uniqueCombattantsB = [...new Map(allCombattantsB.map(c => [c.id, c])).values()];
-
-        // Afficher les combattants de l'équipe A avec checkboxes
-        let htmlA = '';
-        uniqueCombattantsA.forEach(c => {
-            htmlA += `
-                <label class="list-group-item d-flex align-items-center">
-                    <input class="form-check-input me-3" type="checkbox" value="${c.id}" id="checkA_${c.id}" checked>
-                    <div class="flex-grow-1">
-                        <div class="fw-bold">${c.nom}</div>
-                        <small class="text-muted">
-                            <span class="badge bg-info text-dark">${c.categorieAge || 'N/A'}</span>
-                            <span class="badge bg-secondary">${c.sexe === 'M' ? 'M' : 'F'}</span>
-                            <span class="badge bg-primary">${c.poids} kg</span>
-                        </small>
+        // Construire le HTML des catégories
+        let html = '';
+        data.categories.forEach((cat, index) => {
+            html += `
+                <div class="card mb-3">
+                    <div class="card-header bg-light">
+                        <h6 class="mb-0">
+                            <i class="fas fa-trophy me-2"></i>
+                            ${cat.categorieAge} - ${cat.sexe === 'M' ? 'Masculin' : 'Féminin'} ${cat.poids} kg
+                        </h6>
                     </div>
-                </label>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold text-danger">
+                                    <i class="fas fa-square me-1"></i>${equipeA.nom} (Rouge)
+                                </label>
+                                <select class="form-select" id="rouge_${index}" required>
+                                    ${cat.combattantsRouge.map(c => `
+                                        <option value="${c.id}">${c.nom}</option>
+                                    `).join('')}
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold text-primary">
+                                    <i class="fas fa-square me-1"></i>${equipeB.nom} (Bleu)
+                                </label>
+                                <select class="form-select" id="bleu_${index}" required>
+                                    ${cat.combattantsBleu.map(c => `
+                                        <option value="${c.id}">${c.nom}</option>
+                                    `).join('')}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             `;
         });
 
-        // Afficher les combattants de l'équipe B avec checkboxes
-        let htmlB = '';
-        uniqueCombattantsB.forEach(c => {
-            htmlB += `
-                <label class="list-group-item d-flex align-items-center">
-                    <input class="form-check-input me-3" type="checkbox" value="${c.id}" id="checkB_${c.id}" checked>
-                    <div class="flex-grow-1">
-                        <div class="fw-bold">${c.nom}</div>
-                        <small class="text-muted">
-                            <span class="badge bg-info text-dark">${c.categorieAge || 'N/A'}</span>
-                            <span class="badge bg-secondary">${c.sexe === 'M' ? 'M' : 'F'}</span>
-                            <span class="badge bg-primary">${c.poids} kg</span>
-                        </small>
-                    </div>
-                </label>
-            `;
-        });
-
-        document.getElementById('combattantsEquipeA').innerHTML = htmlA;
-        document.getElementById('combattantsEquipeB').innerHTML = htmlB;
+        document.getElementById('categoriesSelectionContainer').innerHTML = html;
+        document.getElementById('categoriesSelectionContainer').dataset.categories = JSON.stringify(data.categories);
 
         const modal = new bootstrap.Modal(document.getElementById('modalSelectionCombattants'));
         modal.show();
@@ -1040,71 +1009,20 @@
 
     function validerSelectionCombattants() {
         const rencontreId = parseInt(document.getElementById('selectionRencontreId').value);
+        const categoriesData = JSON.parse(document.getElementById('categoriesSelectionContainer').dataset.categories || '[]');
 
-        // Récupérer les combattants cochés de l'équipe A
-        const selectedA = [];
-        document.querySelectorAll('#combattantsEquipeA input[type="checkbox"]:checked').forEach(cb => {
-            const combattantId = parseInt(cb.value);
-            // Récupérer les infos du combattant depuis le badge affiché
-            const label = cb.closest('label');
-            const nom = label.querySelector('.fw-bold').textContent;
-            const badges = label.querySelectorAll('.badge');
-            const categorieAge = badges[0].textContent;
-            const sexe = badges[1].textContent === 'M' ? 'M' : 'F';
-            const poids = badges[2].textContent.replace(' kg', '');
-
-            selectedA.push({ id: combattantId, nom, categorieAge, sexe, poids });
-        });
-
-        // Récupérer les combattants cochés de l'équipe B
-        const selectedB = [];
-        document.querySelectorAll('#combattantsEquipeB input[type="checkbox"]:checked').forEach(cb => {
-            const combattantId = parseInt(cb.value);
-            const label = cb.closest('label');
-            const nom = label.querySelector('.fw-bold').textContent;
-            const badges = label.querySelectorAll('.badge');
-            const categorieAge = badges[0].textContent;
-            const sexe = badges[1].textContent === 'M' ? 'M' : 'F';
-            const poids = badges[2].textContent.replace(' kg', '');
-
-            selectedB.push({ id: combattantId, nom, categorieAge, sexe, poids });
-        });
-
-        // Grouper par catégorie (âge + sexe + poids)
-        const categoriesA = {};
-        selectedA.forEach(c => {
-            const cle = `${c.categorieAge}-${c.sexe}-${c.poids}`;
-            if (!categoriesA[cle]) categoriesA[cle] = [];
-            categoriesA[cle].push(c);
-        });
-
-        const categoriesB = {};
-        selectedB.forEach(c => {
-            const cle = `${c.categorieAge}-${c.sexe}-${c.poids}`;
-            if (!categoriesB[cle]) categoriesB[cle] = [];
-            categoriesB[cle].push(c);
-        });
-
-        // Créer la sélection pour les catégories communes
+        // Construire la sélection
         const selection = [];
-        Object.keys(categoriesA).forEach(categorie => {
-            if (categoriesB[categorie]) {
-                // Prendre le premier de chaque équipe pour cette catégorie
-                const rougeId = categoriesA[categorie][0].id;
-                const bleuId = categoriesB[categorie][0].id;
+        categoriesData.forEach((cat, index) => {
+            const rougeId = parseInt(document.getElementById(`rouge_${index}`).value);
+            const bleuId = parseInt(document.getElementById(`bleu_${index}`).value);
 
-                selection.push({
-                    categorie,
-                    rougeId,
-                    bleuId
-                });
-            }
+            selection.push({
+                categorie: cat.categorie,
+                rougeId,
+                bleuId
+            });
         });
-
-        if (selection.length === 0) {
-            showNotification('Aucune catégorie commune entre les combattants sélectionnés', 'warning');
-            return;
-        }
 
         // Fermer le modal de sélection
         const modalSelection = bootstrap.Modal.getInstance(document.getElementById('modalSelectionCombattants'));
