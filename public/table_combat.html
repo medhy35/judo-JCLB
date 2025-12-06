@@ -778,7 +778,16 @@
         // Afficher la catégorie d'âge si définie
         const categorieDisplay = document.getElementById('categorieAgeDisplay');
         if (combat.categorieAge) {
-            categorieDisplay.textContent = combat.categorieAge;
+            // Récupérer le sexe et le poids depuis le combattant rouge
+            const sexe = combat.rouge?.sexe || '';
+            const poids = combat.rouge?.poids || '';
+            const sexeLabel = sexe === 'M' ? 'Masculin' : sexe === 'F' ? 'Féminin' : '';
+
+            let displayText = combat.categorieAge;
+            if (sexeLabel) displayText += ` - ${sexeLabel}`;
+            if (poids) displayText += ` ${poids} kg`;
+
+            categorieDisplay.textContent = displayText;
             categorieDisplay.style.display = 'block';
         } else {
             categorieDisplay.style.display = 'none';
